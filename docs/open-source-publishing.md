@@ -5,7 +5,7 @@ This project is intended to be published as a reusable local plugin and cross-ag
 ## Recommended Repository Name
 
 ```text
-microsoft-excel-bi-agent-pack
+microsoft-excel-bi-agent
 ```
 
 ## Public Scope
@@ -59,14 +59,14 @@ git init
 git branch -M main
 git add .
 git commit -m "Initial open source release"
-git remote add origin https://github.com/<owner>/microsoft-excel-bi-agent-pack.git
+git remote add origin https://github.com/<owner>/microsoft-excel-bi-agent.git
 git push -u origin main
 ```
 
 If GitHub CLI is available and authenticated:
 
 ```powershell
-gh repo create <owner>/microsoft-excel-bi-agent-pack --public --source . --remote origin --push
+gh repo create <owner>/microsoft-excel-bi-agent --public --source . --remote origin --push
 ```
 
 ## Boundary Statement

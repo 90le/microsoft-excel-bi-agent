@@ -18,7 +18,7 @@ gh auth status
 From the repository root:
 
 ```powershell
-.\tools\publish_to_github.ps1 -Owner <github-owner> -Repo microsoft-excel-bi-agent-pack
+.\tools\publish_to_github.ps1 -Owner <github-owner> -Repo microsoft-excel-bi-agent
 ```
 
 If `-Owner` is omitted, the script uses the authenticated GitHub user.
@@ -26,13 +26,13 @@ If `-Owner` is omitted, the script uses the authenticated GitHub user.
 Default visibility is public. To create a private repo first:
 
 ```powershell
-.\tools\publish_to_github.ps1 -Owner <github-owner> -Repo microsoft-excel-bi-agent-pack -Private
+.\tools\publish_to_github.ps1 -Owner <github-owner> -Repo microsoft-excel-bi-agent -Private
 ```
 
 ## Manual Equivalent
 
 ```powershell
-gh repo create <github-owner>/microsoft-excel-bi-agent-pack --public --source . --remote origin --push
+gh repo create <github-owner>/microsoft-excel-bi-agent --public --source . --remote origin --push
 ```
 
 ## Current Open-Source Boundary

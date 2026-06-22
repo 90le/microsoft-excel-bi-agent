@@ -1,6 +1,6 @@
 param(
     [string]$Owner = "",
-    [string]$Repo = "microsoft-excel-bi-agent-pack",
+    [string]$Repo = "microsoft-excel-bi-agent",
     [switch]$Private
 )
 

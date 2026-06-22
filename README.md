@@ -6,6 +6,8 @@
 
 License: MIT
 
+GitHub: https://github.com/90le/microsoft-excel-bi-agent
+
 ## 适用场景
 
 - Excel/VBA 工作簿创建、修改、调试、按钮绑定、隐藏 sheet、公式和链接检查。
