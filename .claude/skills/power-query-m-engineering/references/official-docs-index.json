@@ -1,0 +1,222 @@
+{
+  "version": "2026-06-18",
+  "source_policy": "Official Microsoft Learn pages first. Use community sources only after official pages are checked and the limitation is documented.",
+  "entries": [
+    {
+      "id": "m-language-reference",
+      "category": "language",
+      "title": "Power Query M formula language reference",
+      "official_url": "https://learn.microsoft.com/en-us/powerquery-m/",
+      "local_keywords": ["m language", "formula language", "let in", "power query m", "syntax"],
+      "online_query": "site:learn.microsoft.com/en-us/powerquery-m \"Power Query M formula language\"",
+      "use_when": "Use for base language semantics, expression syntax, values, types, let expressions, and operators."
+    },
+    {
+      "id": "m-function-reference",
+      "category": "function-index",
+      "title": "Power Query M function reference",
+      "official_url": "https://learn.microsoft.com/en-us/powerquery-m/power-query-m-function-reference",
+      "local_keywords": ["function reference", "m functions", "function category", "all functions"],
+      "online_query": "site:learn.microsoft.com/en-us/powerquery-m \"Power Query M function reference\"",
+      "use_when": "Use as the first stop when a function's category or exact official page is unknown."
+    },
+    {
+      "id": "table-functions",
+      "category": "function-family",
+      "title": "Table functions",
+      "official_url": "https://learn.microsoft.com/en-us/powerquery-m/table-functions",
+      "local_keywords": ["Table.", "Table.NestedJoin", "Table.Group", "Table.TransformColumns", "Table.Buffer", "MissingField"],
+      "online_query": "site:learn.microsoft.com/en-us/powerquery-m/table-functions Table.NestedJoin Table.Group",
+      "use_when": "Use for table construction, joins, grouping, expansion, schema checks, missing columns, sorting, and buffering."
+    },
+    {
+      "id": "list-functions",
+      "category": "function-family",
+      "title": "List functions",
+      "official_url": "https://learn.microsoft.com/en-us/powerquery-m/list-functions",
+      "local_keywords": ["List.", "List.Buffer", "List.Max", "List.Transform", "List.Accumulate", "List.Combine"],
+      "online_query": "site:learn.microsoft.com/en-us/powerquery-m/list-functions List.Buffer List.Accumulate",
+      "use_when": "Use for list transforms, buffered helper lists, dynamic column lists, and fold/reduce logic."
+    },
+    {
+      "id": "record-functions",
+      "category": "function-family",
+      "title": "Record functions",
+      "official_url": "https://learn.microsoft.com/en-us/powerquery-m/record-functions",
+      "local_keywords": ["Record.", "Record.Field", "Record.HasFields", "record"],
+      "online_query": "site:learn.microsoft.com/en-us/powerquery-m/record-functions Record.HasFields",
+      "use_when": "Use for optional fields, JSON objects, records inside nested columns, and safe field access."
+    },
+    {
+      "id": "text-functions",
+      "category": "function-family",
+      "title": "Text functions",
+      "official_url": "https://learn.microsoft.com/en-us/powerquery-m/text-functions",
+      "local_keywords": ["Text.", "Text.Trim", "Text.From", "Text.Contains", "Text.Combine", "Comparer"],
+      "online_query": "site:learn.microsoft.com/en-us/powerquery-m/text-functions Text.Trim Text.Contains",
+      "use_when": "Use for text normalization, display-key separation, helper join keys, and localized text handling."
+    },
+    {
+      "id": "accessing-data-functions",
+      "category": "source-functions",
+      "title": "Accessing data functions",
+      "official_url": "https://learn.microsoft.com/en-us/powerquery-m/accessing-data-functions",
+      "local_keywords": ["File.Contents", "Folder.Files", "Excel.Workbook", "Csv.Document", "Web.Contents", "Json.Document", "Sql.Database"],
+      "online_query": "site:learn.microsoft.com/en-us/powerquery-m/accessing-data-functions Excel.Workbook Folder.Files",
+      "use_when": "Use for file, folder, workbook, database, web, OData, JSON, and connector source functions."
+    },
+    {
+      "id": "excel-workbook",
+      "category": "source-functions",
+      "title": "Excel.Workbook",
+      "official_url": "https://learn.microsoft.com/en-us/powerquery-m/excel-workbook",
+      "local_keywords": ["Excel.Workbook", "UseHeaders", "DelayTypes", "PromoteHeaders", "sheet navigation"],
+      "online_query": "site:learn.microsoft.com/en-us/powerquery-m/excel-workbook UseHeaders DelayTypes",
+      "use_when": "Use when reading .xlsx/.xlsm/.xlsb files, navigating sheets/tables, or deciding whether headers should be promoted separately."
+    },
+    {
+      "id": "csv-document",
+      "category": "source-functions",
+      "title": "Csv.Document",
+      "official_url": "https://learn.microsoft.com/en-us/powerquery-m/csv-document",
+      "local_keywords": ["Csv.Document", "delimiter", "encoding", "ExtraValues", "quote style"],
+      "online_query": "site:learn.microsoft.com/en-us/powerquery-m/csv-document delimiter encoding",
+      "use_when": "Use when loading CSV/TSV/text files and controlling delimiter, encoding, quote, and extra-value behavior."
+    },
+    {
+      "id": "web-contents",
+      "category": "source-functions",
+      "title": "Web.Contents",
+      "official_url": "https://learn.microsoft.com/en-us/powerquery-m/web-contents",
+      "local_keywords": ["Web.Contents", "RelativePath", "Query", "Headers", "ApiKeyName", "ManualStatusHandling"],
+      "online_query": "site:learn.microsoft.com/en-us/powerquery-m/web-contents RelativePath Query ApiKeyName",
+      "use_when": "Use when building API calls, URL parameters, headers, credentials, and refreshable web queries."
+    },
+    {
+      "id": "value-native-query",
+      "category": "folding-sql",
+      "title": "Value.NativeQuery",
+      "official_url": "https://learn.microsoft.com/en-us/powerquery-m/value-nativequery",
+      "local_keywords": ["Value.NativeQuery", "native query", "SQL", "parameters", "query folding"],
+      "online_query": "site:learn.microsoft.com/en-us/powerquery-m/value-nativequery",
+      "use_when": "Use for native SQL execution, parameterized source queries, and folding-sensitive database extraction."
+    },
+    {
+      "id": "query-folding-basics",
+      "category": "performance",
+      "title": "Understanding query evaluation and query folding",
+      "official_url": "https://learn.microsoft.com/en-us/power-query/query-folding-basics",
+      "local_keywords": ["query folding", "folding", "native query", "performance", "streaming"],
+      "online_query": "site:learn.microsoft.com/en-us/power-query/query-folding-basics Power Query",
+      "use_when": "Use for deciding where to filter, sort, group, buffer, or stop folding."
+    },
+    {
+      "id": "power-query-best-practices",
+      "category": "best-practice",
+      "title": "Best practices when working with Power Query",
+      "official_url": "https://learn.microsoft.com/en-us/power-query/best-practices",
+      "local_keywords": ["best practices", "filter early", "expensive operations last", "parameters", "modular", "data types"],
+      "online_query": "site:learn.microsoft.com/en-us/power-query/best-practices \"Power Query\"",
+      "use_when": "Use for overall design guidance, performance ordering, parameters, modular queries, data profiling, and future-proofing."
+    },
+    {
+      "id": "common-authoring-issues",
+      "category": "troubleshooting",
+      "title": "Common authoring issues in Power Query",
+      "official_url": "https://learn.microsoft.com/en-us/power-query/common-issues",
+      "local_keywords": ["common issues", "type inference", "column not found", "errors", "privacy", "refresh error"],
+      "online_query": "site:learn.microsoft.com/en-us/power-query/common-issues Power Query",
+      "use_when": "Use when refresh works on preview but fails later, schema drifts, auto type detection is suspicious, or errors need root-cause triage."
+    },
+    {
+      "id": "query-diagnostics",
+      "category": "diagnostics",
+      "title": "Query diagnostics",
+      "official_url": "https://learn.microsoft.com/en-us/power-query/query-diagnostics",
+      "local_keywords": ["query diagnostics", "diagnose step", "trace", "performance", "multiple evaluations"],
+      "online_query": "site:learn.microsoft.com/en-us/power-query/query-diagnostics",
+      "use_when": "Use for Power BI Desktop or Power Query Editor performance diagnosis and evaluation tracing."
+    },
+    {
+      "id": "multiple-queries",
+      "category": "diagnostics",
+      "title": "Why does my query run multiple times?",
+      "official_url": "https://learn.microsoft.com/en-us/power-query/multiple-queries",
+      "local_keywords": ["runs multiple times", "multiple evaluations", "refresh preview", "background", "metadata"],
+      "online_query": "site:learn.microsoft.com/en-us/power-query/multiple-queries",
+      "use_when": "Use when a source is hit more than expected or refresh appears to run the same query repeatedly."
+    },
+    {
+      "id": "workbook-query-object",
+      "category": "excel-vba-host",
+      "title": "Excel WorkbookQuery object",
+      "official_url": "https://learn.microsoft.com/en-us/office/vba/api/excel.workbookquery",
+      "local_keywords": ["WorkbookQuery", "Workbook.Queries", "Formula", "Delete", "Refresh", "Excel COM"],
+      "online_query": "site:learn.microsoft.com/en-us/office/vba/api/excel.workbookquery",
+      "use_when": "Use for Excel VBA/COM object model access to Power Query queries."
+    },
+    {
+      "id": "queries-add",
+      "category": "excel-vba-host",
+      "title": "Excel Queries.Add method",
+      "official_url": "https://learn.microsoft.com/en-us/office/vba/api/excel.queries.add",
+      "local_keywords": ["Queries.Add", "add query", "insert query", "M formula", "WorkbookQuery"],
+      "online_query": "site:learn.microsoft.com/en-us/office/vba/api/excel.queries.add",
+      "use_when": "Use when adding a new Power Query formula through Excel VBA/COM."
+    },
+    {
+      "id": "workbookquery-formula",
+      "category": "excel-vba-host",
+      "title": "Excel WorkbookQuery.Formula property",
+      "official_url": "https://learn.microsoft.com/en-us/office/vba/api/excel.workbookquery.formula",
+      "local_keywords": ["WorkbookQuery.Formula", "edit query", "read query", "update M"],
+      "online_query": "site:learn.microsoft.com/en-us/office/vba/api/excel.workbookquery.formula",
+      "use_when": "Use when reading or replacing the M formula of an existing workbook query."
+    },
+    {
+      "id": "workbook-refreshall",
+      "category": "excel-vba-refresh",
+      "title": "Excel Workbook.RefreshAll method",
+      "official_url": "https://learn.microsoft.com/en-us/office/vba/api/excel.workbook.refreshall",
+      "local_keywords": ["RefreshAll", "refresh all", "external data ranges", "PivotTable", "background refresh"],
+      "online_query": "site:learn.microsoft.com/en-us/office/vba/api/excel.workbook.refreshall",
+      "use_when": "Use when refreshing all external ranges, Power Query loads, PivotTables, and external reports in an Excel workbook."
+    },
+    {
+      "id": "calculate-until-async-queries-done",
+      "category": "excel-vba-refresh",
+      "title": "Excel Application.CalculateUntilAsyncQueriesDone method",
+      "official_url": "https://learn.microsoft.com/en-us/office/vba/api/excel.application.calculateuntilasyncqueriesdone",
+      "local_keywords": ["CalculateUntilAsyncQueriesDone", "wait", "async queries", "OLEDB", "OLAP", "refresh complete"],
+      "online_query": "site:learn.microsoft.com/en-us/office/vba/api/excel.application.calculateuntilasyncqueriesdone",
+      "use_when": "Use after RefreshAll or Query.Refresh when VBA must wait for asynchronous OLEDB/OLAP work before continuing."
+    },
+    {
+      "id": "querytable-refresh",
+      "category": "excel-vba-refresh",
+      "title": "Excel QueryTable.Refresh method",
+      "official_url": "https://learn.microsoft.com/en-us/office/vba/api/excel.querytable.refresh",
+      "local_keywords": ["QueryTable.Refresh", "BackgroundQuery", "worksheet table", "refresh one table"],
+      "online_query": "site:learn.microsoft.com/en-us/office/vba/api/excel.querytable.refresh",
+      "use_when": "Use when a worksheet-loaded query table needs a synchronous refresh or detailed refresh result handling."
+    },
+    {
+      "id": "querytable-backgroundquery",
+      "category": "excel-vba-refresh",
+      "title": "Excel QueryTable.BackgroundQuery property",
+      "official_url": "https://learn.microsoft.com/en-us/office/vba/api/excel.querytable.backgroundquery",
+      "local_keywords": ["BackgroundQuery", "disable background refresh", "ListObject.QueryTable", "synchronous refresh"],
+      "online_query": "site:learn.microsoft.com/en-us/office/vba/api/excel.querytable.backgroundquery",
+      "use_when": "Use when a macro must prevent worksheet query tables from refreshing in the background."
+    },
+    {
+      "id": "power-query-connectors",
+      "category": "connectors",
+      "title": "Power Query connectors",
+      "official_url": "https://learn.microsoft.com/en-us/power-query/connectors/",
+      "local_keywords": ["connectors", "data source", "SQL Server", "SharePoint", "ODBC", "OLEDB", "Excel"],
+      "online_query": "site:learn.microsoft.com/en-us/power-query/connectors/ Power Query connector",
+      "use_when": "Use for connector-specific capabilities, authentication, limitations, and supported host products."
+    }
+  ]
+}

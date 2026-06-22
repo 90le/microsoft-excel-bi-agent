@@ -1,0 +1,4 @@
+interface:
+  display_name: "Excel Testing Fixtures"
+  short_description: "Create safe Excel fixtures and regression evidence."
+  default_prompt: "Use $excel-testing-fixtures to create a sanitized fixture or regression case for this Excel BI workflow."

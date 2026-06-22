@@ -1,0 +1,30 @@
+{
+  "id": "cube-zero-result-debug",
+  "title": "CUBE formula zero-result debugging across MDX member, measure grain, and cell formatting",
+  "layer": "cube-mdx",
+  "evidenceMode": "sanitized-spec",
+  "originSignal": "A CUBEVALUE cell returns zero or an unexpected blank even though the user expects a non-zero value.",
+  "riskPattern": "The issue can be in the MDX member path, measure numerator/denominator grain, filter clearing logic, or worksheet display format.",
+  "regressionChecks": [
+    "Extract CUBE formulas and referenced measures from the workbook report layer.",
+    "Trace measure names through escaped MDX references.",
+    "Separate report-layer reference errors from Data Model measure behavior.",
+    "Record display-format checks when a small numeric result might be hidden."
+  ],
+  "packageTools": [
+    "tools/build_cube_dependency_report.py",
+    "tools/mdx_references.py",
+    "tools/analyze_measure_rename_impact.py",
+    "tools/build_measure_rename_rewrite_plan.py"
+  ],
+  "expectedEvidence": [
+    "CUBE dependency report lists formulas, measures, members, and parsing diagnostics.",
+    "Measure impact report identifies direct and helper-cell downstream references.",
+    "Task notes isolate whether the issue is formula reference, model grain, or display formatting."
+  ],
+  "boundaries": [
+    "OpenXML inspection sees formula text but cannot evaluate CUBEVALUE results.",
+    "Live model evaluation requires Excel desktop with the workbook Data Model available."
+  ],
+  "nextLiveWorkbookRequirement": "Add a sanitized workbook with CUBE formulas that include direct measure references, helper cells, and one intentionally wrong member path."
+}

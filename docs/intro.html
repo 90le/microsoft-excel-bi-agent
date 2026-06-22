@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Microsoft Excel BI Agent Pack</title>
+  <style>
+    :root {
+      --excel: #217346;
+      --blue: #1f5f99;
+      --ink: #1f2933;
+      --muted: #5e6b75;
+      --line: #d9e2ec;
+      --soft: #f5f8fa;
+      --panel: #ffffff;
+      --amber: #a96500;
+      --red: #9f2b2b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: #ffffff;
+      font-family: "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+      line-height: 1.55;
+    }
+    a { color: var(--blue); }
+    .wrap {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+    header {
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(90deg, #ffffff 0%, #eef7f1 100%);
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.06fr) minmax(360px, 0.94fr);
+      gap: 40px;
+      align-items: center;
+      min-height: 560px;
+      padding: 56px 0 48px;
+    }
+    .kicker {
+      margin: 0 0 12px;
+      color: var(--excel);
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(36px, 4.6vw, 62px);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+    .lead {
+      margin: 22px 0 0;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 18px;
+    }
+    .hero strong {
+      color: var(--ink);
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 18px;
+      border-radius: 6px;
+      border: 1px solid var(--excel);
+      color: #ffffff;
+      background: var(--excel);
+      text-decoration: none;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .btn.secondary {
+      color: var(--excel);
+      background: #ffffff;
+    }
+    .console {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--panel);
+      box-shadow: 0 16px 42px rgba(31, 41, 51, 0.09);
+    }
+    .console-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 42px;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--line);
+      background: #f8fafb;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #c8d2dc;
+    }
+    .console-body {
+      padding: 18px;
+    }
+    .flow {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .flow-row {
+      display: grid;
+      grid-template-columns: 132px 1fr;
+      gap: 12px;
+      align-items: stretch;
+    }
+    .flow-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 54px;
+      border-radius: 6px;
+      color: #ffffff;
+      background: var(--excel);
+      font-weight: 800;
+    }
+    .flow-text {
+      min-height: 54px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--muted);
+      background: #ffffff;
+    }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .metric {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f9fbfc;
+    }
+    .metric b {
+      display: block;
+      color: var(--excel);
+      font-size: 24px;
+      line-height: 1.1;
+    }
+    .metric span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    main { padding: 36px 0 64px; }
+    .band {
+      border-top: 1px solid var(--line);
+      padding: 36px 0;
+    }
+    h2 {
+      margin: 0 0 16px;
+      font-size: 28px;
+      letter-spacing: 0;
+    }
+    .section-lead {
+      margin: -4px 0 22px;
+      max-width: 900px;
+      color: var(--muted);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .grid.four {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      background: #ffffff;
+      min-height: 148px;
+    }
+    .item h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      letter-spacing: 0;
+    }
+    .item p {
+      margin: 0;
+      color: var(--muted);
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 0 8px;
+      margin-bottom: 10px;
+      border-radius: 999px;
+      color: var(--excel);
+      background: #eaf5ee;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .scenario {
+      display: grid;
+      grid-template-columns: 210px 1fr 180px;
+      border-top: 1px solid var(--line);
+    }
+    .scenario > div {
+      padding: 14px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .scenario > div:nth-child(3n) {
+      border-right: 0;
+    }
+    .scenario .head {
+      color: #ffffff;
+      background: var(--excel);
+      font-weight: 800;
+    }
+    .scenario .name {
+      font-weight: 800;
+      background: #f9fbfc;
+    }
+    pre {
+      overflow-x: auto;
+      margin: 0;
+      padding: 16px;
+      border-radius: 8px;
+      background: #17212b;
+      color: #e6edf3;
+      font-size: 14px;
+    }
+    .two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+    .note {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .boundary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .ok {
+      border-left: 4px solid var(--excel);
+    }
+    .no {
+      border-left: 4px solid var(--red);
+    }
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 24px 0;
+      color: var(--muted);
+      background: var(--soft);
+      font-size: 14px;
+    }
+    @media (max-width: 920px) {
+      .hero,
+      .two,
+      .boundary {
+        grid-template-columns: 1fr;
+      }
+      .grid,
+      .grid.four,
+      .metrics {
+        grid-template-columns: 1fr 1fr;
+      }
+      .scenario {
+        grid-template-columns: 1fr;
+      }
+      .scenario > div {
+        border-right: 0;
+      }
+    }
+    @media (max-width: 620px) {
+      .wrap {
+        width: min(100% - 28px, 1180px);
+      }
+      .hero {
+        min-height: auto;
+        padding-top: 36px;
+      }
+      .grid,
+      .grid.four,
+      .metrics {
+        grid-template-columns: 1fr;
+      }
+      .flow-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap hero">
+      <div>
+        <p class="kicker">Excel BI Agent Skill Pack</p>
+        <h1>让 AI Agent 真正会处理复杂 Excel BI 工作簿</h1>
+        <p class="lead">
+          Microsoft Excel BI Agent Pack 是一套本地插件和 skills 包。它不是一个普通提示词集合，而是把
+          <strong>Excel/VBA、Power Query M、Power Pivot DAX、MDX/CUBE、ADO/SQL、交付清理和 QA 验证</strong>
+          做成可安装、可复用、可验证的 agent 工作体系。
+        </p>
+        <div class="actions">
+          <a class="btn" href="../README.md">安装说明</a>
+          <a class="btn secondary" href="recipient-guide.zh-CN.md">中文使用说明</a>
+        </div>
+      </div>
+      <div class="console" aria-label="Excel BI project capability map">
+        <div class="console-head">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+        <div class="console-body">
+          <div class="flow">
+            <div class="flow-row">
+              <div class="flow-label">输入</div>
+              <div class="flow-text">客户工作簿、VBA、Power Query、DAX、CUBE 公式、外部链接、交付规则</div>
+            </div>
+            <div class="flow-row">
+              <div class="flow-label">处理</div>
+              <div class="flow-text">选择专业 skill，导出/检查/改写/刷新/审计，并用脚本记录边界和证据</div>
+            </div>
+            <div class="flow-row">
+              <div class="flow-label">输出</div>
+              <div class="flow-text">可交付 Excel、QA 报告、问题定位、清理计划、验证结论、跨 agent 一致操作</div>
+            </div>
+          </div>
+          <div class="metrics">
+            <div class="metric"><b>12</b><span>canonical skills</span></div>
+            <div class="metric"><b>14</b><span>cataloged workflows</span></div>
+            <div class="metric"><b>76</b><span>tools / scripts</span></div>
+            <div class="metric"><b>53</b><span>release-gate checks</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="band">
+      <div class="wrap">
+        <h2>这个项目可以干嘛</h2>
+        <p class="section-lead">
+          它的目标是让不同 AI agent 在处理 Excel BI 文件时，不再只靠临时猜测，而是按稳定流程完成读取、定位、修改、验证和交付。
+        </p>
+        <div class="grid four">
+          <div class="item">
+            <span class="tag">Workbook</span>
+            <h3>改 Excel 工作簿</h3>
+            <p>创建、修改、检查 `.xlsx` / `.xlsm`，处理公式、格式、隐藏 sheet、按钮、控件、保护、外链和交付结构。</p>
+          </div>
+          <div class="item">
+            <span class="tag">VBA</span>
+            <h3>调试 VBA</h3>
+            <p>导出/导入模块，定位编译错误、运行时错误、按钮绑定问题，并保持宏工作簿结构不被破坏。</p>
+          </div>
+          <div class="item">
+            <span class="tag">Power Query</span>
+            <h3>处理 M 查询</h3>
+            <p>检查、编辑、插入、删除 Power Query，分析依赖、刷新状态、错误分类、性能耗时和数据源风险。</p>
+          </div>
+          <div class="item">
+            <span class="tag">DAX / Model</span>
+            <h3>分析 Power Pivot</h3>
+            <p>处理 Data Model、DAX 度量、计算列、关系、上下文、兼容性和 Excel Power Pivot 与 Power BI 边界。</p>
+          </div>
+          <div class="item">
+            <span class="tag">MDX / CUBE</span>
+            <h3>追踪 CUBE 公式</h3>
+            <p>分析 CUBEVALUE、CUBEMEMBER、MDX 成员、度量引用、动态期间和报表层公式依赖。</p>
+          </div>
+          <div class="item">
+            <span class="tag">ADO / SQL</span>
+            <h3>连接 Excel 数据</h3>
+            <p>支持 ADO、OLEDB、ADODB、ADOMD、SQL 查询工作簿、外部文件和可访问的数据模型接口。</p>
+          </div>
+          <div class="item">
+            <span class="tag">Delivery</span>
+            <h3>生成纯净交付物</h3>
+            <p>冻结公式为值，删除外链、Power Query、Data Model、配置 sheet 和过程稿，输出客户可打开的干净版本。</p>
+          </div>
+          <div class="item">
+            <span class="tag">QA</span>
+            <h3>做交付前审计</h3>
+            <p>检查公式质量、外部依赖、控件、隐藏内容、视觉可读性、发布门禁和客户交付风险。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="band">
+      <div class="wrap">
+        <h2>典型任务场景</h2>
+        <p class="section-lead">这些是这个技能包最适合处理的实际任务。</p>
+        <div class="scenario">
+          <div class="head">场景</div>
+          <div class="head">Agent 应该做什么</div>
+          <div class="head">推荐入口</div>
+          <div class="name">客户 Excel 交付前检查</div>
+          <div>识别外链、隐藏过程稿、公式风险、Power Query / Data Model 依赖和清理边界。</div>
+          <div>workbook QA / publish</div>
+          <div class="name">VBA 自动化工作簿开发</div>
+          <div>创建 `.xlsm` 副本、导入模块、绑定按钮、编译检查、运行验证、保留源文件。</div>
+          <div>excel-vba-workbook-engineering</div>
+          <div class="name">Power Query 刷新失败</div>
+          <div>导出 M 查询、分析依赖和数据源、刷新并等待完成、分类错误、记录性能。</div>
+          <div>power-query-m-engineering</div>
+          <div class="name">DAX / CUBE 公式结果异常</div>
+          <div>分析度量、过滤上下文、MDX 成员、CUBEVALUE 参数和报表层引用链。</div>
+          <div>dax / mdx skills</div>
+          <div class="name">生成纯净交付版</div>
+          <div>把工作簿转为值，删除链接、查询、Data Model、配置页和宏，验证无残留。</div>
+          <div>excel-deliverable-publisher</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="band">
+      <div class="wrap">
+        <h2>为什么需要它</h2>
+        <div class="grid">
+          <div class="item">
+            <h3>减少临时猜测</h3>
+            <p>Excel BI 文件通常同时包含公式、宏、查询、模型和外链。这个包让 agent 先选正确层，再操作。</p>
+          </div>
+          <div class="item">
+            <h3>降低交付风险</h3>
+            <p>交付前清理、验证、审计和边界说明固化为流程，避免把过程稿、外链或私有路径发给客户。</p>
+          </div>
+          <div class="item">
+            <h3>多 agent 一致</h3>
+            <p>Codex、Claude、OpenCode 可以同步同一套 skills，减少不同 agent 对同一任务的处理方式漂移。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="band">
+      <div class="wrap two">
+        <div>
+          <h2>Windows 安装命令</h2>
+          <pre><code>python tools\deploy-local-plugin.py --project-root . --replace --install
+python tools\sync-skills.py --project-root . --all-project-mirrors --codex-user --replace
+python tools\run_release_gate.py --project-root . --profile structural</code></pre>
+        </div>
+        <div>
+          <h2>macOS / Linux / Git Bash</h2>
+          <pre><code>python tools/deploy-local-plugin.py --project-root . --replace --install
+python tools/sync-skills.py --project-root . --all-project-mirrors --codex-user --replace
+python tools/run_release_gate.py --project-root . --profile structural</code></pre>
+        </div>
+      </div>
+      <div class="wrap">
+        <p class="note">完整 Excel COM、VBA 执行、Power Query 刷新和 Power Pivot/Data Model 运行验证需要 Windows + 桌面版 Microsoft Excel。</p>
+      </div>
+    </div>
+
+    <div class="band">
+      <div class="wrap">
+        <h2>分发和使用边界</h2>
+        <div class="boundary">
+          <div class="item ok">
+            <h3>可以分发</h3>
+            <p>完整插件目录、README、中文说明、一键安装 prompt、HTML 介绍页、skill 源、生成镜像、验证脚本和通用 fixture。</p>
+          </div>
+          <div class="item no">
+            <h3>不要分发</h3>
+            <p>客户工作簿、截图、PDF、凭证、私有路径、生成报告、缓存目录、Excel 锁文件和任何机器特定证据。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">Version 0.1.0+codex.20260622060709 · Microsoft Excel BI Agent Pack</div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,78 @@
+{
+  "version": "2026-06-18",
+  "source_policy": "Use Microsoft Support for Excel CUBE worksheet functions and Microsoft Learn for MDX concepts.",
+  "entries": [
+    {
+      "id": "cube-functions-reference",
+      "category": "excel-cube-functions",
+      "title": "Excel CUBE functions reference",
+      "official_url": "https://support.microsoft.com/en-us/office/cube-functions-reference-2378132b-d3f2-4af1-896d-48a9ee840eb2",
+      "local_keywords": ["CUBE functions", "Excel", "CUBEVALUE", "CUBEMEMBER", "CUBESET"],
+      "online_query": "site:support.microsoft.com/en-us/office cube functions reference Excel",
+      "use_when": "Use as the first stop for Excel CUBE worksheet functions."
+    },
+    {
+      "id": "cubevalue",
+      "category": "excel-cube-functions",
+      "title": "CUBEVALUE function",
+      "official_url": "https://support.microsoft.com/en-us/office/cubevalue-function-8733da24-26d1-4e34-9b3a-84a8f00dcbe0",
+      "local_keywords": ["CUBEVALUE", "measure", "member expression", "ThisWorkbookDataModel"],
+      "online_query": "site:support.microsoft.com/en-us/office cubevalue-function CUBEVALUE",
+      "use_when": "Use for Excel CUBEVALUE syntax, arguments, and returned value behavior."
+    },
+    {
+      "id": "cubemember",
+      "category": "excel-cube-functions",
+      "title": "CUBEMEMBER function",
+      "official_url": "https://support.microsoft.com/en-us/office/cubemember-function-0f6a15b9-2c18-4819-ae89-e1b5c8b398ad",
+      "local_keywords": ["CUBEMEMBER", "member", "caption", "helper cell"],
+      "online_query": "site:support.microsoft.com/en-us/office cubemember-function CUBEMEMBER",
+      "use_when": "Use for member helper cells and stable report parameterization."
+    },
+    {
+      "id": "cubeset",
+      "category": "excel-cube-functions",
+      "title": "CUBESET function",
+      "official_url": "https://support.microsoft.com/en-us/office/cubeset-function-5b2146bd-62d6-4d04-9d8f-670e993ee1d9",
+      "local_keywords": ["CUBESET", "set expression", "sort", "top N"],
+      "online_query": "site:support.microsoft.com/en-us/office cubeset-function CUBESET",
+      "use_when": "Use for MDX set expressions in worksheet formulas."
+    },
+    {
+      "id": "mdx-basic-query",
+      "category": "mdx",
+      "title": "The basic MDX query",
+      "official_url": "https://learn.microsoft.com/en-us/analysis-services/multidimensional-models/mdx/mdx-query-the-basic-query",
+      "local_keywords": ["MDX", "SELECT", "FROM", "WHERE", "axis", "set"],
+      "online_query": "site:learn.microsoft.com/en-us/analysis-services/multidimensional-models/mdx mdx-query-the-basic-query",
+      "use_when": "Use for explaining MDX SELECT structure and axis behavior."
+    },
+    {
+      "id": "mdx-key-concepts",
+      "category": "mdx",
+      "title": "Key concepts in MDX",
+      "official_url": "https://learn.microsoft.com/en-us/analysis-services/multidimensional-models/mdx/key-concepts-in-mdx-analysis-services",
+      "local_keywords": ["MDX key concepts", "cube space", "tuples", "autoexists"],
+      "online_query": "site:learn.microsoft.com/en-us/analysis-services/multidimensional-models/mdx key concepts MDX",
+      "use_when": "Use for MDX conceptual explanations, especially tuples and cube space."
+    },
+    {
+      "id": "members-tuples-sets",
+      "category": "mdx",
+      "title": "Working with Members, Tuples, and Sets",
+      "official_url": "https://learn.microsoft.com/en-us/analysis-services/multidimensional-models/mdx/working-with-members-tuples-and-sets-mdx",
+      "local_keywords": ["member", "tuple", "set", "unique name", "MDX"],
+      "online_query": "site:learn.microsoft.com/en-us/analysis-services/multidimensional-models/mdx working-with-members-tuples-and-sets-mdx",
+      "use_when": "Use when debugging member unique names, tuple composition, or set expressions."
+    },
+    {
+      "id": "tuples",
+      "category": "mdx",
+      "title": "Tuples",
+      "official_url": "https://learn.microsoft.com/en-us/analysis-services/multidimensional-models/mdx/tuples",
+      "local_keywords": ["tuple", "default member", "attribute hierarchy"],
+      "online_query": "site:learn.microsoft.com/en-us/analysis-services/multidimensional-models/mdx tuples default member",
+      "use_when": "Use when a CUBEVALUE combines measure and dimension members and implicit default members may affect the result."
+    }
+  ]
+}

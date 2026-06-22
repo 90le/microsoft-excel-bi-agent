@@ -1,0 +1,4 @@
+interface:
+  display_name: "Excel Report Builder"
+  short_description: "Build polished Excel report and dashboard workbooks."
+  default_prompt: "Use $excel-report-builder to create or update this Excel report workbook with a maintainable layout and validation path."

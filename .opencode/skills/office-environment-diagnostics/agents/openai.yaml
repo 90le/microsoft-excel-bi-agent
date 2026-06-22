@@ -1,0 +1,4 @@
+interface:
+  display_name: "Office Environment Diagnostics"
+  short_description: "Check Excel COM, Office providers, and runtime boundaries."
+  default_prompt: "Use $office-environment-diagnostics to diagnose whether this machine can run the required Excel automation safely."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Excel Workbook QA Auditor"
+  short_description: "Audit Excel workbooks for delivery and runtime risks."
+  default_prompt: "Use $excel-workbook-qa-auditor to review this workbook and return prioritized QA findings with validation boundaries."

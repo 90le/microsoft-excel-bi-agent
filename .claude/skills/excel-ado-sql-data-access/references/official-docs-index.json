@@ -1,0 +1,87 @@
+{
+  "version": "2026-06-18",
+  "source_policy": "Use official Microsoft ADO, OLE DB, Access SQL, and Analysis Services documentation before community connection-string examples.",
+  "entries": [
+    {
+      "id": "ado-api-reference",
+      "category": "ado",
+      "title": "ADO API reference",
+      "official_url": "https://learn.microsoft.com/en-us/sql/ado/reference/ado-api/ado-api-reference",
+      "local_keywords": ["ADO", "ADODB", "Connection", "Recordset", "Command"],
+      "online_query": "site:learn.microsoft.com/en-us/sql/ado/reference/ado-api ADO API reference",
+      "use_when": "Use as the first stop for ADODB object model semantics."
+    },
+    {
+      "id": "ado-connection",
+      "category": "ado",
+      "title": "Connection object (ADO)",
+      "official_url": "https://learn.microsoft.com/en-us/sql/ado/reference/ado-api/connection-object-ado",
+      "local_keywords": ["ADODB.Connection", "Connection", "Open", "Close", "ConnectionString"],
+      "online_query": "site:learn.microsoft.com/en-us/sql/ado/reference/ado-api connection-object-ado",
+      "use_when": "Use for opening, closing, and configuring ADODB connections."
+    },
+    {
+      "id": "ado-recordset",
+      "category": "ado",
+      "title": "Recordset object (ADO)",
+      "official_url": "https://learn.microsoft.com/en-us/sql/ado/reference/ado-api/recordset-object-ado",
+      "local_keywords": ["ADODB.Recordset", "Recordset", "EOF", "CopyFromRecordset", "cursor"],
+      "online_query": "site:learn.microsoft.com/en-us/sql/ado/reference/ado-api recordset-object-ado",
+      "use_when": "Use for recordset behavior, cursors, locks, and data retrieval."
+    },
+    {
+      "id": "ado-command",
+      "category": "ado",
+      "title": "Command object (ADO)",
+      "official_url": "https://learn.microsoft.com/en-us/sql/ado/reference/ado-api/command-object-ado",
+      "local_keywords": ["ADODB.Command", "Command", "parameters", "Execute"],
+      "online_query": "site:learn.microsoft.com/en-us/sql/ado/reference/ado-api command-object-ado",
+      "use_when": "Use for parameterized commands and stored query execution where provider-supported."
+    },
+    {
+      "id": "jet-oledb-provider",
+      "category": "provider",
+      "title": "Microsoft OLE DB Provider for Microsoft Jet",
+      "official_url": "https://learn.microsoft.com/en-us/office/client-developer/access/desktop-database-reference/microsoft-ole-db-provider-for-microsoft-jet",
+      "local_keywords": ["Jet OLEDB", "Microsoft.Jet.OLEDB.4.0", "Access", "mdb"],
+      "online_query": "site:learn.microsoft.com/en-us/office/client-developer/access/desktop-database-reference microsoft-ole-db-provider-for-microsoft-jet",
+      "use_when": "Use for legacy .mdb/Jet connection behavior."
+    },
+    {
+      "id": "odbc-oledb-provider",
+      "category": "provider",
+      "title": "Microsoft OLE DB Provider for ODBC",
+      "official_url": "https://learn.microsoft.com/en-us/office/client-developer/access/desktop-database-reference/microsoft-ole-db-provider-for-odbc",
+      "local_keywords": ["MSDASQL", "ODBC", "DSN", "DSN-less", "driver"],
+      "online_query": "site:learn.microsoft.com/en-us/office/client-developer/access/desktop-database-reference microsoft-ole-db-provider-for-odbc",
+      "use_when": "Use for ODBC-through-ADO connection strings and DSN-less connection patterns."
+    },
+    {
+      "id": "access-sql-create-table",
+      "category": "access-sql",
+      "title": "CREATE TABLE statement (Microsoft Access SQL)",
+      "official_url": "https://learn.microsoft.com/en-us/office/client-developer/access/desktop-database-reference/create-table-statement-microsoft-access-sql",
+      "local_keywords": ["Access SQL", "CREATE TABLE", "DDL", "ACE", "Jet"],
+      "online_query": "site:learn.microsoft.com/en-us/office/client-developer/access/desktop-database-reference create-table-statement-microsoft-access-sql",
+      "use_when": "Use for Access/Jet SQL DDL syntax when writing workbook-like database output."
+    },
+    {
+      "id": "sql-server-oledb-driver",
+      "category": "provider",
+      "title": "OLE DB Driver for SQL Server",
+      "official_url": "https://learn.microsoft.com/en-us/sql/connect/oledb/oledb-driver-for-sql-server",
+      "local_keywords": ["MSOLEDBSQL", "SQL Server", "OLE DB Driver", "provider"],
+      "online_query": "site:learn.microsoft.com/en-us/sql/connect/oledb/oledb-driver-for-sql-server",
+      "use_when": "Use for SQL Server OLE DB driver behavior and provider selection."
+    },
+    {
+      "id": "adomd-net",
+      "category": "adomd",
+      "title": "ADOMD.NET client functionality",
+      "official_url": "https://learn.microsoft.com/en-us/analysis-services/adomd/multidimensional-models-adomd-net-client/adomd-net-client-functionality",
+      "local_keywords": ["ADOMD", "OLAP", "MDX", "Data Model", "cube"],
+      "online_query": "site:learn.microsoft.com/en-us/analysis-services/adomd ADOMD.NET client functionality",
+      "use_when": "Use for multidimensional/cube client concepts; VBA ADOMD availability still depends on installed components."
+    }
+  ]
+}

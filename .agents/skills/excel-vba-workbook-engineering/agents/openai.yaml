@@ -1,0 +1,4 @@
+interface:
+  display_name: "Excel VBA Workbook Engineering"
+  short_description: "Create, edit, debug, and validate Excel workbooks with VBA."
+  default_prompt: "Use $excel-vba-workbook-engineering to modify and validate this Excel/VBA workbook safely."

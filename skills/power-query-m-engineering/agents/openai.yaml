@@ -1,0 +1,4 @@
+interface:
+  display_name: "Power Query M Engineering"
+  short_description: "Create, debug, refresh, and validate Power Query M workflows."
+  default_prompt: "Use $power-query-m-engineering to inspect, edit, refresh, and validate this Power Query workflow."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Power Pivot DAX Modeling"
+  short_description: "Inspect and validate Excel Data Model and DAX logic."
+  default_prompt: "Use $power-pivot-dax-modeling to inspect the model, DAX measures, and validation evidence for this workbook."

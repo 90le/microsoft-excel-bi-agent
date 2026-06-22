@@ -1,0 +1,30 @@
+{
+  "id": "deliverable-clean-copy",
+  "title": "Client-ready copied workbook cleanup with post-clean dependency verification",
+  "layer": "deliverable",
+  "evidenceMode": "sanitized-spec",
+  "originSignal": "A workbook needs a clean client-ready copy with formulas frozen and workbook dependencies removed without damaging the source.",
+  "riskPattern": "Cleanup can accidentally run on the source workbook, leave external links or queries, or remove hidden process sheets before values are frozen.",
+  "regressionChecks": [
+    "Inspect source workbook dependencies before cleanup.",
+    "Generate a cleanup plan before making destructive changes.",
+    "Run cleanup only on a copied workbook.",
+    "Verify post-clean workbook has no external links, query/model dependency, or unexpected process sheets."
+  ],
+  "packageTools": [
+    "tools/build_external_dependency_report.py",
+    "tools/build_pure_deliverable_cleanup_plan.py",
+    "tools/build_pure_deliverable_verification_report.py",
+    "tools/build_workbook_triage_report.py"
+  ],
+  "expectedEvidence": [
+    "Pre-clean dependency report lists links, connections, formulas, and package parts.",
+    "Cleanup plan lists actions and post-clean assertions.",
+    "Post-clean verification report proves the copied deliverable satisfies expected assertions."
+  ],
+  "boundaries": [
+    "Cleanup planning is non-destructive.",
+    "The package must not store customer deliverables or generated cleaned workbooks."
+  ],
+  "nextLiveWorkbookRequirement": "Add a sanitized source workbook with formulas, one external-style link, one query-like dependency, and a copied clean-output fixture."
+}

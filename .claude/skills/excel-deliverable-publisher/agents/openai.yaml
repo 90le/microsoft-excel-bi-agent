@@ -1,0 +1,4 @@
+interface:
+  display_name: "Excel Deliverable Publisher"
+  short_description: "Prepare clean client-ready Excel delivery copies."
+  default_prompt: "Use $excel-deliverable-publisher to publish this workbook as a clean client-ready deliverable and verify the output."

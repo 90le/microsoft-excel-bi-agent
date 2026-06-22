@@ -1,0 +1,105 @@
+{
+  "version": "2026-06-18",
+  "source_policy": "Official Microsoft Learn and Microsoft Support pages first. Prefer Excel Power Pivot-compatible DAX patterns unless the user explicitly targets Power BI.",
+  "entries": [
+    {
+      "id": "dax-overview",
+      "category": "dax-basics",
+      "title": "DAX overview",
+      "official_url": "https://learn.microsoft.com/en-us/dax/dax-overview",
+      "local_keywords": ["DAX", "overview", "calculated column", "measure", "Power Pivot"],
+      "online_query": "site:learn.microsoft.com/en-us/dax/dax-overview",
+      "use_when": "Use for explaining what DAX is and how formulas behave in tabular models."
+    },
+    {
+      "id": "dax-function-reference",
+      "category": "function-index",
+      "title": "DAX function reference",
+      "official_url": "https://learn.microsoft.com/en-us/dax/dax-function-reference",
+      "local_keywords": ["DAX function reference", "functions", "measure"],
+      "online_query": "site:learn.microsoft.com/en-us/dax/dax-function-reference",
+      "use_when": "Use as the first stop when a DAX function's exact page or syntax is unknown."
+    },
+    {
+      "id": "calculate",
+      "category": "filter-context",
+      "title": "CALCULATE function",
+      "official_url": "https://learn.microsoft.com/en-us/dax/calculate-function-dax",
+      "local_keywords": ["CALCULATE", "filter context", "context transition"],
+      "online_query": "site:learn.microsoft.com/en-us/dax/calculate-function-dax CALCULATE",
+      "use_when": "Use for modified filter context, context transition, and measure filter logic."
+    },
+    {
+      "id": "all",
+      "category": "filter-context",
+      "title": "ALL function",
+      "official_url": "https://learn.microsoft.com/en-us/dax/all-function-dax",
+      "local_keywords": ["ALL", "remove filters", "Excel Power Pivot compatible", "share of total"],
+      "online_query": "site:learn.microsoft.com/en-us/dax/all-function-dax ALL",
+      "use_when": "Use for Excel-compatible total denominators and clearing filters in measures."
+    },
+    {
+      "id": "allexcept",
+      "category": "filter-context",
+      "title": "ALLEXCEPT function",
+      "official_url": "https://learn.microsoft.com/en-us/dax/allexcept-function-dax",
+      "local_keywords": ["ALLEXCEPT", "keep filters", "remove filters"],
+      "online_query": "site:learn.microsoft.com/en-us/dax/allexcept-function-dax ALLEXCEPT",
+      "use_when": "Use when a measure must remove most filters but preserve selected grouping columns."
+    },
+    {
+      "id": "filter",
+      "category": "filter-context",
+      "title": "FILTER function",
+      "official_url": "https://learn.microsoft.com/en-us/dax/filter-function-dax",
+      "local_keywords": ["FILTER", "row filter", "table expression"],
+      "online_query": "site:learn.microsoft.com/en-us/dax/filter-function-dax FILTER",
+      "use_when": "Use for table filter expressions passed into CALCULATE or iterators."
+    },
+    {
+      "id": "divide",
+      "category": "math",
+      "title": "DIVIDE function",
+      "official_url": "https://learn.microsoft.com/en-us/dax/divide-function-dax",
+      "local_keywords": ["DIVIDE", "zero denominator", "ratio", "blank"],
+      "online_query": "site:learn.microsoft.com/en-us/dax/divide-function-dax DIVIDE",
+      "use_when": "Use for safe ratios where denominators can be zero or blank."
+    },
+    {
+      "id": "sumx",
+      "category": "iterator",
+      "title": "SUMX function",
+      "official_url": "https://learn.microsoft.com/en-us/dax/sumx-function-dax",
+      "local_keywords": ["SUMX", "iterator", "row context", "weighted"],
+      "online_query": "site:learn.microsoft.com/en-us/dax/sumx-function-dax SUMX",
+      "use_when": "Use for row-by-row weighted calculations over a table expression."
+    },
+    {
+      "id": "related",
+      "category": "relationships",
+      "title": "RELATED function",
+      "official_url": "https://learn.microsoft.com/en-us/dax/related-function-dax",
+      "local_keywords": ["RELATED", "relationship", "many-to-one", "lookup"],
+      "online_query": "site:learn.microsoft.com/en-us/dax/related-function-dax RELATED",
+      "use_when": "Use when a calculated column needs values from a related table through an existing relationship."
+    },
+    {
+      "id": "selectedvalue",
+      "category": "context",
+      "title": "SELECTEDVALUE function",
+      "official_url": "https://learn.microsoft.com/en-us/dax/selectedvalue-function-dax",
+      "local_keywords": ["SELECTEDVALUE", "single selection", "HASONEVALUE", "VALUES"],
+      "online_query": "site:learn.microsoft.com/en-us/dax/selectedvalue-function-dax SELECTEDVALUE",
+      "use_when": "Use for single selected values; verify Excel version support and use HASONEVALUE/VALUES fallback when needed."
+    },
+    {
+      "id": "power-pivot-excel",
+      "category": "excel-host",
+      "title": "Power Pivot in Excel",
+      "official_url": "https://support.microsoft.com/en-us/office/power-pivot-powerful-data-analysis-and-data-modeling-in-excel-a9c2c6e2-cc49-4976-a7d7-40896795d045",
+      "local_keywords": ["Power Pivot", "Excel Data Model", "relationships", "measures"],
+      "online_query": "site:support.microsoft.com/en-us/office Power Pivot Excel Data Model",
+      "use_when": "Use for Excel-hosted Power Pivot capabilities and customer-facing descriptions."
+    }
+  ]
+}

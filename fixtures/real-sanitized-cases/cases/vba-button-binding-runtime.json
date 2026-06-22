@@ -1,0 +1,30 @@
+{
+  "id": "vba-button-binding-runtime",
+  "title": "VBA button binding, macro availability, and runtime smoke",
+  "layer": "vba",
+  "evidenceMode": "sanitized-spec",
+  "originSignal": "Workbook buttons or shapes appear correct but the assigned macro is missing, renamed, hidden in another module, or fails at runtime.",
+  "riskPattern": "Static workbook layout can look correct while OnAction points to a missing macro or the VBA project cannot be accessed by automation.",
+  "regressionChecks": [
+    "Inventory workbook buttons, shapes, and OnAction targets.",
+    "Export VBA modules and lint public entry points.",
+    "Run macro import/export smoke only in Windows desktop Excel with trusted VBA project access.",
+    "Keep copied workbooks separate from source files before macro edits."
+  ],
+  "packageTools": [
+    "tools/inspect_excel_bi_workbook.py",
+    "tools/build_vba_button_binding_report.py",
+    ".agents/skills/excel-vba-workbook-engineering/scripts/export_vba.ps1",
+    ".agents/skills/excel-vba-workbook-engineering/scripts/import_vba.ps1"
+  ],
+  "expectedEvidence": [
+    "Button binding report resolves existing macros and flags missing OnAction targets.",
+    "VBA lint/export evidence lists modules, public procedures, and syntax-level concerns.",
+    "Runtime macro smoke records Windows Excel version and success/failure output."
+  ],
+  "boundaries": [
+    "OpenXML button binding checks do not compile or execute VBA.",
+    "Runtime validation requires Windows Excel and Trust Center access to the VBA project object model."
+  ],
+  "nextLiveWorkbookRequirement": "Add a sanitized xlsm with one valid button macro, one missing OnAction target, and one harmless macro smoke procedure."
+}

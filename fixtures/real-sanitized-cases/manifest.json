@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0",
+  "purpose": "Track sanitized regression cases learned from real Excel BI work without shipping customer workbooks.",
+  "boundaries": [
+    "Do not store customer workbooks, screenshots, private file paths, credentials, or business-specific rules here.",
+    "Each case records a problem shape, expected evidence, and package tools that should be considered during future work.",
+    "This library validates case definitions and tool references; live workbook correctness requires separate task-local evidence."
+  ],
+  "requiredLayers": [
+    "power-query",
+    "dax",
+    "cube-mdx",
+    "vba",
+    "deliverable",
+    "visual-qa"
+  ],
+  "cases": [
+    {
+      "id": "pq-folder-dynamic-expand-order",
+      "specPath": "cases/pq-folder-dynamic-expand-order.json"
+    },
+    {
+      "id": "dax-excel-powerpivot-compat",
+      "specPath": "cases/dax-excel-powerpivot-compat.json"
+    },
+    {
+      "id": "cube-zero-result-debug",
+      "specPath": "cases/cube-zero-result-debug.json"
+    },
+    {
+      "id": "vba-button-binding-runtime",
+      "specPath": "cases/vba-button-binding-runtime.json"
+    },
+    {
+      "id": "deliverable-clean-copy",
+      "specPath": "cases/deliverable-clean-copy.json"
+    },
+    {
+      "id": "visual-report-readability",
+      "specPath": "cases/visual-report-readability.json"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "id": "visual-report-readability",
+  "title": "Report-surface readability, clipping, and visible output QA",
+  "layer": "visual-qa",
+  "evidenceMode": "fixture-backed",
+  "originSignal": "A report workbook can be structurally valid while visible sheets are hard to read, clipped, empty, or not presentation-ready.",
+  "riskPattern": "Static formulas and links can pass while titles, labels, charts, and important numbers are visually broken in the final workbook.",
+  "regressionChecks": [
+    "Generate a sanitized report workbook with one clean report sheet, one clipped-text report sheet, and one blank report sheet.",
+    "Identify visible report sheets and key visible ranges before publish cleanup.",
+    "Detect blank or nearly blank report sheets.",
+    "Detect long text in narrow visible cells as a clipping/readability risk.",
+    "Confirm at least one clean report sheet has a chart and print area."
+  ],
+  "packageTools": [
+    "tools/create_visual_qa_fixture.py",
+    "tools/build_visual_qa_report.py",
+    "tools/inspect_excel_bi_workbook.py",
+    "tools/build_formula_quality_report.py",
+    "tools/build_workbook_controls_report.py",
+    "tools/build_workbook_triage_report.py"
+  ],
+  "expectedEvidence": [
+    "Fixture metadata records expected report sheets and expected finding codes.",
+    "Visual QA report returns readiness blocked-for-delivery for the mixed clean/risky fixture.",
+    "Visual QA report records 3 report sheets, 1 blank report sheet, 1 report sheet with chart evidence, and at least the long-text-narrow-column, blank-report-sheet, and missing-print-area finding codes.",
+    "Workbook surface inventory can still be used as supporting structural evidence."
+  ],
+  "boundaries": [
+    "This fixture is workbook-backed but still uses static OpenXML visual QA checks.",
+    "It does not render pixels, export PDF, or prove exact Excel desktop display at every zoom level.",
+    "Windows Excel COM or manual screenshot/PDF review is still required when the final claim depends on rendered appearance."
+  ],
+  "nextLiveWorkbookRequirement": "Add a Windows Excel COM or screenshot/PDF-backed visual render check for the same sanitized fixture."
+}

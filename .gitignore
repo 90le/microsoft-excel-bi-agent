@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# OS and editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+~$*.xls*
+
+# Generated distribution packages
+*.zip
+*_distribution/
+dist/
+build/
+
+# Local runtime evidence and machine-specific reports.
+# Keep these out of public repositories unless sanitized deliberately.
+docs/progress.md
+docs/validation.md
+docs/skill-sync-manifest.json
+tools/smoke-test-workbooks/
+
+# Generated Excel/PDF evidence
+*.pdf
+*.png
+*.jpg
+*.jpeg
+*.gif
+
+
+# Maintainer-only local release ledgers
+docs/master-goal.md
+docs/goal-tracking.md
+docs/iteration-protocol.md
+docs/completion-evidence.md

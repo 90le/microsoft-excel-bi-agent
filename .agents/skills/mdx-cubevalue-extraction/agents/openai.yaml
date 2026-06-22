@@ -1,0 +1,4 @@
+interface:
+  display_name: "MDX CUBEVALUE Extraction"
+  short_description: "Trace Excel CUBE formulas, MDX members, and model measures."
+  default_prompt: "Use $mdx-cubevalue-extraction to trace CUBE formulas, MDX references, and report-layer measure dependencies."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Power BI Semantic Model"
+  short_description: "Reason about Power BI semantic models and DAX portability."
+  default_prompt: "Use $power-bi-semantic-model to review this semantic model or DAX portability task and separate Power BI from Excel Power Pivot assumptions."

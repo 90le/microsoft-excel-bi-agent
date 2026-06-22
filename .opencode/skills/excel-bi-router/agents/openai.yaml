@@ -1,0 +1,4 @@
+interface:
+  display_name: "Excel BI Router"
+  short_description: "Route mixed Excel BI tasks to the right specialist skill."
+  default_prompt: "Use $excel-bi-router to identify the Excel BI layer and validation path for this workbook task."

@@ -1,0 +1,54 @@
+{
+  "name": "microsoft-excel-bi-agent-pack",
+  "version": "0.1.0+codex.20260622060709",
+  "description": "Cross-agent skills, task profiles, references, regression cases, and scripts for Microsoft Excel BI workbooks, VBA, Power Query M, Power Pivot DAX, MDX/CUBE formulas, ADO/SQL automation, deliverable publishing, workbook QA, Office diagnostics, report building, semantic model review, and sanitized fixtures.",
+  "author": {
+    "name": "Local Microsoft Excel BI Automation"
+  },
+  "license": "MIT",
+  "keywords": [
+    "excel",
+    "vba",
+    "power-query",
+    "power-pivot",
+    "dax",
+    "mdx",
+    "cubevalue",
+    "ado",
+    "sql",
+    "deliverable",
+    "qa",
+    "power-bi",
+    "reporting",
+    "fixtures",
+    "regression",
+    "visual-qa",
+    "rendered-qa",
+    "task-profiles"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Microsoft Excel BI Agent Pack",
+    "shortDescription": "Excel BI skills and task profiles for workbook engineering, BI layers, delivery, QA, diagnostics, reports, and fixtures.",
+    "longDescription": "A local plugin package for agents that need to inspect, modify, debug, validate, publish, and QA Microsoft Excel BI workbooks across VBA, Power Query M, Power Pivot DAX, CUBE/MDX formulas, ADO/SQL data access, Office environment diagnostics, Excel report building, Power BI semantic model review, sanitized fixture workflows, workbook-backed visual QA fixtures, rendered Visual QA evidence through Windows Excel COM PDF export, and real/sanitized regression-case tracking. The package includes workflow skills, concise task-profile entry points, official-documentation routing, deterministic helper scripts for Windows Excel COM plus cross-platform OpenXML inspection, and a safe regression library that captures recurring problem shapes without storing customer workbooks.",
+    "developerName": "Local Microsoft Excel BI Automation",
+    "category": "Productivity",
+    "capabilities": [
+      "Write",
+      "Files",
+      "Automation"
+    ],
+    "brandColor": "#217346",
+    "defaultPrompt": [
+      "Inspect this Excel BI workbook and identify the safest edit path.",
+      "Export and validate the VBA and Power Query in this workbook.",
+      "Debug this DAX, MDX, or CUBEVALUE workbook issue.",
+      "Publish a clean client-ready Excel deliverable with post-clean verification.",
+      "Audit this workbook for delivery risks and runtime validation boundaries.",
+      "Generate and check a sanitized workbook-backed visual QA fixture.",
+      "Export sanitized visual QA render evidence through Excel COM PDF output.",
+      "Choose the safest Excel BI task profile for this workbook request.",
+      "Run the real/sanitized case regression library before release."
+    ]
+  }
+}

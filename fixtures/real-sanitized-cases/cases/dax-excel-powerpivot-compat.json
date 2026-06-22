@@ -1,0 +1,30 @@
+{
+  "id": "dax-excel-powerpivot-compat",
+  "title": "Excel Power Pivot DAX compatibility and ratio stability",
+  "layer": "dax",
+  "evidenceMode": "sanitized-spec",
+  "originSignal": "Measures that are valid in Power BI can fail in Excel Power Pivot or become unstable when ratios divide by zero.",
+  "riskPattern": "Using Power BI-only functions, clearing filters from the wrong table, or using direct division in ratios can produce errors or misleading values in Excel.",
+  "regressionChecks": [
+    "Prefer Excel Power Pivot-compatible filter clearing patterns.",
+    "Use DIVIDE for ratio measures.",
+    "Flag version-sensitive functions before writing formulas into an Excel Data Model.",
+    "Trace downstream measure dependencies before rename or delete operations."
+  ],
+  "packageTools": [
+    ".agents/skills/power-pivot-dax-modeling/scripts/lint_dax_compat.py",
+    ".agents/skills/power-pivot-dax-modeling/scripts/analyze_dax_dependencies.py",
+    "tools/build_excel_bi_model_report.py",
+    "tools/analyze_measure_rename_impact.py"
+  ],
+  "expectedEvidence": [
+    "DAX compatibility lint report blocks unsupported formulas and records warnings for version-sensitive formulas.",
+    "DAX dependency report identifies upstream and downstream measure relationships.",
+    "Model report records tables, measures, relationships, and compatibility boundaries."
+  ],
+  "boundaries": [
+    "Static linting does not prove the business measure is semantically correct.",
+    "Final DAX behavior must be validated in the target Excel Power Pivot workbook or compatible host."
+  ],
+  "nextLiveWorkbookRequirement": "Add a sanitized model export containing compatible ratios, an intentionally unsupported function, and a downstream dependency chain."
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Excel ADO SQL Data Access"
+  short_description: "Validate Excel ADO, OLEDB, ADOMD, and workbook SQL access."
+  default_prompt: "Use $excel-ado-sql-data-access to validate the provider, connection string, SQL or MDX query, and result shape."
