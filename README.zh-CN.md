@@ -92,6 +92,7 @@ node tools/install.mjs
 ```bash
 python tools/validate-skills.py .
 python tools/validate_project_docs.py --project-root .
+python tools/validate_github_community_health.py --project-root .
 python tools/validate_task_recipes.py --project-root .
 python tools/validate_official_docs_index.py --project-root .
 python tools/build_artifact_hygiene_report.py --project-root . --require-pass
@@ -130,8 +131,11 @@ python tools\run_release_gate.py --project-root .
 - [任务配方](docs/task-recipes.md)
 - [维护目标与风险 backlog](docs/maintenance-goals.zh-CN.md)
 - [公开增长目标](docs/growth-goals.zh-CN.md)
+- [仓库治理目标](docs/repository-governance-goals.zh-CN.md)
 - [营销文案包](docs/marketing-copy.zh-CN.md)
 - [发布说明](docs/release-notes.zh-CN.md)
+- [贡献说明](CONTRIBUTING.md)
+- [安全策略](SECURITY.md)
 - [兼容性边界](docs/compatibility.md)
 - [分发检查清单](docs/distribution-checklist.md)
 - [中文一键安装 Prompt](prompts/one-click-install-prompt.zh-CN.md)

@@ -1,32 +1,33 @@
 # Current Status
 
 This is the short operational entry point for Microsoft Excel BI Agent.
-Use `docs/maintenance-goals.en-US.md` or `docs/maintenance-goals.zh-CN.md` for the public maintenance goals, risk register, and optimization backlog.
+Use `docs/maintenance-goals.en-US.md` or `docs/maintenance-goals.zh-CN.md` for the public maintenance goals, risk register, and optimization backlog. Use `docs/repository-governance-goals.en-US.md` or `docs/repository-governance-goals.zh-CN.md` for GitHub issue/PR/security intake rules.
 
 ## Current Release
 
 ```text
-v0.1.4
+v0.1.5
 ```
 
 Package cachebuster version:
 
 ```text
-0.1.4+codex.20260623173419
+0.1.5+codex.20260623175347
 ```
 
 ## Current Capability Shape
 
 - 12 canonical skills.
-- 76 package tools/scripts, including task profiles, the real/sanitized case regression runner, visual QA fixture tools, and Excel COM render-evidence export.
+- 77 package tools/scripts, including task profiles, GitHub community-health validation, the real/sanitized case regression runner, visual QA fixture tools, and Excel COM render-evidence export.
 - 14 cataloged workflows.
-- 53 release-gate check functions.
+- 54 release-gate check functions.
 - Core Excel BI skills, six upper-layer scenario skills, and maintenance task profiles are complete.
 - The real/sanitized case regression library V1 is complete for `0.1.0+codex.20260622033808`.
 - The workbook-backed sanitized Visual QA case V1 is complete for `0.1.0+codex.20260622045441`.
 - The rendered Visual QA evidence chain V1 is complete for `0.1.0+codex.20260622060709`.
 - Public maintenance goals, risk backlog, and CI-backed structural validation are complete for `v0.1.3`.
 - Public growth goals, maintainer attribution, social metadata, and reusable marketing copy are complete for `v0.1.4`.
+- GitHub community-health files, safe issue/PR intake, security reporting, and governance validation are complete for `v0.1.5`.
 
 ## Daily Entry Points
 
@@ -38,6 +39,7 @@ Package cachebuster version:
 | Install/sync all prompts | `docs/install-and-sync.md` |
 | Review maintenance goals and remaining risks | `docs/maintenance-goals.en-US.md` or `docs/maintenance-goals.zh-CN.md` |
 | Review growth goals and marketing copy | `docs/growth-goals.en-US.md`, `docs/growth-goals.zh-CN.md`, `docs/marketing-copy.en-US.md`, or `docs/marketing-copy.zh-CN.md` |
+| Review GitHub governance and contribution rules | `docs/repository-governance-goals.en-US.md`, `docs/repository-governance-goals.zh-CN.md`, `CONTRIBUTING.md`, or `SECURITY.md` |
 | Review release notes | `docs/release-notes.en-US.md` or `docs/release-notes.zh-CN.md` |
 | Choose a skill or workflow | `excel-bi-router` or `tools/run_task_profile.py` |
 | Audit a workbook | `tools/run_task_profile.py --profile audit` |

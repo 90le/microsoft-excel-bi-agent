@@ -529,6 +529,7 @@ def build_catalog(project_root: Path) -> dict[str, Any]:
             "python tools/build_completion_readiness_audit.py --project-root . --require-pass",
             "python tools/build_cross_agent_response_collection_report.py --manifest-json <forward-test-pack.json> --responses-dir <responses-dir> --out-json <collection.json>",
             "python tools/validate_project_docs.py --project-root .",
+            "python tools/validate_github_community_health.py --project-root .",
             "python tools/validate_task_recipes.py --project-root .",
         ],
         "findings": findings,

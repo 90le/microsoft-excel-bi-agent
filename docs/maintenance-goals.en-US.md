@@ -86,6 +86,7 @@ Run these after public docs, install flow, validation scripts, or skill packagin
 ```bash
 python tools/validate-skills.py .
 python tools/validate_project_docs.py --project-root .
+python tools/validate_github_community_health.py --project-root .
 python tools/validate_task_recipes.py --project-root .
 python tools/validate_official_docs_index.py --project-root .
 python tools/build_artifact_hygiene_report.py --project-root . --require-pass

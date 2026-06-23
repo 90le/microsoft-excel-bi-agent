@@ -1,0 +1,69 @@
+name: Bug report
+description: Report a reproducible issue without private workbook data.
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not upload customer workbooks, screenshots, PDFs, credentials, local private paths, generated QA reports, or unsanitized runtime evidence. Use sanitized fixtures or text-only reproduction steps.
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Privacy and artifact safety
+      options:
+        - label: I did not attach customer files, screenshots, PDFs, credentials, local private paths, generated QA reports, or unsanitized runtime evidence.
+          required: true
+        - label: Any workbook details below are sanitized or synthetic.
+          required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Install or packaging
+        - Excel/VBA workbook engineering
+        - Power Query M
+        - Power Pivot DAX
+        - MDX/CUBE formulas
+        - ADO/SQL data access
+        - Workbook QA or clean deliverables
+        - Website or documentation
+        - GitHub/CI/community health
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Sanitized reproduction
+      description: Use a synthetic workbook shape, command, fixture, or text-only steps. Do not paste private workbook content.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment and validation boundary
+      description: Include OS, agent surface, Excel availability, and whether validation was structural-only or Windows desktop Excel runtime.
+    validations:
+      required: true
+  - type: textarea
+    id: checks
+    attributes:
+      label: Checks already run
+      description: Paste public check output if available.
+      placeholder: |
+        python tools/validate-skills.py .
+        node tools/install.mjs --check

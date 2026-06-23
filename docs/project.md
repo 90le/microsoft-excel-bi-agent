@@ -8,6 +8,8 @@ Choose a language:
 - [中文维护目标](maintenance-goals.zh-CN.md)
 - [English public growth goals](growth-goals.en-US.md)
 - [中文公开增长目标](growth-goals.zh-CN.md)
+- [English repository governance goals](repository-governance-goals.en-US.md)
+- [中文仓库治理目标](repository-governance-goals.zh-CN.md)
 - [English marketing copy pack](marketing-copy.en-US.md)
 - [中文营销文案包](marketing-copy.zh-CN.md)
 - [English release notes](release-notes.en-US.md)
@@ -17,3 +19,8 @@ Site pages:
 
 - [English site](intro.html)
 - [中文站点](intro.zh-CN.html)
+
+Community:
+
+- [Contributing guide](https://github.com/90le/microsoft-excel-bi-agent/blob/main/CONTRIBUTING.md)
+- [Security policy](https://github.com/90le/microsoft-excel-bi-agent/blob/main/SECURITY.md)

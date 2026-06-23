@@ -35,6 +35,9 @@ jobs:
       - name: Validate public project docs
         run: python tools/validate_project_docs.py --project-root .
 
+      - name: Validate GitHub community health
+        run: python tools/validate_github_community_health.py --project-root .
+
       - name: Validate task recipes
         run: python tools/validate_task_recipes.py --project-root .
 

@@ -92,6 +92,7 @@ Public validation, suitable for Windows, macOS, Linux, and Git Bash:
 ```bash
 python tools/validate-skills.py .
 python tools/validate_project_docs.py --project-root .
+python tools/validate_github_community_health.py --project-root .
 python tools/validate_task_recipes.py --project-root .
 python tools/validate_official_docs_index.py --project-root .
 python tools/build_artifact_hygiene_report.py --project-root . --require-pass
@@ -130,8 +131,11 @@ python tools\run_release_gate.py --project-root .
 - [Task recipes](docs/task-recipes.md)
 - [Maintenance goals and risk backlog](docs/maintenance-goals.en-US.md)
 - [Public growth goals](docs/growth-goals.en-US.md)
+- [Repository governance goals](docs/repository-governance-goals.en-US.md)
 - [Marketing copy pack](docs/marketing-copy.en-US.md)
 - [Release notes](docs/release-notes.en-US.md)
+- [Contributing guide](CONTRIBUTING.md)
+- [Security policy](SECURITY.md)
 - [Compatibility boundaries](docs/compatibility.md)
 - [Distribution checklist](docs/distribution-checklist.md)
 - [One-click install prompt EN](prompts/one-click-install-prompt.en-US.md)

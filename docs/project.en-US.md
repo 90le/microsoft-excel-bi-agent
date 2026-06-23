@@ -84,6 +84,7 @@ Public validation:
 ```bash
 python tools/validate-skills.py .
 python tools/validate_project_docs.py --project-root .
+python tools/validate_github_community_health.py --project-root .
 python tools/validate_task_recipes.py --project-root .
 python tools/validate_official_docs_index.py --project-root .
 python tools/build_artifact_hygiene_report.py --project-root . --require-pass
@@ -102,8 +103,11 @@ python tools\run_release_gate.py --project-root .
 - [Chinese project overview](project.zh-CN.md)
 - [Maintenance goals and risk backlog](maintenance-goals.en-US.md)
 - [Public growth goals](growth-goals.en-US.md)
+- [Repository governance goals](repository-governance-goals.en-US.md)
 - [Marketing copy pack](marketing-copy.en-US.md)
 - [Release notes](release-notes.en-US.md)
+- [Contributing guide](https://github.com/90le/microsoft-excel-bi-agent/blob/main/CONTRIBUTING.md)
+- [Security policy](https://github.com/90le/microsoft-excel-bi-agent/blob/main/SECURITY.md)
 - [English site](intro.html)
 - [Chinese site](intro.zh-CN.html)
 - [Install and sync guide](install-and-sync.md)

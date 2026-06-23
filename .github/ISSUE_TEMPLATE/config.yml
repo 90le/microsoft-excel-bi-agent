@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Sensitive data or security report
+    url: https://github.com/90le/microsoft-excel-bi-agent/security/policy
+    about: Do not disclose credentials, customer workbooks, local paths, or unsanitized runtime evidence in public issues.
+  - name: Install and compatibility guide
+    url: https://90le.github.io/microsoft-excel-bi-agent/intro.html
+    about: Start here for supported install paths and runtime boundaries.

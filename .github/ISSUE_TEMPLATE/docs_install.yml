@@ -1,0 +1,43 @@
+name: Docs or install issue
+description: Report documentation, install, or website problems.
+title: "[Docs/Install]: "
+labels: ["documentation", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not attach private workbooks, screenshots, PDFs, local paths, credentials, generated QA reports, or unsanitized runtime evidence.
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Surface
+      options:
+        - README
+        - Chinese README
+        - GitHub Pages
+        - Install guide
+        - Release notes
+        - Validation output
+        - Codex marketplace install
+        - Local install
+    validations:
+      required: true
+  - type: textarea
+    id: issue
+    attributes:
+      label: What is wrong or unclear?
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What should it say or do instead?
+    validations:
+      required: true
+  - type: checkboxes
+    id: command_truth
+    attributes:
+      label: Install command safety
+      options:
+        - label: I am not requesting an npm/npx command unless the project has actually published an npm package.
+          required: true

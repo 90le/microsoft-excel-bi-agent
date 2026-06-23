@@ -1,5 +1,36 @@
 # Release Notes
 
+## v0.1.5 - GitHub Community Health And Safe Intake
+
+Release focus: reduce public collaboration risk by making issue intake, PR review, security reporting, and repository documentation surfaces safer.
+
+### Changed
+
+- Added bilingual repository governance goals with objective, constraints, boundaries, can-do/cannot-do rules, detailed goals, and high-value backlog.
+- Added `CONTRIBUTING.md`, `SECURITY.md`, issue forms, and a pull request template.
+- Added `tools/validate_github_community_health.py` and included it in `node tools/install.mjs --check` and GitHub Actions.
+- Updated public checks across docs so community-health validation is part of the release gate.
+- Bumped the plugin manifest to `0.1.5+codex.20260623175347`.
+
+### Validation
+
+Public checks:
+
+```bash
+python tools/validate-skills.py .
+python tools/validate_project_docs.py --project-root .
+python tools/validate_github_community_health.py --project-root .
+python tools/validate_task_recipes.py --project-root .
+python tools/validate_official_docs_index.py --project-root .
+python tools/build_artifact_hygiene_report.py --project-root . --require-pass
+python tools/build_goal_coverage_report.py --project-root . --require-pass
+node tools/install.mjs --check
+```
+
+### Boundary
+
+This release changes GitHub governance and public intake safety. It does not claim new Excel COM, VBA, Power Query refresh, or Power Pivot runtime proof.
+
 ## v0.1.4 - Public Growth Goals And Marketing Readiness
 
 Release focus: improve public trust, adoption clarity, social sharing, and marketing reuse without changing Excel workbook behavior.
@@ -20,6 +51,7 @@ Public checks:
 ```bash
 python tools/validate-skills.py .
 python tools/validate_project_docs.py --project-root .
+python tools/validate_github_community_health.py --project-root .
 python tools/validate_task_recipes.py --project-root .
 python tools/validate_official_docs_index.py --project-root .
 python tools/build_artifact_hygiene_report.py --project-root . --require-pass
@@ -60,6 +92,7 @@ Public checks:
 ```bash
 python tools/validate-skills.py .
 python tools/validate_project_docs.py --project-root .
+python tools/validate_github_community_health.py --project-root .
 python tools/validate_task_recipes.py --project-root .
 python tools/validate_official_docs_index.py --project-root .
 python tools/build_artifact_hygiene_report.py --project-root . --require-pass

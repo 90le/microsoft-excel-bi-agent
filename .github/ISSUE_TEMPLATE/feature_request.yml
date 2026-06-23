@@ -1,0 +1,52 @@
+name: Feature request
+description: Propose a must-worthy improvement.
+title: "[Feature]: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please keep requests grounded in real Excel BI agent workflows. Do not attach customer workbooks, screenshots, PDFs, credentials, local private paths, generated QA reports, or unsanitized runtime evidence.
+  - type: checkboxes
+    id: worth
+    attributes:
+      label: Must-worthy criteria
+      options:
+        - label: This reduces release risk, prevents false install claims, protects user data, improves validation, or makes the package easier for another agent/maintainer to operate.
+          required: true
+        - label: This can be described without private workbook data.
+          required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What recurring workflow or public repository risk does this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+    validations:
+      required: true
+  - type: textarea
+    id: boundary
+    attributes:
+      label: Boundaries and non-goals
+      description: State what this should not do, especially around private data and Excel runtime claims.
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Primary surface
+      options:
+        - Skills
+        - Tools/scripts
+        - Fixtures/regression
+        - Documentation
+        - Website/marketing
+        - GitHub/CI/community health
+        - Install/distribution
+    validations:
+      required: true

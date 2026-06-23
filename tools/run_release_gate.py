@@ -6357,6 +6357,7 @@ def main() -> int:
     checks.append(bash_syntax_check(project_root, bash_exe))
     checks.append(portable_structural_wrapper_fixture_check(project_root, bash_exe))
     checks.append(run_command([sys.executable, str(project_root / "tools" / "validate_project_docs.py"), "--project-root", str(project_root)], project_root, "project documentation consistency validation"))
+    checks.append(run_command([sys.executable, str(project_root / "tools" / "validate_github_community_health.py"), "--project-root", str(project_root)], project_root, "GitHub community health validation"))
     checks.append(run_command([sys.executable, str(project_root / "tools" / "validate_task_recipes.py"), "--project-root", str(project_root)], project_root, "task recipe documentation validation"))
     checks.append(run_command([sys.executable, str(project_root / "tools" / "validate_official_docs_index.py"), "--project-root", str(project_root)], project_root, "official documentation index validation"))
     checks.append(official_docs_drift_report_check(project_root))

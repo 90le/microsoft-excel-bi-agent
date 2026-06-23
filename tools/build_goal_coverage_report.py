@@ -65,10 +65,17 @@ AREA_REQUIREMENTS: tuple[AreaRequirement, ...] = (
         goal_terms=("Advertising readiness", "广告准备度", "Do Not Claim", "不要这样宣传"),
     ),
     AreaRequirement(
+        key="repository-governance",
+        title="Repository governance and safe public intake",
+        required_files=("CONTRIBUTING.md", "SECURITY.md", ".github/pull_request_template.md", ".github/ISSUE_TEMPLATE/config.yml", ".github/ISSUE_TEMPLATE/bug_report.yml", ".github/ISSUE_TEMPLATE/feature_request.yml", ".github/ISSUE_TEMPLATE/docs_install.yml", "tools/validate_github_community_health.py", "docs/repository-governance-goals.en-US.md", "docs/repository-governance-goals.zh-CN.md", "docs/repository-governance-goals.md"),
+        public_doc_terms=("CONTRIBUTING.md", "SECURITY.md", "repository-governance-goals.en-US.md", "repository-governance-goals.zh-CN.md"),
+        goal_terms=("Safe issue intake", "安全 issue 入口", "PR review discipline", "PR 审阅纪律"),
+    ),
+    AreaRequirement(
         key="release-versioning",
         title="Release notes and version visibility",
         required_files=("docs/release-notes.en-US.md", "docs/release-notes.zh-CN.md", "docs/release-notes.md", ".codex-plugin/plugin.json"),
-        public_doc_terms=("release-notes.en-US.md", "release-notes.zh-CN.md", "v0.1.4"),
+        public_doc_terms=("release-notes.en-US.md", "release-notes.zh-CN.md", "v0.1.5"),
         goal_terms=("release decisions", "发布判断"),
     ),
     AreaRequirement(
@@ -197,6 +204,8 @@ def public_doc_text(project_root: Path) -> str:
         "docs/task-recipes.md",
         "docs/intro.html",
         "docs/intro.zh-CN.html",
+        "CONTRIBUTING.md",
+        "SECURITY.md",
     ]
     return "\n".join(read_text(project_root / path) for path in paths)
 
@@ -209,6 +218,9 @@ def goal_doc_text(project_root: Path) -> str:
         "docs/growth-goals.en-US.md",
         "docs/growth-goals.zh-CN.md",
         "docs/growth-goals.md",
+        "docs/repository-governance-goals.en-US.md",
+        "docs/repository-governance-goals.zh-CN.md",
+        "docs/repository-governance-goals.md",
         "docs/marketing-copy.en-US.md",
         "docs/marketing-copy.zh-CN.md",
         "docs/marketing-copy.md",

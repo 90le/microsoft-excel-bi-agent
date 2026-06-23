@@ -1,5 +1,36 @@
 # 发布说明
 
+## v0.1.5 - GitHub 社区健康与安全入口
+
+发布重点：通过更安全的 issue 入口、PR 审阅、安全报告和仓库文档表面，降低公开协作风险。
+
+### 变更
+
+- 新增中英文仓库治理目标，包含目标、约束、边界、可以做/不能做、详细 goal 和高价值 backlog。
+- 新增 `CONTRIBUTING.md`、`SECURITY.md`、issue 表单和 pull request 模板。
+- 新增 `tools/validate_github_community_health.py`，并接入 `node tools/install.mjs --check` 和 GitHub Actions。
+- 更新公开校验文档，使社区健康校验成为发布门禁的一部分。
+- 插件 manifest 版本升至 `0.1.5+codex.20260623175347`。
+
+### 校验
+
+公开校验：
+
+```bash
+python tools/validate-skills.py .
+python tools/validate_project_docs.py --project-root .
+python tools/validate_github_community_health.py --project-root .
+python tools/validate_task_recipes.py --project-root .
+python tools/validate_official_docs_index.py --project-root .
+python tools/build_artifact_hygiene_report.py --project-root . --require-pass
+python tools/build_goal_coverage_report.py --project-root . --require-pass
+node tools/install.mjs --check
+```
+
+### 边界
+
+本次发布修改 GitHub 仓库治理和公开入口安全，不声称新增 Excel COM、VBA、Power Query 刷新或 Power Pivot 运行时证明。
+
 ## v0.1.4 - 公开增长目标与营销准备
 
 发布重点：提升公开信任、采用清晰度、社交分享和营销复用，不改变 Excel 工作簿处理行为。
@@ -20,6 +51,7 @@
 ```bash
 python tools/validate-skills.py .
 python tools/validate_project_docs.py --project-root .
+python tools/validate_github_community_health.py --project-root .
 python tools/validate_task_recipes.py --project-root .
 python tools/validate_official_docs_index.py --project-root .
 python tools/build_artifact_hygiene_report.py --project-root . --require-pass
@@ -60,6 +92,7 @@ python tools/run_release_gate.py --project-root . --profile structural
 ```bash
 python tools/validate-skills.py .
 python tools/validate_project_docs.py --project-root .
+python tools/validate_github_community_health.py --project-root .
 python tools/validate_task_recipes.py --project-root .
 python tools/validate_official_docs_index.py --project-root .
 python tools/build_artifact_hygiene_report.py --project-root . --require-pass

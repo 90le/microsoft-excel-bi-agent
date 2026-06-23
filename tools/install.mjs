@@ -61,6 +61,7 @@ function requireRepoShape() {
 function runChecks(py) {
   run(py, ["tools/validate-skills.py", "."]);
   run(py, ["tools/validate_project_docs.py", "--project-root", "."]);
+  run(py, ["tools/validate_github_community_health.py", "--project-root", "."]);
   run(py, ["tools/validate_task_recipes.py", "--project-root", "."]);
   run(py, ["tools/validate_official_docs_index.py", "--project-root", "."]);
   run(py, ["tools/build_artifact_hygiene_report.py", "--project-root", ".", "--require-pass"]);
