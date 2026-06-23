@@ -2,12 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="refresh" content="0; url=./intro.html">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Microsoft Excel BI Agent</title>
-  <link rel="canonical" href="./intro.html">
+  <script>
+    const lang = (navigator.language || navigator.userLanguage || "").toLowerCase();
+    const target = lang.startsWith("zh") ? "./intro.zh-CN.html" : "./intro.html";
+    window.location.replace(target);
+  </script>
 </head>
 <body>
-  <p><a href="./intro.html">Open Microsoft Excel BI Agent</a></p>
+  <p><a href="./intro.html">English</a> | <a href="./intro.zh-CN.html">中文</a></p>
 </body>
 </html>
