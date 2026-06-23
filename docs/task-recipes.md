@@ -1,6 +1,6 @@
 # Task Recipes
 
-These recipes show how an agent should use `microsoft-excel-bi-agent-pack` on real Excel BI work without shipping customer-specific workbooks or reports inside the plugin.
+These recipes show how an agent should use Microsoft Excel BI Agent on real Excel BI work without shipping customer-specific workbooks or reports inside the plugin.
 
 The release gate validates this document with `tools/validate_task_recipes.py`. Keep package paths real, mention every canonical skill, and keep the required recipe headings intact so another agent can trust this as an executable routing guide rather than stale prose.
 

@@ -40,6 +40,13 @@ tools/smoke-test-workbooks/
 *.jpeg
 *.gif
 
+# Public repository marketing assets are intentionally versioned.
+!assets/
+!assets/*.png
+!assets/*.jpg
+!assets/*.jpeg
+!assets/*.gif
+
 
 # Maintainer-only local release ledgers
 docs/master-goal.md

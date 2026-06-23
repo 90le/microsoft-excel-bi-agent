@@ -28,7 +28,7 @@
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Microsoft Excel BI Agent Pack",
+    "displayName": "Microsoft Excel BI Agent",
     "shortDescription": "Excel BI skills and task profiles for workbook engineering, BI layers, delivery, QA, diagnostics, reports, and fixtures.",
     "longDescription": "A local plugin package for agents that need to inspect, modify, debug, validate, publish, and QA Microsoft Excel BI workbooks across VBA, Power Query M, Power Pivot DAX, CUBE/MDX formulas, ADO/SQL data access, Office environment diagnostics, Excel report building, Power BI semantic model review, sanitized fixture workflows, workbook-backed visual QA fixtures, rendered Visual QA evidence through Windows Excel COM PDF export, and real/sanitized regression-case tracking. The package includes workflow skills, concise task-profile entry points, official-documentation routing, deterministic helper scripts for Windows Excel COM plus cross-platform OpenXML inspection, and a safe regression library that captures recurring problem shapes without storing customer workbooks.",
     "developerName": "Local Microsoft Excel BI Automation",

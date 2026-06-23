@@ -1,6 +1,6 @@
 # Install And Sync
 
-This file is the constrained install path for `microsoft-excel-bi-agent-pack`.
+This file is the constrained install path for Microsoft Excel BI Agent.
 Do not create new install flows unless one of these commands cannot support the target runtime.
 
 For a recipient who receives the whole plugin folder, start with `README.md` or `docs/recipient-guide.zh-CN.md`, then use the commands in this file. If another agent will perform the installation, copy `prompts/one-click-install-prompt.zh-CN.md` to that agent.

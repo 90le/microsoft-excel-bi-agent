@@ -1,10 +1,10 @@
-# Microsoft Excel BI Agent Pack 使用说明
+# Microsoft Excel BI Agent 使用说明
 
 本说明面向收到插件包的使用者。拿到完整文件夹或 zip 后，按下面步骤安装即可。
 
 ## 这个包是什么
 
-`microsoft-excel-bi-agent-pack` 是一套给 AI agent 使用的 Excel BI 工作技能包。它把 Excel/VBA、Power Query M、Power Pivot DAX、MDX/CUBE、ADO/SQL、交付物清理、工作簿 QA、Office 环境诊断等常见工作流程整理成标准技能和脚本。
+Microsoft Excel BI Agent 是一套给 AI agent 使用的 Excel BI 工作技能包。它把 Excel/VBA、Power Query M、Power Pivot DAX、MDX/CUBE、ADO/SQL、交付物清理、工作簿 QA、Office 环境诊断等常见工作流程整理成标准技能和脚本。
 
 适用对象：
 

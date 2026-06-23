@@ -3,7 +3,7 @@
 把下面这段完整复制给 Codex、Claude、OpenCode 或其他具备本地文件操作能力的 agent。
 
 ```text
-你是本机插件安装助手。请帮我安装 Microsoft Excel BI Agent Pack。
+你是本机插件安装助手。请帮我安装 Microsoft Excel BI Agent。
 
 目标：
 1. 安装 Codex 插件。
@@ -12,7 +12,7 @@
 4. 汇总安装结果和失败原因。
 
 插件位置：
-请使用当前打开的插件目录；如果我提供的是 zip，请先解压，然后进入解压后的 microsoft_excel_bi_agent_pack 目录。
+请使用当前打开的插件目录；如果我提供的是 zip，请先解压，然后进入解压后的 microsoft-excel-bi-agent 目录。
 
 必须遵守：
 - 不要手动编辑 marketplace.json。
@@ -50,7 +50,7 @@ python tools\run_release_gate.py --project-root .
 ## 最短版
 
 ```text
-请进入 microsoft_excel_bi_agent_pack 目录，执行安装、skills 同步和 structural 验证：
+请进入 microsoft-excel-bi-agent 目录，执行安装、skills 同步和 structural 验证：
 python tools\deploy-local-plugin.py --project-root . --replace --install
 python tools\sync-skills.py --project-root . --all-project-mirrors --codex-user --replace
 python tools\run_release_gate.py --project-root . --profile structural

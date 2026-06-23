@@ -2,7 +2,7 @@
 
 ## Objective
 
-`microsoft-excel-bi-agent-pack` is an open-source cross-agent Excel BI skill pack for agents that work on Excel workbooks, VBA, Power Query M, Power Pivot DAX, MDX/CUBE formulas, ADO/SQL, workbook QA, clean deliverables, report building, Office diagnostics, and sanitized fixtures.
+Microsoft Excel BI Agent is an open-source cross-agent Excel BI skill pack for agents that work on Excel workbooks, VBA, Power Query M, Power Pivot DAX, MDX/CUBE formulas, ADO/SQL, workbook QA, clean deliverables, report building, Office diagnostics, and sanitized fixtures.
 
 Current release: `0.1.0+codex.20260622060709`.
 
@@ -21,7 +21,7 @@ Current release: `0.1.0+codex.20260622060709`.
 ## Canonical Structure
 
 ```text
-microsoft-excel-bi-agent-pack/
+microsoft-excel-bi-agent/
   README.md
   LICENSE
   .codex-plugin/plugin.json

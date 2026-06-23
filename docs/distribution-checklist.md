@@ -1,6 +1,6 @@
 # Distribution Checklist
 
-Use this before sending `microsoft_excel_bi_agent_pack` to another user or another machine.
+Use this before sending Microsoft Excel BI Agent to another user or another machine.
 
 ## Package Shape
 

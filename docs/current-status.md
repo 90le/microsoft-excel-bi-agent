@@ -1,6 +1,6 @@
 # Current Status
 
-This is the short operational entry point for `microsoft-excel-bi-agent-pack`.
+This is the short operational entry point for Microsoft Excel BI Agent.
 Use `docs/progress.md` as the chronological ledger, not as the first file to read.
 
 ## Current Release
