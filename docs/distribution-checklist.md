@@ -2,6 +2,8 @@
 
 Use this before sending Microsoft Excel BI Agent to another user or another machine.
 
+GitHub Actions runs public structural validation on pushes and pull requests. These local checks mirror that public CI boundary and do not require desktop Excel.
+
 ## Package Shape
 
 - Send the whole plugin folder, not only `skills/`.
@@ -14,10 +16,19 @@ Use this before sending Microsoft Excel BI Agent to another user or another mach
 ## Required Pre-Send Checks
 
 ```powershell
-python tools\sync-skills.py --project-root . --all-project-mirrors --codex-user --check-drift
+python tools\validate-skills.py .
 python tools\validate_project_docs.py --project-root .
+python tools\validate_task_recipes.py --project-root .
+python tools\validate_official_docs_index.py --project-root .
 python tools\build_artifact_hygiene_report.py --project-root . --require-pass
-python tools\run_release_gate.py --project-root . --profile structural
+python tools\build_goal_coverage_report.py --project-root . --require-pass
+node tools\install.mjs --check
+```
+
+Run this additional drift check after changing `.agents/skills/`:
+
+```powershell
+python tools\sync-skills.py --project-root . --all-project-mirrors --codex-user --check-drift
 ```
 
 Run the full gate only on a Windows machine with desktop Excel when Excel runtime behavior changed:

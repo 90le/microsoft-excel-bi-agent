@@ -122,6 +122,8 @@ h2 { margin: 0 0 16px; font-size: clamp(28px, 3.8vw, 42px); line-height: 1.1; }
 .tile { border-radius: 12px; padding: 20px; }
 .tile h3 { margin: 0 0 8px; font-size: 18px; }
 .tile p { margin: 0; color: var(--muted); }
+.tile a { color: var(--accent); text-decoration: none; font-weight: 850; }
+.release-grid { margin-top: 22px; }
 .matrix { margin-top: 30px; overflow: hidden; border-radius: 14px; }
 .row { display: grid; grid-template-columns: 280px 1fr; border-top: 1px solid rgba(255,255,255,.1); }
 .row:first-child { border-top: 0; }
@@ -140,6 +142,8 @@ code { color: #dcf3ff; }
   color: #ffe4bb;
 }
 footer { color: var(--muted); padding: 44px 0 60px; border-top: 1px solid rgba(255,255,255,.08); }
+.footer-links { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 10px; }
+.footer-links a { color: var(--accent); text-decoration: none; }
 @media (max-width: 880px) {
   .nav { align-items: flex-start; flex-direction: column; }
   .hero { grid-template-columns: minmax(0, 1fr); padding-top: 28px; gap: 30px; }

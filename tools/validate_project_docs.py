@@ -1,43 +1,105 @@
 #!/usr/bin/env python3
-"""Validate project documentation consistency for the Excel BI plugin."""
+"""Validate public project documentation for Microsoft Excel BI Agent.
+
+The public repository intentionally excludes maintainer-only release ledgers,
+machine-specific runtime evidence, customer workbooks, and generated QA
+reports. This validator checks the documentation contract that is actually
+shipped to users and contributors.
+"""
 
 from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
 from pathlib import Path
+from typing import Any
 
 
-REQUIRED_DOCS = [
-    "docs/master-goal.md",
+PUBLIC_DOCS = [
+    "README.md",
+    "README.zh-CN.md",
+    "docs/project.md",
+    "docs/project.en-US.md",
+    "docs/project.zh-CN.md",
     "docs/current-status.md",
+    "docs/install-and-sync.md",
+    "docs/distribution-checklist.md",
+    "docs/compatibility.md",
+    "docs/task-recipes.md",
+    "docs/maintenance-goals.md",
+    "docs/maintenance-goals.en-US.md",
+    "docs/maintenance-goals.zh-CN.md",
+    "docs/release-notes.md",
+    "docs/release-notes.en-US.md",
+    "docs/release-notes.zh-CN.md",
+    "docs/intro.html",
+    "docs/intro.zh-CN.html",
+    "docs/index.html",
+]
+
+REAL_INSTALL_COMMANDS = [
+    "codex plugin marketplace add 90le/microsoft-excel-bi-agent",
+    "codex plugin add microsoft-excel-bi-agent-pack@microsoft-excel-bi-agent",
+    "node tools/install.mjs",
+]
+
+PUBLIC_CHECK_COMMANDS = [
+    "python tools/validate-skills.py .",
+    "python tools/validate_project_docs.py --project-root .",
+    "python tools/validate_task_recipes.py --project-root .",
+    "python tools/validate_official_docs_index.py --project-root .",
+    "python tools/build_artifact_hygiene_report.py --project-root . --require-pass",
+    "python tools/build_goal_coverage_report.py --project-root . --require-pass",
+    "node tools/install.mjs --check",
+]
+
+EN_GOAL_HEADINGS = [
+    "## Objective",
+    "## Constraints",
+    "## Boundaries",
+    "## Can Do",
+    "## Cannot Do",
+    "## Detailed Goals",
+    "## Risk Register",
+    "## Optimization Backlog",
+    "## Required Public Checks",
+    "## Must-Worthy Optimization Rule",
+]
+
+ZH_GOAL_HEADINGS = [
+    "## 目标",
+    "## 约束",
+    "## 边界",
+    "## 可以做",
+    "## 不能做",
+    "## 详细 Goal",
+    "## 风险清单",
+    "## 优化 Backlog",
+    "## 必跑公开校验",
+    "## 必须值得的优化规则",
+]
+
+MOJIBAKE_MARKERS = (
+    "涓",
+    "绔",
+    "椤圭",
+    "瀹夎",
+    "鏍￠",
+    "闁",
+    "鐎",
+    "閻",
+)
+
+PRIVATE_LEDGER_LINKS = (
+    "docs/master-goal.md",
     "docs/goal-tracking.md",
     "docs/iteration-protocol.md",
     "docs/progress.md",
     "docs/validation.md",
     "docs/completion-evidence.md",
-    "docs/task-recipes.md",
-    "docs/project.md",
-    "docs/real-case-regression.md",
-]
-
-VERSION_RE = re.compile(r"0\.1\.0\+codex(?:\.local-|\.)\d{14}")
-CURRENT_STATUS_RE = re.compile(r"## \d{4}-\d{2}-\d{2} Current Active Status")
-THREAD_GOAL_ID = "019e96b6-393d-77b1-bc12-456d6083d4d6"
-ACTIVE_OBJECTIVE_FRAGMENT = "rendered Visual QA evidence chain V1"
-MOJIBAKE_MARKERS = (
-    "閹",
-    "閵",
-    "閿",
-    "閻",
-    "妤",
-    "瀵",
-    "鐠",
-    "閼",
-    "瀹屾",
-    "鑳藉",
 )
 
 
@@ -45,129 +107,190 @@ def read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def plugin_version(project_root: Path) -> str:
-    manifest = project_root / ".codex-plugin" / "plugin.json"
-    data = json.loads(read_text(manifest))
-    value = str(data.get("version", "")).strip()
-    if not value:
-        raise ValueError(f"missing version in {manifest}")
-    return value
+def rel(path: str) -> Path:
+    return Path(path.replace("/", os.sep))
 
 
-def latest_current_status(progress_text: str) -> str:
-    matches = list(CURRENT_STATUS_RE.finditer(progress_text))
-    if not matches:
-        return ""
-    start = matches[-1].start()
-    next_header = progress_text.find("\n## ", start + 1)
-    if next_header == -1:
-        return progress_text[start:]
-    return progress_text[start:next_header]
+def contains_cjk(text: str) -> bool:
+    return bool(re.search(r"[\u4e00-\u9fff]", text))
 
 
-def find_mojibake(project_root: Path) -> list[dict[str, object]]:
-    findings: list[dict[str, object]] = []
-    for doc_path in REQUIRED_DOCS:
-        path = project_root / doc_path
-        if not path.is_file():
-            continue
-        text = read_text(path)
-        markers = sorted(marker for marker in MOJIBAKE_MARKERS if marker in text)
-        if markers:
-            findings.append({"path": doc_path, "markers": markers})
-    return findings
+def has_mojibake(text: str) -> list[str]:
+    return [marker for marker in MOJIBAKE_MARKERS if marker in text]
 
 
-def validate(project_root: Path) -> dict[str, object]:
+def check_required_links(label: str, text: str, links: list[str], errors: list[str]) -> None:
+    for link in links:
+        if link not in text:
+            errors.append(f"{label} does not link {link}")
+
+
+def validate(project_root: Path) -> dict[str, Any]:
+    project_root = project_root.expanduser().resolve()
     errors: list[str] = []
     warnings: list[str] = []
 
-    try:
-        version = plugin_version(project_root)
-    except Exception as exc:
-        version = ""
-        errors.append(str(exc))
-
-    missing_docs = [path for path in REQUIRED_DOCS if not (project_root / path).is_file()]
+    missing_docs = [path for path in PUBLIC_DOCS if not (project_root / rel(path)).is_file()]
     for path in missing_docs:
-        errors.append(f"missing required project document: {path}")
+        errors.append(f"missing public document: {path}")
 
-    validation_text = read_text(project_root / "docs" / "validation.md") if (project_root / "docs" / "validation.md").is_file() else ""
-    evidence_text = read_text(project_root / "docs" / "completion-evidence.md") if (project_root / "docs" / "completion-evidence.md").is_file() else ""
-    progress_text = read_text(project_root / "docs" / "progress.md") if (project_root / "docs" / "progress.md").is_file() else ""
-    project_text = read_text(project_root / "docs" / "project.md") if (project_root / "docs" / "project.md").is_file() else ""
-    current_status_text = read_text(project_root / "docs" / "current-status.md") if (project_root / "docs" / "current-status.md").is_file() else ""
-    master_goal_text = read_text(project_root / "docs" / "master-goal.md") if (project_root / "docs" / "master-goal.md").is_file() else ""
-    goal_tracking_text = read_text(project_root / "docs" / "goal-tracking.md") if (project_root / "docs" / "goal-tracking.md").is_file() else ""
+    texts: dict[str, str] = {}
+    for path in PUBLIC_DOCS:
+        full_path = project_root / rel(path)
+        if full_path.is_file():
+            texts[path] = read_text(full_path)
 
-    mojibake_findings = find_mojibake(project_root)
-    for finding in mojibake_findings:
-        errors.append(
-            f"{finding['path']} contains possible Chinese mojibake markers: "
-            f"{', '.join(str(marker) for marker in finding['markers'])}"
-        )
+    for path, text in texts.items():
+        markers = has_mojibake(text)
+        if markers:
+            errors.append(f"{path} contains possible Chinese mojibake markers: {', '.join(markers)}")
 
-    if version:
-        for label, text in [
-            ("docs/validation.md", validation_text),
-            ("docs/completion-evidence.md", evidence_text),
-            ("docs/progress.md", progress_text),
+    readme_en = texts.get("README.md", "")
+    readme_zh = texts.get("README.zh-CN.md", "")
+    install_doc = texts.get("docs/install-and-sync.md", "")
+    distribution_doc = texts.get("docs/distribution-checklist.md", "")
+    project_index = texts.get("docs/project.md", "")
+    project_en = texts.get("docs/project.en-US.md", "")
+    project_zh = texts.get("docs/project.zh-CN.md", "")
+    current_status = texts.get("docs/current-status.md", "")
+    goals_en = texts.get("docs/maintenance-goals.en-US.md", "")
+    goals_zh = texts.get("docs/maintenance-goals.zh-CN.md", "")
+    goals_index = texts.get("docs/maintenance-goals.md", "")
+    release_notes_en = texts.get("docs/release-notes.en-US.md", "")
+    release_notes_zh = texts.get("docs/release-notes.zh-CN.md", "")
+    release_notes_index = texts.get("docs/release-notes.md", "")
+    intro_en = texts.get("docs/intro.html", "")
+    intro_zh = texts.get("docs/intro.zh-CN.html", "")
+    site_index = texts.get("docs/index.html", "")
+
+    if contains_cjk(readme_en.replace("[中文]", "")):
+        warnings.append("README.md contains CJK characters outside the language switcher")
+    if not contains_cjk(readme_zh):
+        errors.append("README.zh-CN.md does not appear to contain Chinese text")
+
+    check_required_links(
+        "README.md",
+        readme_en,
+        [
+            "README.zh-CN.md",
+            "docs/project.en-US.md",
+            "docs/maintenance-goals.en-US.md",
+            "docs/release-notes.en-US.md",
+            "docs/install-and-sync.md",
+            "docs/intro.html",
+        ],
+        errors,
+    )
+    check_required_links(
+        "README.zh-CN.md",
+        readme_zh,
+        [
+            "README.md",
+            "docs/project.zh-CN.md",
+            "docs/maintenance-goals.zh-CN.md",
+            "docs/release-notes.zh-CN.md",
+            "docs/install-and-sync.md",
+            "docs/intro.zh-CN.html",
+        ],
+        errors,
+    )
+
+    for command in REAL_INSTALL_COMMANDS:
+        if command not in readme_en or command not in readme_zh or command not in install_doc:
+            errors.append(f"real install command is not present in README EN, README ZH, and install guide: {command}")
+
+    fake_current_commands = [
+        "npx microsoft-excel-bi-agent",
+        "npm install microsoft-excel-bi-agent",
+    ]
+    for path in ["README.md", "README.zh-CN.md", "docs/intro.html", "docs/intro.zh-CN.html"]:
+        text = texts.get(path, "")
+        for command in fake_current_commands:
+            if command in text:
+                errors.append(f"{path} advertises unsupported current command: {command}")
+
+    check_required_links(
+        "docs/project.md",
+        project_index,
+        [
+            "project.en-US.md",
+            "project.zh-CN.md",
+            "maintenance-goals.en-US.md",
+            "maintenance-goals.zh-CN.md",
+            "release-notes.en-US.md",
+            "release-notes.zh-CN.md",
+            "intro.html",
+            "intro.zh-CN.html",
+        ],
+        errors,
+    )
+    check_required_links("docs/project.en-US.md", project_en, ["maintenance-goals.en-US.md", "install-and-sync.md"], errors)
+    check_required_links("docs/project.zh-CN.md", project_zh, ["maintenance-goals.zh-CN.md", "install-and-sync.md"], errors)
+    check_required_links("docs/maintenance-goals.md", goals_index, ["maintenance-goals.en-US.md", "maintenance-goals.zh-CN.md"], errors)
+    check_required_links("docs/release-notes.md", release_notes_index, ["release-notes.en-US.md", "release-notes.zh-CN.md"], errors)
+    check_required_links("docs/current-status.md", current_status, ["docs/maintenance-goals.en-US.md", "docs/maintenance-goals.zh-CN.md"], errors)
+
+    for heading in EN_GOAL_HEADINGS:
+        if heading not in goals_en:
+            errors.append(f"docs/maintenance-goals.en-US.md missing heading: {heading}")
+    for heading in ZH_GOAL_HEADINGS:
+        if heading not in goals_zh:
+            errors.append(f"docs/maintenance-goals.zh-CN.md missing heading: {heading}")
+
+    for command in PUBLIC_CHECK_COMMANDS:
+        if command not in goals_en or command not in goals_zh:
+            errors.append(f"maintenance goals do not document public check: {command}")
+        if command not in release_notes_en or command not in release_notes_zh:
+            errors.append(f"release notes do not document public check: {command}")
+
+    for path, text in [("docs/release-notes.en-US.md", release_notes_en), ("docs/release-notes.zh-CN.md", release_notes_zh)]:
+        if "v0.1.3" not in text or "0.1.3+codex.20260623171436" not in text:
+            errors.append(f"{path} does not document the v0.1.3 release and plugin version")
+
+    for command in PUBLIC_CHECK_COMMANDS:
+        if command not in distribution_doc.replace("\\", "/"):
+            errors.append(f"distribution checklist does not document public check: {command}")
+        if command not in install_doc.replace("\\", "/"):
+            errors.append(f"install guide does not document public check: {command}")
+
+    for private_link in PRIVATE_LEDGER_LINKS:
+        for path in [
+            "README.md",
+            "README.zh-CN.md",
+            "docs/project.md",
+            "docs/project.en-US.md",
+            "docs/project.zh-CN.md",
+            "docs/current-status.md",
+            "docs/distribution-checklist.md",
+            "docs/maintenance-goals.en-US.md",
+            "docs/maintenance-goals.zh-CN.md",
         ]:
-            if version not in text:
-                errors.append(f"{label} does not contain current plugin version {version}")
+            if private_link in texts.get(path, ""):
+                errors.append(f"{path} links maintainer-only ignored document: {private_link}")
 
-        cache_path = f"microsoft-excel-bi-agent-pack\\{version}"
-        cache_path_alt = f"microsoft-excel-bi-agent-pack/{version}"
-        if cache_path not in validation_text and cache_path_alt not in validation_text:
-            errors.append(f"docs/validation.md does not mention installed cache path for {version}")
+    for path, text in [("docs/intro.html", intro_en), ("docs/intro.zh-CN.html", intro_zh)]:
+        if 'name="viewport"' not in text:
+            errors.append(f"{path} is missing responsive viewport meta")
+        if "<html" not in text or "</html>" not in text:
+            errors.append(f"{path} does not look like a complete HTML page")
+        if "v0.1.3" not in text:
+            errors.append(f"{path} does not expose the latest release")
+        if "release-notes" not in text:
+            errors.append(f"{path} does not link release notes")
+    if 'lang="en"' not in intro_en:
+        errors.append("docs/intro.html does not declare lang=\"en\"")
+    if 'lang="zh-CN"' not in intro_zh:
+        errors.append("docs/intro.zh-CN.html does not declare lang=\"zh-CN\"")
+    if "navigator.language" not in site_index or "intro.zh-CN.html" not in site_index or "intro.html" not in site_index:
+        errors.append("docs/index.html does not contain the browser-language redirect contract")
 
-    current_status = latest_current_status(progress_text)
-    if not current_status:
-        errors.append("docs/progress.md has no Current Active Status section")
-    elif version and version not in current_status:
-        errors.append("latest Current Active Status does not contain current plugin version")
-
-    if "docs/task-recipes.md" not in project_text:
-        errors.append("docs/project.md does not link docs/task-recipes.md")
-    if "docs/current-status.md" not in project_text:
-        errors.append("docs/project.md does not link docs/current-status.md")
-    if "docs/completion-evidence.md" not in project_text:
-        errors.append("docs/project.md does not link docs/completion-evidence.md")
-    if "docs/real-case-regression.md" not in project_text:
-        errors.append("docs/project.md does not link docs/real-case-regression.md")
-    if version and version not in current_status_text:
-        errors.append(f"docs/current-status.md does not contain current plugin version {version}")
-    if "docs/goal-tracking.md" not in master_goal_text:
-        errors.append("docs/master-goal.md does not link docs/goal-tracking.md")
-    if THREAD_GOAL_ID not in master_goal_text or THREAD_GOAL_ID not in goal_tracking_text:
-        errors.append(f"runtime goal id {THREAD_GOAL_ID} is not recorded in both master-goal and goal-tracking docs")
-    if ACTIVE_OBJECTIVE_FRAGMENT not in master_goal_text or ACTIVE_OBJECTIVE_FRAGMENT not in goal_tracking_text:
-        errors.append("active runtime maintenance objective is not recorded in both master-goal and goal-tracking docs")
-    if "Goal Control Checklist" not in goal_tracking_text:
-        errors.append("docs/goal-tracking.md does not contain the Goal Control Checklist")
-    for required in [
-        "docs/progress.md",
-        "docs/validation.md",
-        "docs/completion-evidence.md",
-        "docs/real-case-regression.md",
-        "tools/run_case_regression.py",
-        "tools/build_goal_coverage_report.py",
-        "tools/run_release_gate.py",
-    ]:
-        if required not in goal_tracking_text:
-            errors.append(f"docs/goal-tracking.md does not bind required goal-control item: {required}")
-
-    historical_versions = sorted(set(VERSION_RE.findall(progress_text)))
-    if len(historical_versions) < 5:
-        warnings.append("progress history contains fewer version markers than expected for this project")
-
-    result = {
+    result: dict[str, Any] = {
         "status": "pass" if not errors else "fail",
-        "version": version,
-        "requiredDocs": REQUIRED_DOCS,
-        "historicalVersionCount": len(historical_versions),
-        "latestCurrentStatus": current_status.strip().splitlines()[:6],
-        "mojibakeFindings": mojibake_findings,
+        "projectRoot": str(project_root),
+        "publicDocs": PUBLIC_DOCS,
+        "publicDocCount": len(PUBLIC_DOCS),
+        "realInstallCommands": REAL_INSTALL_COMMANDS,
+        "publicCheckCommands": PUBLIC_CHECK_COMMANDS,
         "errors": errors,
         "warnings": warnings,
     }
@@ -180,8 +303,7 @@ def main() -> int:
     parser.add_argument("--out-json", default="", help="Write validation report JSON")
     args = parser.parse_args()
 
-    project_root = Path(args.project_root).expanduser().resolve()
-    result = validate(project_root)
+    result = validate(Path(args.project_root))
 
     if args.out_json:
         out_path = Path(args.out_json).expanduser().resolve()
@@ -191,10 +313,12 @@ def main() -> int:
     if result["status"] == "pass":
         print(
             "Project docs validation OK: "
-            f"version={result['version']}, "
-            f"requiredDocs={len(result['requiredDocs'])}, "
-            f"historicalVersions={result['historicalVersionCount']}"
+            f"publicDocs={result['publicDocCount']}, "
+            f"installCommands={len(result['realInstallCommands'])}, "
+            f"publicChecks={len(result['publicCheckCommands'])}"
         )
+        for warning in result["warnings"]:
+            print(f"warning: {warning}", file=sys.stderr)
         return 0
 
     print("Project docs validation failed:", file=sys.stderr)

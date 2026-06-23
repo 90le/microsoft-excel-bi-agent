@@ -1,6 +1,6 @@
 {
   "name": "microsoft-excel-bi-agent-pack",
-  "version": "0.1.0+codex.20260622060709",
+  "version": "0.1.3+codex.20260623171436",
   "description": "Cross-agent skills, task profiles, references, regression cases, and scripts for Microsoft Excel BI workbooks, VBA, Power Query M, Power Pivot DAX, MDX/CUBE formulas, ADO/SQL automation, deliverable publishing, workbook QA, Office diagnostics, report building, semantic model review, and sanitized fixtures.",
   "author": {
     "name": "Local Microsoft Excel BI Automation"

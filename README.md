@@ -82,7 +82,11 @@ Public validation, suitable for Windows, macOS, Linux, and Git Bash:
 
 ```bash
 python tools/validate-skills.py .
+python tools/validate_project_docs.py --project-root .
+python tools/validate_task_recipes.py --project-root .
+python tools/validate_official_docs_index.py --project-root .
 python tools/build_artifact_hygiene_report.py --project-root . --require-pass
+python tools/build_goal_coverage_report.py --project-root . --require-pass
 node tools/install.mjs --check
 ```
 
@@ -115,6 +119,8 @@ python tools\run_release_gate.py --project-root .
 - [Chinese project overview](docs/project.zh-CN.md)
 - [Install and sync guide](docs/install-and-sync.md)
 - [Task recipes](docs/task-recipes.md)
+- [Maintenance goals and risk backlog](docs/maintenance-goals.en-US.md)
+- [Release notes](docs/release-notes.en-US.md)
 - [Compatibility boundaries](docs/compatibility.md)
 - [Distribution checklist](docs/distribution-checklist.md)
 - [One-click install prompt EN](prompts/one-click-install-prompt.en-US.md)

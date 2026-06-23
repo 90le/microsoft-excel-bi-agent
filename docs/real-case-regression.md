@@ -11,7 +11,7 @@ V1 is complete when:
 - The visual QA case is workbook-backed through a generated sanitized fixture.
 - `tools/run_case_regression.py` validates schema, coverage, package-tool references, evidence modes, and safety boundaries.
 - `tools/run_task_profile.py --profile case-regression` points agents to the runner.
-- `docs/task-recipes.md`, `docs/current-status.md`, `docs/completion-evidence.md`, `docs/validation.md`, and `docs/progress.md` record the entry point and boundaries.
+- `docs/task-recipes.md`, `docs/current-status.md`, and the maintenance goal docs record the public entry point, validation boundary, and remaining optimization backlog.
 
 ## Boundaries
 

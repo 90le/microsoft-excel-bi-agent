@@ -1,0 +1,51 @@
+name: Validate
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  public-checks:
+    name: Public structural checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Validate skills
+        run: python tools/validate-skills.py .
+
+      - name: Validate public project docs
+        run: python tools/validate_project_docs.py --project-root .
+
+      - name: Validate task recipes
+        run: python tools/validate_task_recipes.py --project-root .
+
+      - name: Validate official docs index
+        run: python tools/validate_official_docs_index.py --project-root .
+
+      - name: Check artifact hygiene
+        run: python tools/build_artifact_hygiene_report.py --project-root . --require-pass
+
+      - name: Check public goal coverage
+        run: python tools/build_goal_coverage_report.py --project-root . --require-pass
+
+      - name: Check installer
+        run: node tools/install.mjs --check

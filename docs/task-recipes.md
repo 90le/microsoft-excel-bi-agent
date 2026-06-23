@@ -773,7 +773,7 @@ Expected evidence:
 
 ## Delivery Rule
 
-Generated reports from customer workbooks should live in task-specific temporary or deliverable folders, not inside this plugin package. Only generic smoke fixtures belong under `tools/smoke-test-workbooks`.
+Generated reports from customer workbooks should live in task-specific temporary or deliverable folders, not inside this plugin package. Generic smoke fixtures should be created in task-local or release-local output folders unless they are deliberately sanitized and documented for public fixtures.
 
 ## Sanitized Fixture Bundle
 
@@ -974,7 +974,7 @@ python tools\build_artifact_hygiene_report.py `
   --require-pass
 ```
 
-The report allows the documented generic Power Query fixture under `tools/smoke-test-workbooks` and fails on unexpected Office files elsewhere. Write the JSON/Markdown report to a temp path, not into the plugin package.
+The report fails on unexpected Office files, customer artifacts, generated reports, lock files, and local path markers. Write the JSON/Markdown report to a temp path, not into the plugin package.
 
 ## Goal Coverage Audit
 
@@ -1002,7 +1002,7 @@ python tools\build_completion_readiness_audit.py `
   --require-pass
 ```
 
-Expected current evidence: `status=pass`, `coverage.status=pass`, and either an in-progress blocker state or `completionReady=true` after `docs/master-goal.md` and `docs/completion-evidence.md` record complete or accepted-boundary rows. Use `--require-complete` for the final closure audit before calling `update_goal(status=complete)`.
+Expected current evidence: `status=pass`, `coverage.status=pass`, and either an in-progress blocker state while the public optimization backlog remains active or `completionReady=true` after every public backlog item is closed or explicitly accepted. Use `--require-complete` only for a deliberate final closure audit.
 
 ## Official Documentation Drift Report
 

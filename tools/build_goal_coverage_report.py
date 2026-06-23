@@ -1,14 +1,9 @@
 #!/usr/bin/env python3
-"""Build an auditable coverage report for the active Excel BI plugin goal.
+"""Build an auditable public goal coverage report for this plugin.
 
-This report checks that each core goal area has concrete package evidence:
-
-- expected source files or generated mirrors exist
-- validation documentation records the relevant gate evidence
-- completion-evidence documentation maps the area to package artifacts
-
-It is intentionally a coverage audit, not a substitute for running the release
-gate. Runtime behavior still needs the release gate and Excel COM fixtures.
+The report verifies that the public maintenance goals are backed by concrete
+repository files and public documentation. It intentionally avoids
+maintainer-only release ledgers and machine-specific runtime evidence.
 """
 
 from __future__ import annotations
@@ -29,321 +24,122 @@ class AreaRequirement:
     key: str
     title: str
     required_files: tuple[str, ...]
-    validation_terms: tuple[str, ...]
-    completion_terms: tuple[str, ...]
-    project_doc_terms: tuple[str, ...] = ()
+    public_doc_terms: tuple[str, ...]
+    goal_terms: tuple[str, ...]
 
 
 AREA_REQUIREMENTS: tuple[AreaRequirement, ...] = (
     AreaRequirement(
-        key="plugin-packaging",
-        title="Plugin packaging and install flow",
-        required_files=(
-            ".codex-plugin/plugin.json",
-            "tools/deploy-local-plugin.py",
-        ),
-        validation_terms=(
-            "Source plugin validation",
-            "Local plugin copy validation",
-            "Installed cache validation",
-            "Installed plugin enabled",
-        ),
-        completion_terms=("Plugin packaging and install flow",),
-        project_doc_terms=("cachebuster reinstall flow",),
+        key="install-truth",
+        title="Install truth",
+        required_files=("tools/install.mjs", "install.ps1", "install.cmd", "install.sh", "docs/install-and-sync.md"),
+        public_doc_terms=("node tools/install.mjs", "codex plugin marketplace add 90le/microsoft-excel-bi-agent"),
+        goal_terms=("Install truth", "安装真实性"),
     ),
     AreaRequirement(
-        key="cross-agent-distribution",
-        title="Cross-agent skill distribution",
-        required_files=(
-            ".agents/skills/excel-bi-router/SKILL.md",
-            "skills/excel-bi-router/SKILL.md",
-            ".claude/skills/excel-bi-router/SKILL.md",
-            ".opencode/skills/excel-bi-router/SKILL.md",
-            "tools/sync-skills.py",
-        ),
-        validation_terms=(
-            "Cross-agent mirror drift",
-            "Task recipe documentation validation",
-            "Skill UI metadata validation",
-        ),
-        completion_terms=("Cross-agent skill distribution",),
-        project_doc_terms=("generated Codex `skills/` mirror",),
+        key="bilingual-docs",
+        title="Bilingual independent docs",
+        required_files=("README.md", "README.zh-CN.md", "docs/project.en-US.md", "docs/project.zh-CN.md", "docs/intro.html", "docs/intro.zh-CN.html"),
+        public_doc_terms=("English project overview", "中文项目说明"),
+        goal_terms=("Bilingual independence", "双语独立"),
+    ),
+    AreaRequirement(
+        key="maintenance-goals",
+        title="Public maintenance goals and risk backlog",
+        required_files=("docs/maintenance-goals.en-US.md", "docs/maintenance-goals.zh-CN.md", "docs/maintenance-goals.md"),
+        public_doc_terms=("maintenance-goals.en-US.md", "maintenance-goals.zh-CN.md"),
+        goal_terms=("Risk Register", "风险清单", "Optimization Backlog", "优化 Backlog"),
+    ),
+    AreaRequirement(
+        key="release-versioning",
+        title="Release notes and version visibility",
+        required_files=("docs/release-notes.en-US.md", "docs/release-notes.zh-CN.md", "docs/release-notes.md", ".codex-plugin/plugin.json"),
+        public_doc_terms=("release-notes.en-US.md", "release-notes.zh-CN.md", "v0.1.3"),
+        goal_terms=("release decisions", "发布判断"),
+    ),
+    AreaRequirement(
+        key="skill-source-discipline",
+        title="Skill source and mirror discipline",
+        required_files=(".agents/skills/excel-bi-router/SKILL.md", "skills/excel-bi-router/SKILL.md", ".claude/skills/excel-bi-router/SKILL.md", ".opencode/skills/excel-bi-router/SKILL.md", "tools/sync-skills.py"),
+        public_doc_terms=(".agents/skills/", "generated mirrors"),
+        goal_terms=("Skill source discipline", "技能源纪律"),
     ),
     AreaRequirement(
         key="excel-vba-workbook-engineering",
         title="Excel/VBA workbook engineering",
-        required_files=(
-            ".agents/skills/excel-vba-workbook-engineering/SKILL.md",
-            ".agents/skills/excel-vba-workbook-engineering/scripts/export_vba.ps1",
-            ".agents/skills/excel-vba-workbook-engineering/scripts/import_vba.ps1",
-            ".agents/skills/excel-vba-workbook-engineering/scripts/inspect_workbook.ps1",
-            ".agents/skills/excel-vba-workbook-engineering/scripts/lint_vba_source.py",
-        ),
-        validation_terms=(
-            "Excel workbook COM inventory fixture smoke",
-            "VBA import/export/run fixture smoke",
-            "VBA source lint fixture smoke",
-            "External dependency OpenXML fixture smoke",
-        ),
-        completion_terms=("Reusable Excel/VBA workbook engineering",),
-        project_doc_terms=("Excel workbook and VBA engineering",),
+        required_files=(".agents/skills/excel-vba-workbook-engineering/SKILL.md", ".agents/skills/excel-vba-workbook-engineering/scripts/export_vba.ps1", ".agents/skills/excel-vba-workbook-engineering/scripts/import_vba.ps1", ".agents/skills/excel-vba-workbook-engineering/scripts/inspect_workbook.ps1"),
+        public_doc_terms=("Excel/VBA workbook engineering", "`excel-vba-workbook-engineering`"),
+        goal_terms=("Windows desktop Excel", "Windows 桌面版 Excel"),
     ),
     AreaRequirement(
         key="power-query-m",
-        title="Power Query M authoring, lifecycle control, refresh, diagnostics",
-        required_files=(
-            ".agents/skills/power-query-m-engineering/SKILL.md",
-            ".agents/skills/power-query-m-engineering/scripts/manage_power_queries_excel_com.ps1",
-            ".agents/skills/power-query-m-engineering/scripts/refresh_power_queries_excel_com.ps1",
-            ".agents/skills/power-query-m-engineering/scripts/lint_power_query_m.py",
-            ".agents/skills/power-query-m-engineering/scripts/classify_power_query_refresh_errors.py",
-            ".agents/skills/power-query-m-engineering/references/official-docs-index.json",
-        ),
-        validation_terms=(
-            "Power Query M lint fixture smoke",
-            "Power Query live refresh fixture smoke",
-            "Power Query refresh error classifier fixture smoke",
-            "Official documentation index validation",
-        ),
-        completion_terms=("Power Query M authoring, lifecycle control, refresh, diagnostics",),
-        project_doc_terms=("Power Query M authoring",),
+        title="Power Query M workflows",
+        required_files=(".agents/skills/power-query-m-engineering/SKILL.md", ".agents/skills/power-query-m-engineering/scripts/lint_power_query_m.py", ".agents/skills/power-query-m-engineering/scripts/refresh_power_queries_excel_com.ps1"),
+        public_doc_terms=("Power Query M", "`power-query-m-engineering`"),
+        goal_terms=("Power Query refresh", "Power Query 刷新"),
     ),
     AreaRequirement(
         key="power-pivot-dax",
-        title="Power Pivot Data Model and DAX modeling",
-        required_files=(
-            ".agents/skills/power-pivot-dax-modeling/SKILL.md",
-            ".agents/skills/power-pivot-dax-modeling/scripts/lint_dax_compat.py",
-            ".agents/skills/power-pivot-dax-modeling/scripts/analyze_dax_dependencies.py",
-            ".agents/skills/power-pivot-dax-modeling/references/official-docs-index.json",
-            "tools/inspect_excel_data_model_com.ps1",
-            "tools/build_excel_bi_model_report.py",
-            "tools/analyze_measure_rename_impact.py",
-            "tools/build_measure_rename_rewrite_plan.py",
-        ),
-        validation_terms=(
-            "Generic Power Pivot model-report fixture smoke",
-            "DAX compatibility lint fixture smoke",
-            "DAX dependency analysis fixture smoke",
-            "Measure rename impact fixture smoke",
-        ),
-        completion_terms=("Power Pivot DAX modeling",),
-        project_doc_terms=("Power Pivot Data Model and DAX modeling",),
+        title="Power Pivot DAX workflows",
+        required_files=(".agents/skills/power-pivot-dax-modeling/SKILL.md", ".agents/skills/power-pivot-dax-modeling/scripts/lint_dax_compat.py", ".agents/skills/power-pivot-dax-modeling/scripts/analyze_dax_dependencies.py"),
+        public_doc_terms=("Power Pivot DAX", "`power-pivot-dax-modeling`"),
+        goal_terms=("Power Pivot runtime", "Power Pivot 运行时"),
     ),
     AreaRequirement(
         key="mdx-cube",
-        title="MDX/CUBE formula extraction and report-layer tracing",
-        required_files=(
-            ".agents/skills/mdx-cubevalue-extraction/SKILL.md",
-            ".agents/skills/mdx-cubevalue-extraction/references/official-docs-index.json",
-            "tools/create_cube_formula_fixture.py",
-            "tools/build_cube_dependency_report.py",
-            "tools/mdx_references.py",
-            "tools/build_measure_rename_rewrite_plan.py",
-        ),
-        validation_terms=(
-            "Generic CUBE formula fixture smoke",
-            "Measure rename rewrite plan fixture smoke",
-            "Measure delete rewrite plan fixture smoke",
-            "Escaped MDX measure reference fixture smoke",
-        ),
-        completion_terms=("MDX/CUBE formula extraction and report-layer tracing",),
-        project_doc_terms=("MDX/CUBE formula extraction",),
+        title="MDX/CUBE formula workflows",
+        required_files=(".agents/skills/mdx-cubevalue-extraction/SKILL.md", "tools/create_cube_formula_fixture.py", "tools/build_cube_dependency_report.py", "tools/mdx_references.py"),
+        public_doc_terms=("MDX/CUBE", "`mdx-cubevalue-extraction`"),
+        goal_terms=("structural validation", "结构校验"),
     ),
     AreaRequirement(
-        key="ado-sql-adomd",
-        title="VBA ADO/OLEDB/ADOMD/SQL data access",
-        required_files=(
-            ".agents/skills/excel-ado-sql-data-access/SKILL.md",
-            ".agents/skills/excel-ado-sql-data-access/references/official-docs-index.json",
-            "tools/probe_excel_bi_providers.ps1",
-            "tools/test_excel_ado_sql_access.ps1",
-            "tools/test_excel_adomd_query.ps1",
-        ),
-        validation_terms=(
-            "Provider probe fixture smoke",
-            "ADO workbook SQL fixture smoke",
-            "ADOMD COM probe fixture smoke",
-        ),
-        completion_terms=("VBA ADO/OLEDB/ADOMD/SQL data access",),
-        project_doc_terms=("VBA ADO/OLEDB/ADOMD/SQL data access",),
+        key="ado-sql",
+        title="ADO/OLEDB/ADOMD/SQL workflows",
+        required_files=(".agents/skills/excel-ado-sql-data-access/SKILL.md", "tools/probe_excel_bi_providers.ps1", "tools/test_excel_ado_sql_access.ps1", "tools/test_excel_adomd_query.ps1"),
+        public_doc_terms=("ADO / SQL", "`excel-ado-sql-data-access`"),
+        goal_terms=("runtime behavior", "运行时行为"),
     ),
     AreaRequirement(
-        key="official-docs",
-        title="Official documentation routing and local knowledge indexes",
-        required_files=(
-            "tools/search_official_docs.py",
-            "tools/validate_official_docs_index.py",
-            ".agents/skills/power-query-m-engineering/references/official-docs-index.json",
-            ".agents/skills/power-pivot-dax-modeling/references/official-docs-index.json",
-            ".agents/skills/mdx-cubevalue-extraction/references/official-docs-index.json",
-            ".agents/skills/excel-ado-sql-data-access/references/official-docs-index.json",
-        ),
-        validation_terms=(
-            "Official documentation index validation",
-            "Optional online official URL sample",
-        ),
-        completion_terms=("Official documentation routing and local knowledge indexes",),
-        project_doc_terms=("Official documentation routing",),
+        key="deliverable-qa-reporting",
+        title="Deliverable, QA, diagnostics, report, semantic model, and fixture skills",
+        required_files=(".agents/skills/excel-deliverable-publisher/SKILL.md", ".agents/skills/excel-workbook-qa-auditor/SKILL.md", ".agents/skills/office-environment-diagnostics/SKILL.md", ".agents/skills/excel-report-builder/SKILL.md", ".agents/skills/power-bi-semantic-model/SKILL.md", ".agents/skills/excel-testing-fixtures/SKILL.md"),
+        public_doc_terms=("Client deliverables", "Workbook QA", "`excel-report-builder`", "`excel-testing-fixtures`"),
+        goal_terms=("Artifact hygiene", "Artifact hygiene"),
     ),
     AreaRequirement(
-        key="cross-platform-boundaries",
-        title="Windows PowerShell, Git Bash, Linux, and macOS compatibility boundaries",
-        required_files=(
-            "tools/run_release_gate.sh",
-            "tools/invoke_excel_bi_com.sh",
-            ".agents/skills/excel-vba-workbook-engineering/scripts/invoke_excel_com.sh",
-            ".agents/skills/power-query-m-engineering/scripts/invoke_power_query_excel_com.sh",
-            "docs/compatibility.md",
-        ),
-        validation_terms=(
-            "Portable release gate wrapper",
-            "Structural release gate profile",
-            "Git Bash and portable wrapper syntax",
-            "PowerShell script syntax",
-            "checked 5 Bash scripts",
-        ),
-        completion_terms=(
-            "Windows PowerShell compatibility",
-            "Windows Git Bash compatibility",
-            "Linux/macOS compatibility boundaries",
-        ),
-        project_doc_terms=("Linux, and macOS compatibility boundaries",),
+        key="sanitized-regression",
+        title="Sanitized regression cases",
+        required_files=("fixtures/real-sanitized-cases/manifest.json", "fixtures/real-sanitized-cases/cases/pq-folder-dynamic-expand-order.json", "fixtures/real-sanitized-cases/cases/dax-excel-powerpivot-compat.json", "fixtures/real-sanitized-cases/cases/cube-zero-result-debug.json", "tools/run_case_regression.py", "docs/real-case-regression.md"),
+        public_doc_terms=("sanitized", "real/sanitized case regression"),
+        goal_terms=("sanitized regression cases", "脱敏回归案例"),
     ),
     AreaRequirement(
-        key="validation-workflow",
-        title="One-command validation workflow",
-        required_files=(
-            "tools/run_release_gate.py",
-            "tools/run_release_gate.sh",
-            "tools/validate_project_docs.py",
-            "tools/validate_task_recipes.py",
-            "tools/validate-skills.py",
-        ),
-        validation_terms=(
-            "Automated release gate runner",
-            "Project documentation consistency validation",
-            "Task recipe documentation validation",
-            "Python script compile",
-            "Python cache cleanup",
-        ),
-        completion_terms=("Validation workflow",),
-        project_doc_terms=("One-command release gate",),
+        key="public-validation",
+        title="Public validation workflow",
+        required_files=("tools/validate-skills.py", "tools/validate_project_docs.py", "tools/validate_task_recipes.py", "tools/build_artifact_hygiene_report.py", "tools/install.mjs"),
+        public_doc_terms=("python tools/validate-skills.py .", "node tools/install.mjs --check"),
+        goal_terms=("Public validation", "公开校验"),
     ),
     AreaRequirement(
-        key="goal-tracking-docs",
-        title="Goal tracking and project documentation",
-        required_files=(
-            "docs/master-goal.md",
-            "docs/goal-tracking.md",
-            "docs/iteration-protocol.md",
-            "docs/progress.md",
-            "docs/validation.md",
-            "docs/completion-evidence.md",
-            "docs/task-recipes.md",
-            "docs/project.md",
-        ),
-        validation_terms=(
-            "Goal tracking document binding",
-            "Sanitized recipe docs",
-            "Project documentation consistency validation",
-        ),
-        completion_terms=("Project tracking docs",),
-        project_doc_terms=("docs/goal-tracking.md",),
+        key="ci-validation",
+        title="GitHub Actions public validation",
+        required_files=(".github/workflows/validate.yml",),
+        public_doc_terms=("GitHub Actions", "public structural validation"),
+        goal_terms=("CI", "GitHub Actions"),
     ),
     AreaRequirement(
-        key="upper-layer-scenario-skills",
-        title="Upper-layer scenario skill expansion",
-        required_files=(
-            ".agents/skills/excel-deliverable-publisher/SKILL.md",
-            ".agents/skills/excel-deliverable-publisher/agents/openai.yaml",
-            ".agents/skills/excel-workbook-qa-auditor/SKILL.md",
-            ".agents/skills/excel-workbook-qa-auditor/agents/openai.yaml",
-            ".agents/skills/office-environment-diagnostics/SKILL.md",
-            ".agents/skills/office-environment-diagnostics/agents/openai.yaml",
-            ".agents/skills/excel-report-builder/SKILL.md",
-            ".agents/skills/excel-report-builder/agents/openai.yaml",
-            ".agents/skills/power-bi-semantic-model/SKILL.md",
-            ".agents/skills/power-bi-semantic-model/agents/openai.yaml",
-            ".agents/skills/excel-testing-fixtures/SKILL.md",
-            ".agents/skills/excel-testing-fixtures/agents/openai.yaml",
-            ".agents/skills/excel-bi-router/scripts/route_excel_bi_task.py",
-            "tools/build_capability_catalog.py",
-            "tools/build_cross_agent_forward_test_pack.py",
-        ),
-        validation_terms=(
-            "Upper-layer scenario skills expansion",
-            "12 canonical skills",
-            "48 forward-test prompts",
-        ),
-        completion_terms=(
-            "Excel deliverable publishing",
-            "Excel workbook QA auditing",
-            "Office environment diagnostics",
-            "Excel report building",
-            "Power BI semantic model review",
-            "Excel testing fixtures",
-        ),
-        project_doc_terms=("six upper-layer scenario skills",),
+        key="artifact-hygiene",
+        title="Artifact hygiene and privacy boundary",
+        required_files=("tools/build_artifact_hygiene_report.py", ".gitignore", "docs/distribution-checklist.md"),
+        public_doc_terms=("Do Not Include", "customer workbooks"),
+        goal_terms=("Artifact hygiene", "客户文件"),
     ),
     AreaRequirement(
-        key="real-sanitized-case-regression",
-        title="Real/sanitized case regression library V1",
-        required_files=(
-            "fixtures/real-sanitized-cases/manifest.json",
-            "fixtures/real-sanitized-cases/cases/pq-folder-dynamic-expand-order.json",
-            "fixtures/real-sanitized-cases/cases/dax-excel-powerpivot-compat.json",
-            "fixtures/real-sanitized-cases/cases/cube-zero-result-debug.json",
-            "fixtures/real-sanitized-cases/cases/vba-button-binding-runtime.json",
-            "fixtures/real-sanitized-cases/cases/deliverable-clean-copy.json",
-            "fixtures/real-sanitized-cases/cases/visual-report-readability.json",
-            "tools/run_case_regression.py",
-            "docs/real-case-regression.md",
-        ),
-        validation_terms=(
-            "Real/sanitized case regression library V1",
-            "run_case_regression.py --require-pass",
-            "case-regression profile execution",
-            "Real/sanitized case regression library smoke",
-        ),
-        completion_terms=("Real/sanitized case regression library V1",),
-        project_doc_terms=("real/sanitized case regression library",),
-    ),
-    AreaRequirement(
-        key="workbook-backed-visual-qa",
-        title="Workbook-backed sanitized Visual QA case V1",
-        required_files=(
-            "tools/create_visual_qa_fixture.py",
-            "tools/build_visual_qa_report.py",
-            "fixtures/real-sanitized-cases/cases/visual-report-readability.json",
-            "docs/real-case-regression.md",
-            "docs/task-recipes.md",
-        ),
-        validation_terms=(
-            "Workbook-backed sanitized Visual QA case V1",
-            "Visual QA report fixture smoke",
-            "blocked-for-delivery",
-        ),
-        completion_terms=("Workbook-backed sanitized Visual QA case V1",),
-        project_doc_terms=("workbook-backed sanitized Visual QA case V1",),
-    ),
-    AreaRequirement(
-        key="rendered-visual-qa-evidence",
-        title="Rendered Visual QA evidence chain V1",
-        required_files=(
-            "tools/export_visual_qa_render_evidence.ps1",
-            "tools/create_visual_qa_fixture.py",
-            "tools/build_visual_qa_report.py",
-            "tools/run_release_gate.py",
-            "docs/task-recipes.md",
-        ),
-        validation_terms=(
-            "Rendered Visual QA evidence chain V1",
-            "Visual QA render evidence smoke",
-            "Windows Excel COM PDF export",
-        ),
-        completion_terms=("Rendered Visual QA evidence chain V1",),
-        project_doc_terms=("rendered Visual QA evidence chain V1",),
+        key="runtime-boundaries",
+        title="Runtime and platform boundaries",
+        required_files=("docs/compatibility.md", "tools/run_release_gate.py", "tools/run_release_gate.sh"),
+        public_doc_terms=("Windows desktop Excel", "macOS", "Linux"),
+        goal_terms=("Runtime boundary clarity", "运行时边界清晰"),
     ),
 )
 
@@ -373,48 +169,61 @@ def check_files(project_root: Path, files: tuple[str, ...]) -> list[str]:
     return [path for path in files if not (project_root / Path(path)).is_file()]
 
 
-def evaluate_area(
-    project_root: Path,
-    requirement: AreaRequirement,
-    validation_text: str,
-    completion_text: str,
-    project_text: str,
-    master_goal_text: str,
-) -> dict[str, Any]:
-    doc_text = "\n".join([project_text, master_goal_text])
+def public_doc_text(project_root: Path) -> str:
+    paths = [
+        "README.md",
+        "README.zh-CN.md",
+        "docs/project.md",
+        "docs/project.en-US.md",
+        "docs/project.zh-CN.md",
+        "docs/current-status.md",
+        "docs/install-and-sync.md",
+        "docs/distribution-checklist.md",
+        "docs/compatibility.md",
+        "docs/task-recipes.md",
+    ]
+    return "\n".join(read_text(project_root / path) for path in paths)
+
+
+def goal_doc_text(project_root: Path) -> str:
+    paths = [
+        "docs/maintenance-goals.en-US.md",
+        "docs/maintenance-goals.zh-CN.md",
+        "docs/maintenance-goals.md",
+        "docs/release-notes.en-US.md",
+        "docs/release-notes.zh-CN.md",
+        "docs/release-notes.md",
+    ]
+    return "\n".join(read_text(project_root / path) for path in paths)
+
+
+def evaluate_area(project_root: Path, requirement: AreaRequirement, docs_text: str, goals_text: str) -> dict[str, Any]:
     missing_files = check_files(project_root, requirement.required_files)
-    missing_validation_terms = check_terms(validation_text, requirement.validation_terms)
-    missing_completion_terms = check_terms(completion_text, requirement.completion_terms)
-    missing_project_terms = check_terms(doc_text, requirement.project_doc_terms)
-    status = PASS if not (missing_files or missing_validation_terms or missing_completion_terms or missing_project_terms) else FAIL
+    missing_public_terms = check_terms(docs_text, requirement.public_doc_terms)
+    missing_goal_terms = check_terms(goals_text, requirement.goal_terms)
+    status = PASS if not (missing_files or missing_public_terms or missing_goal_terms) else FAIL
     return {
         "key": requirement.key,
         "title": requirement.title,
         "status": status,
         "requiredFileCount": len(requirement.required_files),
-        "validationTermCount": len(requirement.validation_terms),
-        "completionTermCount": len(requirement.completion_terms),
-        "projectDocTermCount": len(requirement.project_doc_terms),
+        "publicDocTermCount": len(requirement.public_doc_terms),
+        "goalTermCount": len(requirement.goal_terms),
         "missingFiles": missing_files,
-        "missingValidationTerms": missing_validation_terms,
-        "missingCompletionTerms": missing_completion_terms,
-        "missingProjectDocTerms": missing_project_terms,
+        "missingPublicDocTerms": missing_public_terms,
+        "missingGoalTerms": missing_goal_terms,
     }
 
 
 def build_report(project_root: Path) -> dict[str, Any]:
-    validation_text = read_text(project_root / "docs" / "validation.md")
-    completion_text = read_text(project_root / "docs" / "completion-evidence.md")
-    project_text = read_text(project_root / "docs" / "project.md")
-    master_goal_text = read_text(project_root / "docs" / "master-goal.md")
+    project_root = project_root.expanduser().resolve()
+    docs_text = public_doc_text(project_root)
+    goals_text = goal_doc_text(project_root)
     version = load_manifest_version(project_root)
 
-    areas = [
-        evaluate_area(project_root, requirement, validation_text, completion_text, project_text, master_goal_text)
-        for requirement in AREA_REQUIREMENTS
-    ]
+    areas = [evaluate_area(project_root, requirement, docs_text, goals_text) for requirement in AREA_REQUIREMENTS]
     failed = [area for area in areas if area["status"] != PASS]
-    report = {
+    return {
         "projectRoot": str(project_root),
         "version": version,
         "status": PASS if not failed else FAIL,
@@ -423,12 +232,11 @@ def build_report(project_root: Path) -> dict[str, Any]:
         "failedAreaCount": len(failed),
         "areas": areas,
         "limitations": [
-            "This coverage report checks evidence presence and documentation alignment only.",
-            "Runtime behavior still requires the release gate and Excel COM smoke fixtures.",
-            "A pass here does not mean the long-running goal is complete; it means current evidence covers the named core areas.",
+            "This coverage report checks public repository files and public documentation alignment.",
+            "It does not validate private workbooks or Windows Excel COM runtime behavior.",
+            "A pass means the public maintenance goals are covered by shipped files and docs, not that every future optimization is complete.",
         ],
     }
-    return report
 
 
 def clean_markdown(value: Any) -> str:
@@ -453,9 +261,8 @@ def render_markdown(report: dict[str, Any]) -> str:
         missing: list[str] = []
         for key, label in [
             ("missingFiles", "files"),
-            ("missingValidationTerms", "validation"),
-            ("missingCompletionTerms", "completion"),
-            ("missingProjectDocTerms", "project docs"),
+            ("missingPublicDocTerms", "public docs"),
+            ("missingGoalTerms", "maintenance goals"),
         ]:
             values = area.get(key, [])
             if values:
@@ -480,24 +287,24 @@ def render_markdown(report: dict[str, Any]) -> str:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--project-root", default=".", help="Plugin project root")
-    parser.add_argument("--out-json", type=Path, help="Write machine-readable coverage report")
-    parser.add_argument("--out-md", type=Path, help="Write Markdown coverage report")
+    parser.add_argument("--out-json", default="", help="Write machine-readable coverage report")
+    parser.add_argument("--out-md", default="", help="Write Markdown coverage report")
     parser.add_argument("--require-pass", action="store_true", help="Exit with code 1 if coverage is incomplete")
     args = parser.parse_args()
 
-    project_root = Path(args.project_root).expanduser().resolve()
-    report = build_report(project_root)
-
+    report = build_report(Path(args.project_root))
     if args.out_json:
-        out_json = args.out_json.expanduser().resolve()
+        out_json = Path(args.out_json).expanduser().resolve()
         out_json.parent.mkdir(parents=True, exist_ok=True)
         out_json.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     if args.out_md:
-        out_md = args.out_md.expanduser().resolve()
+        out_md = Path(args.out_md).expanduser().resolve()
         out_md.parent.mkdir(parents=True, exist_ok=True)
         out_md.write_text(render_markdown(report), encoding="utf-8")
+
     if not args.out_json and not args.out_md:
         print(json.dumps(report, ensure_ascii=False, indent=2))
+
     if args.require_pass and report.get("status") != PASS:
         return 1
     return 0

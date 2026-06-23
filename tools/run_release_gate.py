@@ -44,7 +44,7 @@ DEFAULT_SENSITIVE_MARKERS = [
 ]
 
 
-CODEX_CACHEBUSTER_RE = re.compile(r"^0\.1\.0\+codex\.[A-Za-z0-9][A-Za-z0-9._-]*$")
+CODEX_CACHEBUSTER_RE = re.compile(r"^\d+\.\d+\.\d+\+codex\.[A-Za-z0-9][A-Za-z0-9._-]*$")
 
 
 @dataclass
@@ -1159,7 +1159,7 @@ def completion_readiness_audit_check(project_root: Path) -> CheckResult:
         return CheckResult(
             name=name,
             status=PASS if not failures else FAIL,
-            detail="readiness audit proves coverage and goal-completion state" if not failures else "; ".join(failures),
+            detail="readiness audit proves public maintenance coverage and active backlog state" if not failures else "; ".join(failures),
             stdout=result.stdout,
             stderr=result.stderr,
             metadata={
@@ -1910,12 +1910,8 @@ def artifact_hygiene_report_check(project_root: Path) -> CheckResult:
             failures.append(f"status={report.get('status')}")
         if summary.get("issueCount") != 0:
             failures.append(f"issueCount={summary.get('issueCount')}")
-        if summary.get("officeFileCount") != 1:
+        if summary.get("officeFileCount") != 0:
             failures.append(f"officeFileCount={summary.get('officeFileCount')}")
-        observed = report.get("observed", {})
-        allowed = observed.get("allowedOfficeFiles", [])
-        if "tools/smoke-test-workbooks/pq_fixture_release.xlsx" not in allowed:
-            failures.append("allowed Power Query fixture not observed")
         if "Artifact Hygiene Report" not in markdown:
             failures.append("Markdown title missing")
         if "status: **pass**" not in markdown:
@@ -1924,12 +1920,11 @@ def artifact_hygiene_report_check(project_root: Path) -> CheckResult:
         return CheckResult(
             name=name,
             status=PASS if not failures else FAIL,
-            detail="no customer artifacts, generated reports, locks, caches, or unexpected workbooks found" if not failures else "; ".join(failures),
+            detail="no customer artifacts, generated reports, locks, caches, or Office workbooks found in the public package" if not failures else "; ".join(failures),
             stdout=result.stdout,
             stderr=result.stderr,
             metadata={
                 "summary": summary,
-                "allowedOfficeFiles": allowed,
             },
         )
 
@@ -3387,7 +3382,7 @@ def goal_coverage_report_check(project_root: Path) -> CheckResult:
         return CheckResult(
             name=name,
             status=PASS if not failures else FAIL,
-            detail="goal areas covered by files, validation evidence, and completion matrix" if not failures else "; ".join(failures),
+            detail="public goal areas covered by shipped files and public documentation" if not failures else "; ".join(failures),
             command=command,
             stdout=result.stdout,
             stderr=result.stderr,

@@ -81,7 +81,11 @@ Windows 桌面版 Excel 用于验证 Excel COM、VBA 执行、Power Query 刷新
 
 ```bash
 python tools/validate-skills.py .
+python tools/validate_project_docs.py --project-root .
+python tools/validate_task_recipes.py --project-root .
+python tools/validate_official_docs_index.py --project-root .
 python tools/build_artifact_hygiene_report.py --project-root . --require-pass
+python tools/build_goal_coverage_report.py --project-root . --require-pass
 node tools/install.mjs --check
 ```
 
@@ -94,6 +98,8 @@ python tools\run_release_gate.py --project-root .
 ## 相关页面
 
 - [English project overview](project.en-US.md)
+- [维护目标与风险 backlog](maintenance-goals.zh-CN.md)
+- [发布说明](release-notes.zh-CN.md)
 - [英文站点](intro.html)
 - [中文站点](intro.zh-CN.html)
 - [安装与同步说明](install-and-sync.md)

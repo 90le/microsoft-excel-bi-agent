@@ -26,7 +26,7 @@ Exclude or regenerate locally:
 
 - local release ledgers with machine paths
 - generated PDF/image evidence
-- `tools/smoke-test-workbooks/`
+- task-local generated smoke fixture folders
 - Python caches
 - Excel lock files
 - private customer workbooks or screenshots
@@ -36,11 +36,16 @@ Exclude or regenerate locally:
 Before publishing:
 
 ```powershell
-python tools\sync-skills.py --project-root . --all-project-mirrors --codex-user --check-drift
+python tools\validate-skills.py .
 python tools\validate_project_docs.py --project-root .
+python tools\validate_task_recipes.py --project-root .
+python tools\validate_official_docs_index.py --project-root .
 python tools\build_artifact_hygiene_report.py --project-root . --require-pass
-python tools\run_release_gate.py --project-root . --profile structural
+python tools\build_goal_coverage_report.py --project-root . --require-pass
+node tools\install.mjs --check
 ```
+
+Run `python tools\sync-skills.py --project-root . --all-project-mirrors --codex-user --check-drift` after skill source changes. Run `python tools\run_release_gate.py --project-root . --profile structural` when preparing a deeper maintainer validation pass.
 
 For a public repository staging copy, also scan staged files for machine paths:
 

@@ -211,7 +211,7 @@ def render_markdown(bundle: dict[str, Any]) -> str:
         "projectDocs": "manifest/document version alignment and required tracking docs",
         "taskRecipes": "required recipe sections, canonical skills, and package paths",
         "officialDocs": "official Microsoft documentation index structure and search routing",
-        "goalCoverage": "core goal areas mapped to files, validation evidence, and completion evidence",
+        "goalCoverage": "public maintenance goal areas mapped to shipped files and public docs",
         "releaseGate": "attached full/structural release gate report, if supplied",
     }
     for key in ["projectDocs", "taskRecipes", "officialDocs", "goalCoverage", "releaseGate"]:

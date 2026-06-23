@@ -1,12 +1,18 @@
 # Current Status
 
 This is the short operational entry point for Microsoft Excel BI Agent.
-Use `docs/progress.md` as the chronological ledger, not as the first file to read.
+Use `docs/maintenance-goals.en-US.md` or `docs/maintenance-goals.zh-CN.md` for the public maintenance goals, risk register, and optimization backlog.
 
 ## Current Release
 
 ```text
-0.1.0+codex.20260622060709
+v0.1.3
+```
+
+Package cachebuster version:
+
+```text
+0.1.3+codex.20260623171436
 ```
 
 ## Current Capability Shape
@@ -19,6 +25,7 @@ Use `docs/progress.md` as the chronological ledger, not as the first file to rea
 - The real/sanitized case regression library V1 is complete for `0.1.0+codex.20260622033808`.
 - The workbook-backed sanitized Visual QA case V1 is complete for `0.1.0+codex.20260622045441`.
 - The rendered Visual QA evidence chain V1 is complete for `0.1.0+codex.20260622060709`.
+- Public maintenance goals, risk backlog, and CI-backed structural validation are complete for `v0.1.3`.
 
 ## Daily Entry Points
 
@@ -28,6 +35,8 @@ Use `docs/progress.md` as the chronological ledger, not as the first file to rea
 | Explain the pack to a recipient | `docs/recipient-guide.zh-CN.md` or `docs/intro.html` |
 | Ask another agent to install it | `prompts/one-click-install-prompt.zh-CN.md` |
 | Install/sync all prompts | `docs/install-and-sync.md` |
+| Review maintenance goals and remaining risks | `docs/maintenance-goals.en-US.md` or `docs/maintenance-goals.zh-CN.md` |
+| Review release notes | `docs/release-notes.en-US.md` or `docs/release-notes.zh-CN.md` |
 | Choose a skill or workflow | `excel-bi-router` or `tools/run_task_profile.py` |
 | Audit a workbook | `tools/run_task_profile.py --profile audit` |
 | Publish a pure deliverable | `tools/run_task_profile.py --profile publish` |

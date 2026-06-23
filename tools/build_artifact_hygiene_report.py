@@ -32,9 +32,7 @@ TEXT_EXTENSIONS = {
     ".yaml",
     ".yml",
 }
-ALLOWED_OFFICE_FILES = {
-    "tools/smoke-test-workbooks/pq_fixture_release.xlsx",
-}
+ALLOWED_OFFICE_FILES: set[str] = set()
 IGNORED_DIRS = {".git"}
 
 

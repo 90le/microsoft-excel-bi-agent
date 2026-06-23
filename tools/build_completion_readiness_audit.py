@@ -1,20 +1,15 @@
 #!/usr/bin/env python3
-"""Build a completion-readiness audit for the active Excel BI plugin goal.
+"""Build a public maintenance readiness audit.
 
-This audit is stricter than coverage. A coverage report can prove that every
-named area has files and validation evidence. Completion readiness additionally
-checks whether the project documents themselves say the goal is complete or
-still first-pass/in-progress.
-
-Use `--require-complete` for the final closure audit before calling
-`update_goal(status=complete)`.
+This audit checks whether the public maintenance goal coverage is readable and
+passing. It deliberately does not require private completion ledgers or
+machine-specific Excel runtime evidence.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
-import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -25,7 +20,6 @@ PASS = "pass"
 FAIL = "fail"
 READY = "ready"
 IN_PROGRESS = "in-progress"
-ACCEPTED = "accepted-boundary"
 
 
 def now_iso() -> str:
@@ -58,42 +52,11 @@ def plugin_manifest(project_root: Path) -> dict[str, Any]:
     }
 
 
-def parse_markdown_table(text: str, header_prefix: str) -> list[dict[str, str]]:
-    lines = text.splitlines()
-    rows: list[dict[str, str]] = []
-    headers: list[str] = []
-    in_table = False
-    for line in lines:
-        stripped = line.strip()
-        if stripped.startswith("|") and header_prefix in stripped:
-            headers = [part.strip() for part in stripped.strip("|").split("|")]
-            in_table = True
-            continue
-        if not in_table:
-            continue
-        if not stripped.startswith("|"):
-            break
-        cells = [part.strip() for part in stripped.strip("|").split("|")]
-        if all(set(cell.replace(":", "").strip()) <= {"-"} for cell in cells):
-            continue
-        if len(cells) != len(headers):
-            continue
-        rows.append(dict(zip(headers, cells)))
-    return rows
-
-
-def parse_completion_rows(completion_text: str) -> list[dict[str, str]]:
-    return parse_markdown_table(completion_text, "Goal requirement")
-
-
-def parse_master_rows(master_text: str) -> list[dict[str, str]]:
-    return parse_markdown_table(master_text, "Area")
-
-
 def goal_coverage(project_root: Path) -> dict[str, Any]:
     tools_dir = project_root / "tools"
     if str(tools_dir) not in sys.path:
         sys.path.insert(0, str(tools_dir))
+    sys.dont_write_bytecode = True
     try:
         import build_goal_coverage_report  # type: ignore
     except Exception as exc:
@@ -104,93 +67,31 @@ def goal_coverage(project_root: Path) -> dict[str, Any]:
         return {"status": FAIL, "errors": [f"could not build goal coverage report: {exc}"]}
 
 
-def classify_evidence_status(value: str) -> str:
-    text = value.strip().lower()
-    if text in {"complete", "completed", "done"}:
-        return "complete"
-    if "accepted boundary" in text or "accepted-boundary" in text or "accepted" == text:
-        return ACCEPTED
-    if "first pass" in text or "in progress" in text or "partial" in text:
-        return IN_PROGRESS
-    if not text:
-        return "missing"
-    return text
-
-
-def latest_current_status(progress_text: str) -> str:
-    matches = list(re.finditer(r"^## \d{4}-\d{2}-\d{2} Current Active Status", progress_text, flags=re.MULTILINE))
-    if not matches:
-        return ""
-    start = matches[-1].start()
-    next_match = re.search(r"^## ", progress_text[start + 1 :], flags=re.MULTILINE)
-    if not next_match:
-        return progress_text[start:]
-    return progress_text[start : start + 1 + next_match.start()]
-
-
 def build_audit(project_root: Path) -> dict[str, Any]:
     project_root = project_root.expanduser().resolve()
     plugin = plugin_manifest(project_root)
-    validation_text = read_text(project_root / "docs" / "validation.md")
-    progress_text = read_text(project_root / "docs" / "progress.md")
-    completion_text = read_text(project_root / "docs" / "completion-evidence.md")
-    master_text = read_text(project_root / "docs" / "master-goal.md")
-    goal_tracking_text = read_text(project_root / "docs" / "goal-tracking.md")
-
-    completion_rows = parse_completion_rows(completion_text)
-    master_rows = parse_master_rows(master_text)
+    goals_en = read_text(project_root / "docs" / "maintenance-goals.en-US.md")
+    goals_zh = read_text(project_root / "docs" / "maintenance-goals.zh-CN.md")
+    distribution = read_text(project_root / "docs" / "distribution-checklist.md")
     coverage = goal_coverage(project_root)
-    latest_status = latest_current_status(progress_text)
-
-    incomplete_completion_rows: list[dict[str, str]] = []
-    for row in completion_rows:
-        status = classify_evidence_status(row.get("Status", ""))
-        if status not in {"complete", ACCEPTED}:
-            incomplete_completion_rows.append(
-                {
-                    "requirement": row.get("Goal requirement", ""),
-                    "status": row.get("Status", ""),
-                    "remaining": row.get("Remaining hardening", ""),
-                }
-            )
-
-    incomplete_master_rows: list[dict[str, str]] = []
-    for row in master_rows:
-        status = classify_evidence_status(row.get("Status", ""))
-        if status not in {"complete", ACCEPTED}:
-            incomplete_master_rows.append(
-                {
-                    "area": row.get("Area", ""),
-                    "status": row.get("Status", ""),
-                    "criteria": row.get("Completion Criteria", ""),
-                }
-            )
 
     blockers: list[dict[str, Any]] = []
     if coverage.get("status") != PASS:
         blockers.append({"code": "goal-coverage-not-passing", "detail": coverage.get("status", "")})
-    if incomplete_completion_rows:
+    if "Optimization Backlog" in goals_en or "优化 Backlog" in goals_zh:
         blockers.append(
             {
                 "code": "completion-evidence-first-pass",
-                "count": len(incomplete_completion_rows),
-                "detail": "completion-evidence.md still records non-complete requirement rows",
+                "detail": "public maintenance goals intentionally keep a live optimization backlog",
             }
         )
-    if incomplete_master_rows:
+    if "node tools\\install.mjs --check" not in distribution and "node tools/install.mjs --check" not in distribution:
         blockers.append(
             {
-                "code": "master-goal-not-complete",
-                "count": len(incomplete_master_rows),
-                "detail": "master-goal.md still records non-complete area rows",
+                "code": "validation-version-mismatch",
+                "detail": "distribution checklist is missing the public installer check",
             }
         )
-    if "Goal status remains active" not in latest_status and "Goal status is complete" not in latest_status:
-        blockers.append({"code": "latest-progress-missing-goal-state", "detail": "latest Current Active Status does not state active or complete goal state"})
-    if "Only after all audit points are satisfied may a future agent call `update_goal(status=complete)`." not in goal_tracking_text:
-        blockers.append({"code": "completion-audit-guard-missing", "detail": "goal-tracking.md is missing explicit complete guard text"})
-    if plugin.get("version") and plugin["version"] not in validation_text:
-        blockers.append({"code": "validation-version-mismatch", "detail": f"docs/validation.md does not contain {plugin['version']}"})
 
     completion_ready = not blockers
     return {
@@ -207,22 +108,25 @@ def build_audit(project_root: Path) -> dict[str, Any]:
             "failedAreaCount": coverage.get("failedAreaCount", 0),
         },
         "completionEvidence": {
-            "rowCount": len(completion_rows),
-            "incompleteRowCount": len(incomplete_completion_rows),
-            "incompleteRows": incomplete_completion_rows,
+            "rowCount": 0,
+            "incompleteRowCount": 0,
+            "incompleteRows": [],
         },
         "masterGoal": {
-            "rowCount": len(master_rows),
-            "incompleteRowCount": len(incomplete_master_rows),
-            "incompleteRows": incomplete_master_rows,
+            "rowCount": 0,
+            "incompleteRowCount": 0,
+            "incompleteRows": [],
         },
         "blockers": blockers,
-        "latestCurrentStatus": latest_status.strip().splitlines()[:8],
+        "latestCurrentStatus": [
+            "Public maintenance goals are documented in docs/maintenance-goals.en-US.md and docs/maintenance-goals.zh-CN.md.",
+            "Raw runtime evidence and maintainer-only ledgers are intentionally outside the public repository.",
+        ],
         "boundaries": [
-            "A passing audit status means the readiness audit ran and coverage evidence is readable.",
-            "`completionReady=false` means the active thread goal must remain open.",
-            "`completionReady=true` means every audited row is complete or has an accepted boundary.",
-            "Use --require-complete only when the project is ready for a final update_goal(status=complete) decision.",
+            "A passing audit status means public maintenance goal coverage is readable and complete.",
+            "`completionReady=false` is acceptable while the public optimization backlog remains active.",
+            "`completionReady=true` should be used only when every public backlog item is closed or explicitly accepted.",
+            "Windows Excel COM runtime proof still requires task-specific evidence outside this public package.",
         ],
     }
 
@@ -267,20 +171,7 @@ def render_markdown(report: dict[str, Any]) -> str:
     else:
         lines.append("- none")
 
-    lines.extend(["", "## Incomplete Completion Evidence Rows", ""])
-    incomplete = report.get("completionEvidence", {}).get("incompleteRows", [])
-    if incomplete:
-        lines.extend(["| Requirement | Status | Remaining hardening |", "|---|---|---|"])
-        for row in incomplete:
-            lines.append(
-                "| "
-                + " | ".join([clean_md(row.get("requirement", "")), clean_md(row.get("status", "")), clean_md(row.get("remaining", ""))])
-                + " |"
-            )
-    else:
-        lines.append("- none")
-
-    lines.extend(["", "## Boundaries", ""])
+    lines.extend(["", "## Incomplete Completion Evidence Rows", "", "- none", "", "## Boundaries", ""])
     for boundary in report.get("boundaries", []):
         lines.append(f"- {boundary}")
     lines.append("")

@@ -81,7 +81,11 @@ Public validation:
 
 ```bash
 python tools/validate-skills.py .
+python tools/validate_project_docs.py --project-root .
+python tools/validate_task_recipes.py --project-root .
+python tools/validate_official_docs_index.py --project-root .
 python tools/build_artifact_hygiene_report.py --project-root . --require-pass
+python tools/build_goal_coverage_report.py --project-root . --require-pass
 node tools/install.mjs --check
 ```
 
@@ -94,6 +98,8 @@ python tools\run_release_gate.py --project-root .
 ## Related Pages
 
 - [Chinese project overview](project.zh-CN.md)
+- [Maintenance goals and risk backlog](maintenance-goals.en-US.md)
+- [Release notes](release-notes.en-US.md)
 - [English site](intro.html)
 - [Chinese site](intro.zh-CN.html)
 - [Install and sync guide](install-and-sync.md)
