@@ -3,22 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Microsoft Excel BI Agent | Open-source Excel BI skills for AI agents</title>
-  <meta name="description" content="Open-source cross-agent skills for Microsoft Excel BI workbooks: VBA, Power Query M, Power Pivot DAX, MDX/CUBE formulas, ADO/SQL, workbook QA, and clean deliverables.">
-  <meta name="keywords" content="Excel AI agent, Excel VBA automation, Power Query M, Power Pivot DAX, MDX CUBE formulas, CUBEVALUE, workbook QA, Excel deliverables, Codex skills, Claude skills, OpenCode skills">
+  <title>Microsoft Excel BI Agent | Excel BI skills for AI agents | Excel BI Agent 技能包</title>
+  <meta name="description" content="Bilingual open-source Excel BI skills for AI agents: VBA, Power Query M, Power Pivot DAX, MDX/CUBE, ADO/SQL, workbook QA, and clean deliverables. 中英文 Excel BI Agent 技能包。">
+  <meta name="keywords" content="Excel AI agent, Excel VBA automation, Power Query M, Power Pivot DAX, MDX CUBE formulas, CUBEVALUE, workbook QA, Excel deliverables, Codex skills, Claude skills, OpenCode skills, Excel BI Agent, Excel 自动化, Power Query 技能包">
   <meta property="og:title" content="Microsoft Excel BI Agent">
-  <meta property="og:description" content="Make AI agents reliable on real Excel BI workbooks across VBA, Power Query, DAX, MDX/CUBE, ADO/SQL, QA, and clean deliverables.">
+  <meta property="og:description" content="Open-source bilingual Excel BI skills for Codex, Claude, OpenCode, and other AI agents.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="../assets/social-preview.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Microsoft Excel BI Agent">
-  <meta name="twitter:description" content="Open-source Excel BI skills for Codex, Claude, OpenCode, and other AI agents.">
+  <meta name="twitter:description" content="Bilingual Excel BI skills for AI agents: VBA, Power Query, DAX, MDX/CUBE, ADO/SQL, QA, and clean deliverables.">
   <meta name="twitter:image" content="../assets/social-preview.png">
   <style>
     :root {
       --bg: #07111f;
-      --panel: rgba(8, 21, 38, .82);
-      --panel-strong: #081525;
+      --panel: rgba(8, 21, 38, .84);
       --line: rgba(123, 216, 255, .28);
       --excel: #217346;
       --mint: #78e2b1;
@@ -26,8 +25,8 @@
       --ink: #f6fbff;
       --muted: #b8c9d8;
       --soft: #e8f4fb;
-      --blue: #1f5f99;
       --amber: #f0b04f;
+      --blue: #2e7dbc;
     }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
@@ -35,11 +34,11 @@
       margin: 0;
       color: var(--ink);
       background:
-        linear-gradient(180deg, rgba(7,17,31,.64), #07111f 560px),
+        linear-gradient(180deg, rgba(7,17,31,.56), #07111f 600px),
         url("../assets/excel-bi-agent-visual-bg.png") center top / 1800px auto no-repeat,
         var(--bg);
-      font-family: "Segoe UI", Inter, Arial, sans-serif;
-      line-height: 1.55;
+      font-family: "Segoe UI", Inter, "Microsoft YaHei", Arial, sans-serif;
+      line-height: 1.58;
       overflow-x: hidden;
     }
     a { color: var(--cyan); text-decoration: none; }
@@ -49,10 +48,10 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 24px;
+      gap: 20px;
       padding: 22px 0;
     }
-    .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 850; }
     .mark {
       width: 38px; height: 38px; border-radius: 10px;
       background: var(--excel);
@@ -64,30 +63,33 @@
     .mark span:nth-child(1) { height: 14px; }
     .mark span:nth-child(2) { height: 22px; }
     .mark span:nth-child(3) { height: 28px; }
-    .nav-links { display: flex; gap: 18px; font-size: 14px; color: var(--muted); }
+    .nav-links { display: flex; gap: 18px; flex-wrap: wrap; font-size: 14px; color: var(--muted); }
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 1.05fr) minmax(380px, .95fr);
+      grid-template-columns: minmax(0, 1.04fr) minmax(360px, .96fr);
       gap: 44px;
       align-items: center;
       min-height: 620px;
-      padding: 52px 0 72px;
+      padding: 50px 0 72px;
     }
     .hero > * { min-width: 0; }
-    .eyebrow { color: var(--mint); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .eyebrow { color: var(--mint); font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
     h1 {
       margin: 14px 0 0;
-      max-width: 780px;
-      font-size: clamp(42px, 6vw, 78px);
-      line-height: 1.02;
+      max-width: 790px;
+      font-size: clamp(42px, 5.6vw, 76px);
+      line-height: 1.03;
       letter-spacing: 0;
     }
-    .lead {
-      margin: 24px 0 0;
-      max-width: 760px;
-      color: var(--soft);
-      font-size: 20px;
+    .zh-title {
+      margin: 16px 0 0;
+      color: #f0fbff;
+      font-size: clamp(25px, 3.2vw, 38px);
+      line-height: 1.18;
+      font-weight: 850;
     }
+    .lead { margin: 24px 0 0; max-width: 770px; color: var(--soft); font-size: 20px; }
+    .lead.cn { margin-top: 12px; color: #d8eaf5; font-size: 18px; }
     .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
     .button {
       display: inline-flex;
@@ -99,17 +101,15 @@
       border: 1px solid var(--mint);
       background: var(--excel);
       color: white;
-      font-weight: 800;
+      font-weight: 850;
     }
     .button.secondary { background: rgba(255,255,255,.06); color: var(--soft); border-color: rgba(255,255,255,.24); }
-    .hero-card {
-      min-width: 0;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      overflow: hidden;
-      background: rgba(2, 11, 23, .88);
-      box-shadow: 0 24px 70px rgba(0,0,0,.34);
+    .hero-card, .tile, .matrix, .code-card {
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(2, 11, 23, .84);
+      box-shadow: 0 24px 70px rgba(0,0,0,.28);
     }
+    .hero-card { border-radius: 18px; overflow: hidden; max-width: 100%; }
     .hero-card-head {
       height: 52px;
       display: flex;
@@ -124,58 +124,39 @@
     .green { background: #27c93f; }
     pre {
       margin: 0;
-      padding: 28px 30px 34px;
+      padding: 26px 28px 30px;
       color: #83f5b7;
-      font: 17px/1.8 Consolas, "Cascadia Mono", monospace;
+      font: 16px/1.75 Consolas, "Cascadia Mono", monospace;
       white-space: pre-wrap;
       overflow-wrap: anywhere;
     }
     .prompt { color: #9ee7ff; }
     .section { padding: 72px 0; border-top: 1px solid rgba(255,255,255,.08); }
-    h2 { margin: 0 0 18px; font-size: clamp(28px, 4vw, 42px); line-height: 1.1; }
-    .section-intro { max-width: 780px; color: var(--muted); font-size: 18px; }
+    h2 { margin: 0 0 16px; font-size: clamp(28px, 3.8vw, 42px); line-height: 1.1; }
+    .section-intro { max-width: 860px; color: var(--muted); font-size: 18px; }
+    .cn-line { color: #d7e9f4; margin-top: 8px; }
     .grid { display: grid; gap: 16px; margin-top: 28px; }
     .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .tile {
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 12px;
-      background: rgba(255,255,255,.055);
-      padding: 20px;
-    }
+    .tile { border-radius: 12px; padding: 20px; }
     .tile h3 { margin: 0 0 8px; font-size: 18px; }
     .tile p { margin: 0; color: var(--muted); }
-    .matrix {
-      margin-top: 30px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 14px;
-      background: rgba(255,255,255,.05);
-    }
-    .row {
-      display: grid;
-      grid-template-columns: 280px 1fr;
-      border-top: 1px solid rgba(255,255,255,.1);
-    }
+    .matrix { margin-top: 30px; overflow: hidden; border-radius: 14px; }
+    .row { display: grid; grid-template-columns: 280px 1fr; border-top: 1px solid rgba(255,255,255,.1); }
     .row:first-child { border-top: 0; }
     .row > div { padding: 16px 18px; }
-    .row > div:first-child { color: white; font-weight: 800; background: rgba(255,255,255,.045); }
+    .row > div:first-child { color: white; font-weight: 850; background: rgba(255,255,255,.045); }
     .row > div:last-child { color: var(--muted); }
     code { color: #dcf3ff; }
-    .install {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      gap: 18px;
-      margin-top: 28px;
-    }
-    .code-block {
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 12px;
-      background: #020b17;
-      padding: 18px;
-      color: #83f5b7;
-      font: 15px/1.7 Consolas, monospace;
-      overflow-x: auto;
+    .install { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; margin-top: 28px; }
+    .code-card { border-radius: 12px; overflow: hidden; max-width: 100%; }
+    .code-title { padding: 14px 18px; font-weight: 850; background: rgba(255,255,255,.08); color: white; }
+    .note {
+      margin-top: 22px;
+      border-left: 4px solid var(--amber);
+      padding: 12px 16px;
+      background: rgba(240, 176, 79, .12);
+      color: #ffe4bb;
     }
     footer { color: var(--muted); padding: 44px 0 60px; border-top: 1px solid rgba(255,255,255,.08); }
     @media (max-width: 880px) {
@@ -184,21 +165,22 @@
       .grid.three, .grid.two, .install { grid-template-columns: 1fr; }
       .row { grid-template-columns: 1fr; }
       h1 { font-size: 44px; }
-      .eyebrow { font-size: 13px; line-height: 1.45; }
       .lead { font-size: 18px; }
       pre { padding: 24px 18px 28px; font-size: 14px; }
-      .hero-card { width: 100%; }
     }
     @media (max-width: 480px) {
       .wrap { width: calc(100% - 32px); }
-      .nav-links { flex-wrap: wrap; gap: 14px; }
-      .eyebrow, h1, .lead { max-width: 330px; }
-      h1 { font-size: 34px; line-height: 1.08; }
-      .lead { font-size: 16px; max-width: 340px; }
-      .button { min-height: 42px; padding: 0 15px; }
+      .eyebrow, h1, .zh-title, .lead, .lead.cn, .actions, .hero-card, h2, .section-intro {
+        max-width: 340px;
+      }
+      .eyebrow { font-size: 12px; overflow-wrap: anywhere; }
+      h1 { font-size: 30px; line-height: 1.1; overflow-wrap: anywhere; }
+      .zh-title { font-size: 22px; overflow-wrap: anywhere; }
+      .lead, .lead.cn, .section-intro { font-size: 16px; }
+      .actions { flex-direction: column; }
+      .button { width: 100%; min-height: 42px; padding: 0 15px; }
       pre { font-size: 13px; }
-      h2 { max-width: 340px; font-size: 26px; }
-      .section-intro { max-width: 340px; font-size: 16px; }
+      h2 { font-size: 26px; }
     }
   </style>
 </head>
@@ -206,31 +188,33 @@
   <nav class="wrap nav">
     <div class="brand"><span class="mark"><span></span><span></span><span></span></span>Microsoft Excel BI Agent</div>
     <div class="nav-links">
-      <a href="#why">Why</a>
-      <a href="#skills">Skills</a>
-      <a href="#install">Install</a>
+      <a href="#why">Why / 为什么</a>
+      <a href="#skills">Skills / 技能</a>
+      <a href="#install">Install / 安装</a>
       <a href="https://github.com/90le/microsoft-excel-bi-agent">GitHub</a>
     </div>
   </nav>
 
   <header class="wrap hero">
     <div>
-      <div class="eyebrow">Open-source Excel BI automation for AI agents</div>
+      <div class="eyebrow">Open-source Excel BI skills for AI agents</div>
       <h1>Reliable AI agents for Excel BI workbooks</h1>
-      <p class="lead">A cross-agent skill pack for Codex, Claude, OpenCode, and similar agents that need to work safely with Excel VBA, Power Query M, Power Pivot DAX, MDX/CUBE formulas, ADO/SQL, workbook QA, and clean client deliverables.</p>
+      <div class="zh-title">让 AI Agent 稳定处理真实 Excel BI 工作簿</div>
+      <p class="lead">A bilingual cross-agent skill pack for Codex, Claude, OpenCode, and similar agents working with Excel VBA, Power Query M, Power Pivot DAX, MDX/CUBE formulas, ADO/SQL, workbook QA, and clean deliverables.</p>
+      <p class="lead cn">面向真实企业 Excel BI 场景：宏、查询、数据模型、CUBE 公式、外部链接、隐藏过程表和客户交付版本，都有明确的操作边界与验证流程。</p>
       <div class="actions">
-        <a class="button" href="https://github.com/90le/microsoft-excel-bi-agent">View on GitHub</a>
-        <a class="button secondary" href="#install">Install skills</a>
+        <a class="button" href="https://github.com/90le/microsoft-excel-bi-agent">View on GitHub / 查看仓库</a>
+        <a class="button secondary" href="#install">Install / 安装</a>
       </div>
     </div>
     <div class="hero-card">
       <div class="hero-card-head"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
-      <pre><span class="prompt">&gt; install skills</span>
-[ok] VBA modules exported
-[ok] Power Query lineage checked
-[ok] DAX / CUBE dependencies mapped
-[ok] deliverable hygiene passed
-[ok] mirrors synced: Codex / Claude / OpenCode</pre>
+      <pre><span class="prompt">&gt; codex plugin add microsoft-excel-bi-agent-pack@microsoft-excel-bi-agent</span>
+[ok] VBA workflow loaded
+[ok] Power Query refresh rules loaded
+[ok] DAX / MDX / CUBE routing loaded
+[ok] clean deliverable checklist loaded
+[ok] mirrors ready: Codex / Claude / OpenCode</pre>
     </div>
   </header>
 
@@ -238,11 +222,12 @@
     <section id="why" class="section">
       <div class="wrap">
         <h2>Excel BI workbooks are not just code.</h2>
-        <p class="section-intro">A real workbook can contain formulas, macros, query dependencies, Data Model measures, CUBE references, named ranges, external links, buttons, hidden process sheets, and delivery-only copies. This project gives agents a disciplined operating model for that world.</p>
+        <p class="section-intro">A real workbook can contain formulas, VBA, Power Query M, Power Pivot measures, CUBE references, named ranges, external links, buttons, hidden process sheets, and delivery-only copies.</p>
+        <p class="section-intro cn-line">真实工作簿不是单纯的代码文件。这个项目把这些复杂操作沉淀成可复用技能，让 Agent 先判断边界，再修改，再验证。</p>
         <div class="grid three">
-          <div class="tile"><h3>Safer workbook edits</h3><p>Agents get explicit workflows for VBA, formulas, buttons, hidden sheets, links, and workbook structure.</p></div>
-          <div class="tile"><h3>BI-layer awareness</h3><p>Power Query M, Power Pivot DAX, MDX/CUBE, ADO/SQL, and semantic model boundaries are routed to specialist skills.</p></div>
-          <div class="tile"><h3>Delivery-ready outputs</h3><p>Publishing workflows freeze formulas, remove dependencies, clean process sheets, and verify client-ready Excel files.</p></div>
+          <div class="tile"><h3>Safer edits / 更安全修改</h3><p>Explicit workflows for formulas, VBA, buttons, hidden sheets, workbook links, and workbook structure.</p></div>
+          <div class="tile"><h3>BI-layer awareness / 理解 BI 层</h3><p>Specialist skills for Power Query, Power Pivot DAX, MDX/CUBE, ADO/SQL, and semantic model boundaries.</p></div>
+          <div class="tile"><h3>Delivery-ready / 面向交付</h3><p>Freeze formulas, remove dependencies, clean process sheets, and verify client-ready Excel files.</p></div>
         </div>
       </div>
     </section>
@@ -250,13 +235,14 @@
     <section id="skills" class="section">
       <div class="wrap">
         <h2>12 production skills for Excel BI agents.</h2>
-        <p class="section-intro">Use the router for broad tasks or invoke the specialist skill directly when the workbook layer is clear.</p>
+        <p class="section-intro">Use the router for broad tasks, or invoke a specialist skill when the workbook layer is clear.</p>
+        <p class="section-intro cn-line">宽泛需求先用路由技能判断；明确是 VBA、Power Query、DAX、MDX、交付或 QA 时，直接进入对应专项技能。</p>
         <div class="matrix">
           <div class="row"><div>VBA and workbook automation</div><div><code>excel-vba-workbook-engineering</code> exports/imports modules, checks buttons, preserves formulas, and validates Excel behavior where possible.</div></div>
           <div class="row"><div>Power Query M</div><div><code>power-query-m-engineering</code> handles query edits, refresh completion, dependency lineage, error localization, and performance timing.</div></div>
-          <div class="row"><div>Power Pivot / DAX / MDX</div><div><code>power-pivot-dax-modeling</code> and <code>mdx-cubevalue-extraction</code> help agents reason about measures, contexts, members, CUBE formulas, and Data Model boundaries.</div></div>
+          <div class="row"><div>Power Pivot / DAX / MDX</div><div><code>power-pivot-dax-modeling</code> and <code>mdx-cubevalue-extraction</code> cover measures, contexts, members, CUBE formulas, and Data Model boundaries.</div></div>
           <div class="row"><div>ADO / SQL access</div><div><code>excel-ado-sql-data-access</code> covers workbook SQL, ADODB, ADOMD, provider strings, parameters, and recordset handling.</div></div>
-          <div class="row"><div>QA and delivery</div><div><code>excel-workbook-qa-auditor</code> and <code>excel-deliverable-publisher</code> turn workbook risk review and clean `.xlsx` publishing into repeatable agent workflows.</div></div>
+          <div class="row"><div>QA and delivery</div><div><code>excel-workbook-qa-auditor</code> and <code>excel-deliverable-publisher</code> make risk review and clean `.xlsx` publishing repeatable.</div></div>
           <div class="row"><div>Cross-agent distribution</div><div>Generated mirrors support Codex, Claude, and OpenCode from one canonical <code>.agents/skills/</code> source.</div></div>
         </div>
       </div>
@@ -265,13 +251,34 @@
     <section id="install" class="section">
       <div class="wrap">
         <h2>Install once, reuse across agents.</h2>
-        <p class="section-intro">Clone the repository, install as a local Codex plugin, then sync the same skill source to project mirrors and user-level skills.</p>
+        <p class="section-intro">Choose marketplace install for Codex users, local install for teams that want to inspect or customize, and manual scripts for controlled enterprise distribution.</p>
+        <p class="section-intro cn-line">Codex 用户优先用插件市场；团队内部可克隆后一键安装；企业内部交付可使用显式脚本安装与同步。</p>
         <div class="install">
-          <div class="code-block">git clone https://github.com/90le/microsoft-excel-bi-agent.git
-cd microsoft-excel-bi-agent</div>
-          <div class="code-block">python tools\deploy-local-plugin.py --project-root . --replace --install
-python tools\sync-skills.py --project-root . --all-project-mirrors --codex-user --replace</div>
+          <div class="code-card">
+            <div class="code-title">Codex marketplace / Codex 插件市场</div>
+            <pre>codex plugin marketplace add 90le/microsoft-excel-bi-agent
+codex plugin add microsoft-excel-bi-agent-pack@microsoft-excel-bi-agent</pre>
+          </div>
+          <div class="code-card">
+            <div class="code-title">Local one-command / 本地一键</div>
+            <pre>git clone https://github.com/90le/microsoft-excel-bi-agent.git
+cd microsoft-excel-bi-agent
+node tools/install.mjs</pre>
+          </div>
         </div>
+        <div class="install">
+          <div class="code-card">
+            <div class="code-title">Windows shortcuts / Windows 快捷入口</div>
+            <pre>.\install.ps1
+install.cmd</pre>
+          </div>
+          <div class="code-card">
+            <div class="code-title">macOS, Linux, Git Bash</div>
+            <pre>sh install.sh
+node tools/install.mjs --check</pre>
+          </div>
+        </div>
+        <div class="note">npm/npx is not advertised yet because no npm package has been published. Current stable one-command install is <code>node tools/install.mjs</code>. 当前没有发布 npm 包，所以不写不可执行的 npx 命令。</div>
       </div>
     </section>
   </main>
@@ -279,6 +286,7 @@ python tools\sync-skills.py --project-root . --all-project-mirrors --codex-user 
   <footer>
     <div class="wrap">
       MIT licensed. Windows desktop Excel is required for Excel COM, VBA execution, Power Query refresh, and Power Pivot runtime proof. macOS and Linux support structural checks and OpenXML inspection.
+      <br>MIT 开源。Windows 桌面版 Excel 用于证明 COM、VBA、Power Query 刷新和 Power Pivot 运行时行为；macOS/Linux 支持结构校验和 OpenXML 检查。
     </div>
   </footer>
 </body>

@@ -1,0 +1,20 @@
+{
+  "name": "microsoft-excel-bi-agent",
+  "interface": {
+    "displayName": "Microsoft Excel BI Agent"
+  },
+  "plugins": [
+    {
+      "name": "microsoft-excel-bi-agent-pack",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
