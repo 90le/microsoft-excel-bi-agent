@@ -1,9 +1,9 @@
 {
   "name": "microsoft-excel-bi-agent-pack",
-  "version": "0.1.3+codex.20260623171436",
+  "version": "0.1.4+codex.20260623173419",
   "description": "Cross-agent skills, task profiles, references, regression cases, and scripts for Microsoft Excel BI workbooks, VBA, Power Query M, Power Pivot DAX, MDX/CUBE formulas, ADO/SQL automation, deliverable publishing, workbook QA, Office diagnostics, report building, semantic model review, and sanitized fixtures.",
   "author": {
-    "name": "Local Microsoft Excel BI Automation"
+    "name": "Qiu Binbin (丘彬彬)"
   },
   "license": "MIT",
   "keywords": [
@@ -31,7 +31,7 @@
     "displayName": "Microsoft Excel BI Agent",
     "shortDescription": "Excel BI skills and task profiles for workbook engineering, BI layers, delivery, QA, diagnostics, reports, and fixtures.",
     "longDescription": "A local plugin package for agents that need to inspect, modify, debug, validate, publish, and QA Microsoft Excel BI workbooks across VBA, Power Query M, Power Pivot DAX, CUBE/MDX formulas, ADO/SQL data access, Office environment diagnostics, Excel report building, Power BI semantic model review, sanitized fixture workflows, workbook-backed visual QA fixtures, rendered Visual QA evidence through Windows Excel COM PDF export, and real/sanitized regression-case tracking. The package includes workflow skills, concise task-profile entry points, official-documentation routing, deterministic helper scripts for Windows Excel COM plus cross-platform OpenXML inspection, and a safe regression library that captures recurring problem shapes without storing customer workbooks.",
-    "developerName": "Local Microsoft Excel BI Automation",
+    "developerName": "Qiu Binbin (丘彬彬)",
     "category": "Productivity",
     "capabilities": [
       "Write",

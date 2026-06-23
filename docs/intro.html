@@ -5,15 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Microsoft Excel BI Agent | Excel BI skills for AI agents</title>
   <meta name="description" content="Open-source Excel BI skills for AI agents: VBA, Power Query M, Power Pivot DAX, MDX/CUBE, ADO/SQL, workbook QA, and clean deliverables.">
+  <meta name="author" content="Qiu Binbin (丘彬彬), WeChat binstudy, Blog 90le.cn">
   <meta name="keywords" content="Excel AI agent, Excel VBA automation, Power Query M, Power Pivot DAX, MDX CUBE formulas, CUBEVALUE, workbook QA, Excel deliverables, Codex skills, Claude skills, OpenCode skills">
+  <link rel="canonical" href="https://90le.github.io/microsoft-excel-bi-agent/intro.html">
   <meta property="og:title" content="Microsoft Excel BI Agent">
   <meta property="og:description" content="Open-source Excel BI skills for Codex, Claude, OpenCode, and other AI agents.">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="../assets/social-preview.png">
+  <meta property="og:url" content="https://90le.github.io/microsoft-excel-bi-agent/intro.html">
+  <meta property="og:image" content="https://90le.github.io/microsoft-excel-bi-agent/assets/social-preview.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Microsoft Excel BI Agent">
   <meta name="twitter:description" content="Excel BI skills for AI agents: VBA, Power Query, DAX, MDX/CUBE, ADO/SQL, QA, and clean deliverables.">
-  <meta name="twitter:image" content="../assets/social-preview.png">
+  <meta name="twitter:image" content="https://90le.github.io/microsoft-excel-bi-agent/assets/social-preview.png">
   <link rel="alternate" hreflang="en" href="./intro.html">
   <link rel="alternate" hreflang="zh-CN" href="./intro.zh-CN.html">
   <link rel="stylesheet" href="./site.css">
@@ -23,6 +26,7 @@
     <div class="brand"><span class="mark"><span></span><span></span><span></span></span>Microsoft Excel BI Agent</div>
     <div class="nav-links">
       <a href="#why">Why</a>
+      <a href="#use-cases">Use Cases</a>
       <a href="#skills">Skills</a>
       <a href="#install">Install</a>
       <a class="lang" href="./intro.zh-CN.html">中文</a>
@@ -35,6 +39,7 @@
       <div class="eyebrow">Open-source Excel BI skills for AI agents</div>
       <h1>Reliable AI agents for Excel BI workbooks</h1>
       <p class="lead">A cross-agent skill pack for Codex, Claude, OpenCode, and similar agents working with Excel VBA, Power Query M, Power Pivot DAX, MDX/CUBE formulas, ADO/SQL, workbook QA, and clean deliverables.</p>
+      <p class="byline">Maintained by <strong>Qiu Binbin (丘彬彬)</strong> · WeChat <strong>binstudy</strong> · Blog <a href="https://90le.cn">90le.cn</a></p>
       <div class="actions">
         <a class="button" href="https://github.com/90le/microsoft-excel-bi-agent">View on GitHub</a>
         <a class="button secondary" href="#install">Install</a>
@@ -60,6 +65,24 @@
           <div class="tile"><h3>Safer workbook edits</h3><p>Explicit workflows for formulas, VBA, buttons, hidden sheets, workbook links, and workbook structure.</p></div>
           <div class="tile"><h3>BI-layer awareness</h3><p>Specialist skills for Power Query, Power Pivot DAX, MDX/CUBE, ADO/SQL, and semantic model boundaries.</p></div>
           <div class="tile"><h3>Delivery-ready output</h3><p>Freeze formulas, remove dependencies, clean process sheets, and verify client-ready Excel files.</p></div>
+        </div>
+        <div class="proof-strip">
+          <div><strong>12</strong><span>Excel BI skills</span></div>
+          <div><strong>3</strong><span>agent surfaces</span></div>
+          <div><strong>0</strong><span>fake npm commands</span></div>
+          <div><strong>CI</strong><span>public checks</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="use-cases" class="section">
+      <div class="wrap">
+        <h2>Use it when workbook risk matters.</h2>
+        <p class="section-intro">The pack is for agent work where a simple code edit is not enough: workbook state, BI layers, hidden dependencies, and delivery cleanup all affect the outcome.</p>
+        <div class="grid three">
+          <a class="tile card-link" href="./task-recipes.md"><h3>Debug a broken BI layer</h3><p>Route Power Query, DAX, MDX/CUBE, ADO/SQL, or workbook-structure problems to the right specialist workflow.</p></a>
+          <a class="tile card-link" href="./compatibility.md"><h3>Separate structure from runtime</h3><p>Keep public structural checks distinct from Windows Excel COM, VBA, Power Query refresh, and Power Pivot proof.</p></a>
+          <a class="tile card-link" href="./distribution-checklist.md"><h3>Ship a cleaner package</h3><p>Use artifact hygiene, install checks, and release visibility before publishing a workbook-facing skill pack.</p></a>
         </div>
       </div>
     </div>
@@ -98,7 +121,7 @@ node tools/install.mjs</pre>
         </div>
         <div class="note">The project does not advertise `npx` yet because no npm package has been published. Current stable one-command install is <code>node tools/install.mjs</code>.</div>
         <div class="grid three release-grid">
-          <div class="tile"><h3>Latest release</h3><p><a href="https://github.com/90le/microsoft-excel-bi-agent/releases/tag/v0.1.3">v0.1.3</a> adds public maintenance goals, risk backlog, and CI-backed structural validation.</p></div>
+          <div class="tile"><h3>Latest release</h3><p><a href="https://github.com/90le/microsoft-excel-bi-agent/releases/tag/v0.1.4">v0.1.4</a> adds public growth goals, maintainer attribution, social metadata, and a reusable marketing copy pack.</p></div>
           <div class="tile"><h3>Public checks</h3><p>Skills, docs, task recipes, official-doc indexes, artifact hygiene, and installer checks run without desktop Excel.</p></div>
           <div class="tile"><h3>Runtime boundary</h3><p>Excel COM, VBA, Power Query refresh, and Power Pivot proof still require Windows desktop Excel.</p></div>
         </div>
@@ -107,8 +130,8 @@ node tools/install.mjs</pre>
   </main>
 
   <footer>
-    <div class="wrap">MIT licensed. Windows desktop Excel is required for Excel COM, VBA execution, Power Query refresh, and Power Pivot runtime proof. macOS and Linux support structural checks and OpenXML inspection.</div>
-    <div class="wrap footer-links"><a href="./project.en-US.md">Project overview</a><a href="./maintenance-goals.en-US.md">Maintenance goals</a><a href="./release-notes.en-US.md">Release notes</a><a href="./install-and-sync.md">Install guide</a></div>
+    <div class="wrap">MIT licensed. Maintained by Qiu Binbin (丘彬彬), WeChat binstudy, blog <a href="https://90le.cn">90le.cn</a>. Windows desktop Excel is required for Excel COM, VBA execution, Power Query refresh, and Power Pivot runtime proof.</div>
+    <div class="wrap footer-links"><a href="./project.en-US.md">Project overview</a><a href="./maintenance-goals.en-US.md">Maintenance goals</a><a href="./growth-goals.en-US.md">Growth goals</a><a href="./marketing-copy.en-US.md">Marketing copy</a><a href="./release-notes.en-US.md">Release notes</a><a href="./install-and-sync.md">Install guide</a></div>
   </footer>
 </body>
 </html>

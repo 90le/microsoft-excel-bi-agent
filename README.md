@@ -15,6 +15,15 @@ Microsoft Excel BI Agent is an open-source, cross-agent skill pack for teams tha
 
 It is built for the messy Excel work that generic coding agents usually mishandle: hidden sheets, macro-enabled workbooks, Power Query refresh timing, Data Model boundaries, CUBEVALUE formulas, external links, client-ready `.xlsx` publishing, and Windows Excel COM validation.
 
+Maintained by **Qiu Binbin (丘彬彬)**. WeChat: **binstudy**. Blog: **https://90le.cn**.
+
+## Use It When
+
+- An AI agent needs to inspect or modify a real workbook with formulas, VBA, Power Query, Data Model, CUBE formulas, links, or hidden process sheets.
+- A delivery workbook must be cleaned before it is shared with a client.
+- A team wants one Excel BI workflow source that can be reused across Codex, Claude, OpenCode, and similar agents.
+- A maintainer needs public validation that does not require private workbooks or desktop Excel.
+
 ## What It Helps Agents Do
 
 | Area | What the skill pack adds |
@@ -120,6 +129,8 @@ python tools\run_release_gate.py --project-root .
 - [Install and sync guide](docs/install-and-sync.md)
 - [Task recipes](docs/task-recipes.md)
 - [Maintenance goals and risk backlog](docs/maintenance-goals.en-US.md)
+- [Public growth goals](docs/growth-goals.en-US.md)
+- [Marketing copy pack](docs/marketing-copy.en-US.md)
 - [Release notes](docs/release-notes.en-US.md)
 - [Compatibility boundaries](docs/compatibility.md)
 - [Distribution checklist](docs/distribution-checklist.md)

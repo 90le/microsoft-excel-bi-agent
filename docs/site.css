@@ -73,6 +73,13 @@ h1 {
   letter-spacing: 0;
 }
 .lead { margin: 24px 0 0; max-width: 770px; color: var(--soft); font-size: 20px; }
+.byline {
+  margin: 16px 0 0;
+  max-width: 720px;
+  color: #d7e9f4;
+  font-size: 15px;
+}
+.byline strong { color: white; }
 .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
 .button {
   display: inline-flex;
@@ -123,6 +130,42 @@ h2 { margin: 0 0 16px; font-size: clamp(28px, 3.8vw, 42px); line-height: 1.1; }
 .tile h3 { margin: 0 0 8px; font-size: 18px; }
 .tile p { margin: 0; color: var(--muted); }
 .tile a { color: var(--accent); text-decoration: none; font-weight: 850; }
+.card-link {
+  display: block;
+  color: inherit;
+  min-height: 164px;
+  transition: transform .16s ease, border-color .16s ease, background .16s ease;
+}
+.card-link:hover {
+  transform: translateY(-2px);
+  text-decoration: none;
+  border-color: rgba(119, 216, 255, .46);
+  background: rgba(5, 20, 35, .92);
+}
+.proof-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 26px;
+}
+.proof-strip div {
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 10px;
+  padding: 14px 16px;
+  background: rgba(255,255,255,.055);
+}
+.proof-strip strong {
+  display: block;
+  color: white;
+  font-size: 24px;
+  line-height: 1;
+}
+.proof-strip span {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 13px;
+}
 .release-grid { margin-top: 22px; }
 .matrix { margin-top: 30px; overflow: hidden; border-radius: 14px; }
 .row { display: grid; grid-template-columns: 280px 1fr; border-top: 1px solid rgba(255,255,255,.1); }
@@ -147,7 +190,7 @@ footer { color: var(--muted); padding: 44px 0 60px; border-top: 1px solid rgba(2
 @media (max-width: 880px) {
   .nav { align-items: flex-start; flex-direction: column; }
   .hero { grid-template-columns: minmax(0, 1fr); padding-top: 28px; gap: 30px; }
-  .grid.three, .install { grid-template-columns: 1fr; }
+  .grid.three, .install, .proof-strip { grid-template-columns: 1fr; }
   .row { grid-template-columns: 1fr; }
   h1 { font-size: 44px; }
   .lead { font-size: 18px; }
@@ -155,7 +198,7 @@ footer { color: var(--muted); padding: 44px 0 60px; border-top: 1px solid rgba(2
 }
 @media (max-width: 480px) {
   .wrap { width: calc(100% - 32px); }
-  .eyebrow, h1, .lead, .actions, .hero-card, h2, .section-intro { max-width: 340px; }
+  .eyebrow, h1, .lead, .byline, .actions, .hero-card, h2, .section-intro { max-width: 340px; }
   .eyebrow { font-size: 12px; overflow-wrap: anywhere; }
   h1 { font-size: 30px; line-height: 1.1; overflow-wrap: anywhere; }
   .lead, .section-intro { font-size: 16px; }

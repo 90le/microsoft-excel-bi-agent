@@ -5,15 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Microsoft Excel BI Agent | 面向 AI Agent 的 Excel BI 技能包</title>
   <meta name="description" content="开源 Excel BI Agent 技能包：覆盖 VBA、Power Query M、Power Pivot DAX、MDX/CUBE、ADO/SQL、工作簿 QA 和纯净交付物。">
+  <meta name="author" content="丘彬彬, 微信 binstudy, 博客 90le.cn">
   <meta name="keywords" content="Excel AI Agent, Excel 自动化, VBA, Power Query M, Power Pivot DAX, MDX, CUBEVALUE, 工作簿 QA, Excel 交付物, Codex 技能, Claude 技能, OpenCode 技能">
+  <link rel="canonical" href="https://90le.github.io/microsoft-excel-bi-agent/intro.zh-CN.html">
   <meta property="og:title" content="Microsoft Excel BI Agent">
   <meta property="og:description" content="面向 Codex、Claude、OpenCode 等 AI Agent 的开源 Excel BI 技能包。">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="../assets/social-preview.zh-CN.png">
+  <meta property="og:url" content="https://90le.github.io/microsoft-excel-bi-agent/intro.zh-CN.html">
+  <meta property="og:image" content="https://90le.github.io/microsoft-excel-bi-agent/assets/social-preview.zh-CN.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Microsoft Excel BI Agent">
   <meta name="twitter:description" content="面向 AI Agent 的 Excel BI 技能包：VBA、Power Query、DAX、MDX/CUBE、ADO/SQL、QA 和纯净交付。">
-  <meta name="twitter:image" content="../assets/social-preview.zh-CN.png">
+  <meta name="twitter:image" content="https://90le.github.io/microsoft-excel-bi-agent/assets/social-preview.zh-CN.png">
   <link rel="alternate" hreflang="en" href="./intro.html">
   <link rel="alternate" hreflang="zh-CN" href="./intro.zh-CN.html">
   <link rel="stylesheet" href="./site.css">
@@ -23,6 +26,7 @@
     <div class="brand"><span class="mark"><span></span><span></span><span></span></span>Microsoft Excel BI Agent</div>
     <div class="nav-links">
       <a href="#why">为什么</a>
+      <a href="#use-cases">场景</a>
       <a href="#skills">技能</a>
       <a href="#install">安装</a>
       <a class="lang" href="./intro.html">English</a>
@@ -35,6 +39,7 @@
       <div class="eyebrow">开源 Excel BI Agent 技能包</div>
       <h1>让 AI Agent 稳定处理真实 Excel BI 工作簿</h1>
       <p class="lead">面向 Codex、Claude、OpenCode 等 AI Agent 的跨平台技能包，覆盖 Excel VBA、Power Query M、Power Pivot DAX、MDX/CUBE 公式、ADO/SQL、工作簿 QA 和客户交付版本清理。</p>
+      <p class="byline">维护者 <strong>丘彬彬</strong> · 微信 <strong>binstudy</strong> · 博客 <a href="https://90le.cn">90le.cn</a></p>
       <div class="actions">
         <a class="button" href="https://github.com/90le/microsoft-excel-bi-agent">查看 GitHub 仓库</a>
         <a class="button secondary" href="#install">安装</a>
@@ -60,6 +65,24 @@
           <div class="tile"><h3>更安全地修改工作簿</h3><p>为公式、VBA、按钮、隐藏表、工作簿链接和结构保护提供明确操作流程。</p></div>
           <div class="tile"><h3>理解 Excel BI 层</h3><p>为 Power Query、Power Pivot DAX、MDX/CUBE、ADO/SQL 和语义模型边界提供专项技能。</p></div>
           <div class="tile"><h3>面向客户交付</h3><p>支持公式转值、删除依赖、清理过程表，并验证可交付的纯净 Excel 文件。</p></div>
+        </div>
+        <div class="proof-strip">
+          <div><strong>12</strong><span>个 Excel BI 技能</span></div>
+          <div><strong>3</strong><span>类 Agent 表面</span></div>
+          <div><strong>0</strong><span>虚假 npm 命令</span></div>
+          <div><strong>CI</strong><span>公开校验</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="use-cases" class="section">
+      <div class="wrap">
+        <h2>当工作簿风险重要时使用它。</h2>
+        <p class="section-intro">这个技能包面向“不能只当代码改”的 Agent 工作：工作簿状态、BI 层、隐藏依赖和交付清理都会影响结果。</p>
+        <div class="grid three">
+          <a class="tile card-link" href="./task-recipes.md"><h3>定位损坏的 BI 层</h3><p>把 Power Query、DAX、MDX/CUBE、ADO/SQL 或工作簿结构问题路由到正确专项工作流。</p></a>
+          <a class="tile card-link" href="./compatibility.md"><h3>区分结构和运行时</h3><p>把公开结构校验与 Windows Excel COM、VBA、Power Query 刷新和 Power Pivot 证明明确分开。</p></a>
+          <a class="tile card-link" href="./distribution-checklist.md"><h3>发布更干净的包</h3><p>在发布面向工作簿的技能包前，使用 artifact hygiene、安装检查和 release 可见性。</p></a>
         </div>
       </div>
     </div>
@@ -98,7 +121,7 @@ node tools/install.mjs</pre>
         </div>
         <div class="note">当前尚未发布 npm 包，因此不写不可执行的 `npx` 命令。当前稳定的一键安装入口是 <code>node tools/install.mjs</code>。</div>
         <div class="grid three release-grid">
-          <div class="tile"><h3>最新发布</h3><p><a href="https://github.com/90le/microsoft-excel-bi-agent/releases/tag/v0.1.3">v0.1.3</a> 增加公开维护目标、风险 backlog 和 CI 支持的结构校验。</p></div>
+          <div class="tile"><h3>最新发布</h3><p><a href="https://github.com/90le/microsoft-excel-bi-agent/releases/tag/v0.1.4">v0.1.4</a> 增加公开增长目标、维护者署名、社交元信息和可复用营销文案包。</p></div>
           <div class="tile"><h3>公开校验</h3><p>技能、文档、任务配方、官方文档索引、artifact hygiene 和安装器检查均不依赖桌面版 Excel。</p></div>
           <div class="tile"><h3>运行时边界</h3><p>Excel COM、VBA、Power Query 刷新和 Power Pivot 证明仍需要 Windows 桌面版 Excel。</p></div>
         </div>
@@ -107,8 +130,8 @@ node tools/install.mjs</pre>
   </main>
 
   <footer>
-    <div class="wrap">MIT 开源。Windows 桌面版 Excel 用于证明 Excel COM、VBA 执行、Power Query 刷新和 Power Pivot 运行时行为；macOS 和 Linux 支持结构校验与 OpenXML 检查。</div>
-    <div class="wrap footer-links"><a href="./project.zh-CN.md">项目说明</a><a href="./maintenance-goals.zh-CN.md">维护目标</a><a href="./release-notes.zh-CN.md">发布说明</a><a href="./install-and-sync.md">安装说明</a></div>
+    <div class="wrap">MIT 开源。维护者：丘彬彬，微信 binstudy，博客 <a href="https://90le.cn">90le.cn</a>。Windows 桌面版 Excel 用于证明 Excel COM、VBA 执行、Power Query 刷新和 Power Pivot 运行时行为。</div>
+    <div class="wrap footer-links"><a href="./project.zh-CN.md">项目说明</a><a href="./maintenance-goals.zh-CN.md">维护目标</a><a href="./growth-goals.zh-CN.md">增长目标</a><a href="./marketing-copy.zh-CN.md">营销文案</a><a href="./release-notes.zh-CN.md">发布说明</a><a href="./install-and-sync.md">安装说明</a></div>
   </footer>
 </body>
 </html>

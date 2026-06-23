@@ -1,5 +1,42 @@
 # Release Notes
 
+## v0.1.4 - Public Growth Goals And Marketing Readiness
+
+Release focus: improve public trust, adoption clarity, social sharing, and marketing reuse without changing Excel workbook behavior.
+
+### Changed
+
+- Added bilingual public growth goals with objective, constraints, boundaries, can-do/cannot-do rules, detailed goals, and high-value optimization backlog.
+- Added bilingual marketing copy pack for launch posts, short taglines, ad directions, channel variants, and do-not-claim rules.
+- Added maintainer attribution across README, project docs, Pages, and plugin manifest: Qiu Binbin (丘彬彬), WeChat `binstudy`, blog `90le.cn`.
+- Updated the website with use-case conversion cards, proof metrics, absolute Open Graph/Twitter image URLs, canonical URLs, author metadata, and v0.1.4 release visibility.
+- Updated project documentation validation and goal coverage checks so public growth, marketing copy, maintainer signature, and social metadata stay covered by CI.
+- Bumped the plugin manifest to `0.1.4+codex.20260623173419`.
+
+### Validation
+
+Public checks:
+
+```bash
+python tools/validate-skills.py .
+python tools/validate_project_docs.py --project-root .
+python tools/validate_task_recipes.py --project-root .
+python tools/validate_official_docs_index.py --project-root .
+python tools/build_artifact_hygiene_report.py --project-root . --require-pass
+python tools/build_goal_coverage_report.py --project-root . --require-pass
+node tools/install.mjs --check
+```
+
+Maintainer structural gate:
+
+```bash
+python tools/run_release_gate.py --project-root . --profile structural
+```
+
+### Boundary
+
+This release changes public positioning, site layout, metadata, and documentation. It does not claim new Excel COM, VBA, Power Query refresh, or Power Pivot runtime proof.
+
 ## v0.1.3 - Public Maintenance Goals And CI Validation
 
 Release focus: reduce public repository maintenance risk without changing Excel workbook behavior.

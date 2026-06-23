@@ -6,13 +6,13 @@ Use `docs/maintenance-goals.en-US.md` or `docs/maintenance-goals.zh-CN.md` for t
 ## Current Release
 
 ```text
-v0.1.3
+v0.1.4
 ```
 
 Package cachebuster version:
 
 ```text
-0.1.3+codex.20260623171436
+0.1.4+codex.20260623173419
 ```
 
 ## Current Capability Shape
@@ -26,6 +26,7 @@ Package cachebuster version:
 - The workbook-backed sanitized Visual QA case V1 is complete for `0.1.0+codex.20260622045441`.
 - The rendered Visual QA evidence chain V1 is complete for `0.1.0+codex.20260622060709`.
 - Public maintenance goals, risk backlog, and CI-backed structural validation are complete for `v0.1.3`.
+- Public growth goals, maintainer attribution, social metadata, and reusable marketing copy are complete for `v0.1.4`.
 
 ## Daily Entry Points
 
@@ -36,6 +37,7 @@ Package cachebuster version:
 | Ask another agent to install it | `prompts/one-click-install-prompt.zh-CN.md` |
 | Install/sync all prompts | `docs/install-and-sync.md` |
 | Review maintenance goals and remaining risks | `docs/maintenance-goals.en-US.md` or `docs/maintenance-goals.zh-CN.md` |
+| Review growth goals and marketing copy | `docs/growth-goals.en-US.md`, `docs/growth-goals.zh-CN.md`, `docs/marketing-copy.en-US.md`, or `docs/marketing-copy.zh-CN.md` |
 | Review release notes | `docs/release-notes.en-US.md` or `docs/release-notes.zh-CN.md` |
 | Choose a skill or workflow | `excel-bi-router` or `tools/run_task_profile.py` |
 | Audit a workbook | `tools/run_task_profile.py --profile audit` |

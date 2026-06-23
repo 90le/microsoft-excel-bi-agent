@@ -32,6 +32,12 @@ PUBLIC_DOCS = [
     "docs/maintenance-goals.md",
     "docs/maintenance-goals.en-US.md",
     "docs/maintenance-goals.zh-CN.md",
+    "docs/growth-goals.md",
+    "docs/growth-goals.en-US.md",
+    "docs/growth-goals.zh-CN.md",
+    "docs/marketing-copy.md",
+    "docs/marketing-copy.en-US.md",
+    "docs/marketing-copy.zh-CN.md",
     "docs/release-notes.md",
     "docs/release-notes.en-US.md",
     "docs/release-notes.zh-CN.md",
@@ -81,6 +87,31 @@ ZH_GOAL_HEADINGS = [
     "## 必跑公开校验",
     "## 必须值得的优化规则",
 ]
+
+EN_GROWTH_HEADINGS = [
+    "## Objective",
+    "## Constraints",
+    "## Boundaries",
+    "## Can Do",
+    "## Cannot Do",
+    "## Detailed Goals",
+    "## High-Value Optimization Backlog",
+    "## Required Public Checks",
+]
+
+ZH_GROWTH_HEADINGS = [
+    "## 目标",
+    "## 约束",
+    "## 边界",
+    "## 可以做",
+    "## 不能做",
+    "## 详细 Goal",
+    "## 高价值优化 Backlog",
+    "## 必跑公开校验",
+]
+
+SIGNATURE_NAME_TERMS = ("Qiu Binbin", "丘彬彬")
+SIGNATURE_CONTACT_TERMS = ("binstudy", "90le.cn")
 
 MOJIBAKE_MARKERS = (
     "涓",
@@ -156,6 +187,12 @@ def validate(project_root: Path) -> dict[str, Any]:
     goals_en = texts.get("docs/maintenance-goals.en-US.md", "")
     goals_zh = texts.get("docs/maintenance-goals.zh-CN.md", "")
     goals_index = texts.get("docs/maintenance-goals.md", "")
+    growth_en = texts.get("docs/growth-goals.en-US.md", "")
+    growth_zh = texts.get("docs/growth-goals.zh-CN.md", "")
+    growth_index = texts.get("docs/growth-goals.md", "")
+    marketing_en = texts.get("docs/marketing-copy.en-US.md", "")
+    marketing_zh = texts.get("docs/marketing-copy.zh-CN.md", "")
+    marketing_index = texts.get("docs/marketing-copy.md", "")
     release_notes_en = texts.get("docs/release-notes.en-US.md", "")
     release_notes_zh = texts.get("docs/release-notes.zh-CN.md", "")
     release_notes_index = texts.get("docs/release-notes.md", "")
@@ -163,7 +200,8 @@ def validate(project_root: Path) -> dict[str, Any]:
     intro_zh = texts.get("docs/intro.zh-CN.html", "")
     site_index = texts.get("docs/index.html", "")
 
-    if contains_cjk(readme_en.replace("[中文]", "")):
+    english_readme_probe = readme_en.replace("[中文]", "").replace("丘彬彬", "")
+    if contains_cjk(english_readme_probe):
         warnings.append("README.md contains CJK characters outside the language switcher")
     if not contains_cjk(readme_zh):
         errors.append("README.zh-CN.md does not appear to contain Chinese text")
@@ -175,6 +213,8 @@ def validate(project_root: Path) -> dict[str, Any]:
             "README.zh-CN.md",
             "docs/project.en-US.md",
             "docs/maintenance-goals.en-US.md",
+            "docs/growth-goals.en-US.md",
+            "docs/marketing-copy.en-US.md",
             "docs/release-notes.en-US.md",
             "docs/install-and-sync.md",
             "docs/intro.html",
@@ -188,6 +228,8 @@ def validate(project_root: Path) -> dict[str, Any]:
             "README.md",
             "docs/project.zh-CN.md",
             "docs/maintenance-goals.zh-CN.md",
+            "docs/growth-goals.zh-CN.md",
+            "docs/marketing-copy.zh-CN.md",
             "docs/release-notes.zh-CN.md",
             "docs/install-and-sync.md",
             "docs/intro.zh-CN.html",
@@ -217,6 +259,10 @@ def validate(project_root: Path) -> dict[str, Any]:
             "project.zh-CN.md",
             "maintenance-goals.en-US.md",
             "maintenance-goals.zh-CN.md",
+            "growth-goals.en-US.md",
+            "growth-goals.zh-CN.md",
+            "marketing-copy.en-US.md",
+            "marketing-copy.zh-CN.md",
             "release-notes.en-US.md",
             "release-notes.zh-CN.md",
             "intro.html",
@@ -227,8 +273,15 @@ def validate(project_root: Path) -> dict[str, Any]:
     check_required_links("docs/project.en-US.md", project_en, ["maintenance-goals.en-US.md", "install-and-sync.md"], errors)
     check_required_links("docs/project.zh-CN.md", project_zh, ["maintenance-goals.zh-CN.md", "install-and-sync.md"], errors)
     check_required_links("docs/maintenance-goals.md", goals_index, ["maintenance-goals.en-US.md", "maintenance-goals.zh-CN.md"], errors)
+    check_required_links("docs/growth-goals.md", growth_index, ["growth-goals.en-US.md", "growth-goals.zh-CN.md"], errors)
+    check_required_links("docs/marketing-copy.md", marketing_index, ["marketing-copy.en-US.md", "marketing-copy.zh-CN.md"], errors)
     check_required_links("docs/release-notes.md", release_notes_index, ["release-notes.en-US.md", "release-notes.zh-CN.md"], errors)
-    check_required_links("docs/current-status.md", current_status, ["docs/maintenance-goals.en-US.md", "docs/maintenance-goals.zh-CN.md"], errors)
+    check_required_links(
+        "docs/current-status.md",
+        current_status,
+        ["docs/maintenance-goals.en-US.md", "docs/maintenance-goals.zh-CN.md", "docs/growth-goals.en-US.md", "docs/growth-goals.zh-CN.md", "docs/marketing-copy.en-US.md", "docs/marketing-copy.zh-CN.md"],
+        errors,
+    )
 
     for heading in EN_GOAL_HEADINGS:
         if heading not in goals_en:
@@ -236,6 +289,30 @@ def validate(project_root: Path) -> dict[str, Any]:
     for heading in ZH_GOAL_HEADINGS:
         if heading not in goals_zh:
             errors.append(f"docs/maintenance-goals.zh-CN.md missing heading: {heading}")
+    for heading in EN_GROWTH_HEADINGS:
+        if heading not in growth_en:
+            errors.append(f"docs/growth-goals.en-US.md missing heading: {heading}")
+    for heading in ZH_GROWTH_HEADINGS:
+        if heading not in growth_zh:
+            errors.append(f"docs/growth-goals.zh-CN.md missing heading: {heading}")
+
+    for path, text in [
+        ("README.md", readme_en),
+        ("README.zh-CN.md", readme_zh),
+        ("docs/project.en-US.md", project_en),
+        ("docs/project.zh-CN.md", project_zh),
+        ("docs/growth-goals.en-US.md", growth_en),
+        ("docs/growth-goals.zh-CN.md", growth_zh),
+        ("docs/marketing-copy.en-US.md", marketing_en),
+        ("docs/marketing-copy.zh-CN.md", marketing_zh),
+        ("docs/intro.html", intro_en),
+        ("docs/intro.zh-CN.html", intro_zh),
+    ]:
+        if not any(term in text for term in SIGNATURE_NAME_TERMS):
+            errors.append(f"{path} does not contain a maintainer name")
+        for term in SIGNATURE_CONTACT_TERMS:
+            if term not in text:
+                errors.append(f"{path} does not contain maintainer signature term: {term}")
 
     for command in PUBLIC_CHECK_COMMANDS:
         if command not in goals_en or command not in goals_zh:
@@ -244,8 +321,8 @@ def validate(project_root: Path) -> dict[str, Any]:
             errors.append(f"release notes do not document public check: {command}")
 
     for path, text in [("docs/release-notes.en-US.md", release_notes_en), ("docs/release-notes.zh-CN.md", release_notes_zh)]:
-        if "v0.1.3" not in text or "0.1.3+codex.20260623171436" not in text:
-            errors.append(f"{path} does not document the v0.1.3 release and plugin version")
+        if "v0.1.4" not in text or "0.1.4+codex.20260623173419" not in text:
+            errors.append(f"{path} does not document the v0.1.4 release and plugin version")
 
     for command in PUBLIC_CHECK_COMMANDS:
         if command not in distribution_doc.replace("\\", "/"):
@@ -273,10 +350,18 @@ def validate(project_root: Path) -> dict[str, Any]:
             errors.append(f"{path} is missing responsive viewport meta")
         if "<html" not in text or "</html>" not in text:
             errors.append(f"{path} does not look like a complete HTML page")
-        if "v0.1.3" not in text:
+        if "v0.1.4" not in text:
             errors.append(f"{path} does not expose the latest release")
         if "release-notes" not in text:
             errors.append(f"{path} does not link release notes")
+        if "growth-goals" not in text:
+            errors.append(f"{path} does not link growth goals")
+        if "marketing-copy" not in text:
+            errors.append(f"{path} does not link marketing copy")
+        if "https://90le.github.io/microsoft-excel-bi-agent/assets/social-preview" not in text:
+            errors.append(f"{path} does not use an absolute social preview image URL")
+        if 'rel="canonical"' not in text or "og:url" not in text:
+            errors.append(f"{path} does not expose canonical and og:url metadata")
     if 'lang="en"' not in intro_en:
         errors.append("docs/intro.html does not declare lang=\"en\"")
     if 'lang="zh-CN"' not in intro_zh:

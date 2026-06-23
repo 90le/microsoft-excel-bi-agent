@@ -6,6 +6,8 @@ Microsoft Excel BI Agent is an open-source cross-agent Excel BI skill pack for A
 
 The project turns recurring Excel BI risks into reusable agent workflows: read the workbook surface, choose the right Excel BI layer, make narrow edits, validate the result, and document what was verified or skipped.
 
+Maintainer: **Qiu Binbin (丘彬彬)**. WeChat: **binstudy**. Blog: **https://90le.cn**.
+
 ## Who It Is For
 
 - Teams using Codex, Claude, OpenCode, or similar agents to work on Excel BI files.
@@ -99,6 +101,8 @@ python tools\run_release_gate.py --project-root .
 
 - [Chinese project overview](project.zh-CN.md)
 - [Maintenance goals and risk backlog](maintenance-goals.en-US.md)
+- [Public growth goals](growth-goals.en-US.md)
+- [Marketing copy pack](marketing-copy.en-US.md)
 - [Release notes](release-notes.en-US.md)
 - [English site](intro.html)
 - [Chinese site](intro.zh-CN.html)

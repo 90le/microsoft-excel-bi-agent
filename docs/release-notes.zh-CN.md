@@ -1,5 +1,42 @@
 # 发布说明
 
+## v0.1.4 - 公开增长目标与营销准备
+
+发布重点：提升公开信任、采用清晰度、社交分享和营销复用，不改变 Excel 工作簿处理行为。
+
+### 变更
+
+- 新增中英文公开增长目标，包含目标、约束、边界、可以做/不能做、详细 goal 和高价值优化 backlog。
+- 新增中英文营销文案包，覆盖发布文案、短标语、广告方向、渠道变体和不要这样宣传规则。
+- 在 README、项目文档、Pages 和插件 manifest 中增加维护者署名：丘彬彬，微信 `binstudy`，博客 `90le.cn`。
+- 更新网站，增加使用场景转化卡片、证明指标、绝对 Open Graph/Twitter 图片 URL、canonical URL、作者元信息和 v0.1.4 release 可见性。
+- 更新项目文档校验和 goal coverage，使公开增长、营销文案、维护者署名和社交元信息纳入 CI 覆盖。
+- 插件 manifest 版本升至 `0.1.4+codex.20260623173419`。
+
+### 校验
+
+公开校验：
+
+```bash
+python tools/validate-skills.py .
+python tools/validate_project_docs.py --project-root .
+python tools/validate_task_recipes.py --project-root .
+python tools/validate_official_docs_index.py --project-root .
+python tools/build_artifact_hygiene_report.py --project-root . --require-pass
+python tools/build_goal_coverage_report.py --project-root . --require-pass
+node tools/install.mjs --check
+```
+
+维护者结构门禁：
+
+```bash
+python tools/run_release_gate.py --project-root . --profile structural
+```
+
+### 边界
+
+本次发布修改公开定位、站点布局、元信息和文档，不声称新增 Excel COM、VBA、Power Query 刷新或 Power Pivot 运行时证明。
+
 ## v0.1.3 - 公开维护目标与 CI 校验
 
 发布重点：降低公开仓库维护风险，不改变 Excel 工作簿处理行为。

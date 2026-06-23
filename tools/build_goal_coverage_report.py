@@ -51,10 +51,24 @@ AREA_REQUIREMENTS: tuple[AreaRequirement, ...] = (
         goal_terms=("Risk Register", "风险清单", "Optimization Backlog", "优化 Backlog"),
     ),
     AreaRequirement(
+        key="public-growth-goals",
+        title="Public growth goals and maintainer trust",
+        required_files=("docs/growth-goals.en-US.md", "docs/growth-goals.zh-CN.md", "docs/growth-goals.md", "README.md", "README.zh-CN.md"),
+        public_doc_terms=("growth-goals.en-US.md", "growth-goals.zh-CN.md", "Qiu Binbin", "丘彬彬", "binstudy", "90le.cn"),
+        goal_terms=("First-minute clarity", "一分钟清晰度", "Trust and attribution", "信任与署名"),
+    ),
+    AreaRequirement(
+        key="marketing-readiness",
+        title="Marketing copy and share readiness",
+        required_files=("docs/marketing-copy.en-US.md", "docs/marketing-copy.zh-CN.md", "docs/marketing-copy.md", "assets/social-preview.png", "assets/social-preview.zh-CN.png"),
+        public_doc_terms=("marketing-copy.en-US.md", "marketing-copy.zh-CN.md", "summary_large_image", "https://90le.github.io/microsoft-excel-bi-agent/assets/social-preview"),
+        goal_terms=("Advertising readiness", "广告准备度", "Do Not Claim", "不要这样宣传"),
+    ),
+    AreaRequirement(
         key="release-versioning",
         title="Release notes and version visibility",
         required_files=("docs/release-notes.en-US.md", "docs/release-notes.zh-CN.md", "docs/release-notes.md", ".codex-plugin/plugin.json"),
-        public_doc_terms=("release-notes.en-US.md", "release-notes.zh-CN.md", "v0.1.3"),
+        public_doc_terms=("release-notes.en-US.md", "release-notes.zh-CN.md", "v0.1.4"),
         goal_terms=("release decisions", "发布判断"),
     ),
     AreaRequirement(
@@ -181,6 +195,8 @@ def public_doc_text(project_root: Path) -> str:
         "docs/distribution-checklist.md",
         "docs/compatibility.md",
         "docs/task-recipes.md",
+        "docs/intro.html",
+        "docs/intro.zh-CN.html",
     ]
     return "\n".join(read_text(project_root / path) for path in paths)
 
@@ -190,6 +206,12 @@ def goal_doc_text(project_root: Path) -> str:
         "docs/maintenance-goals.en-US.md",
         "docs/maintenance-goals.zh-CN.md",
         "docs/maintenance-goals.md",
+        "docs/growth-goals.en-US.md",
+        "docs/growth-goals.zh-CN.md",
+        "docs/growth-goals.md",
+        "docs/marketing-copy.en-US.md",
+        "docs/marketing-copy.zh-CN.md",
+        "docs/marketing-copy.md",
         "docs/release-notes.en-US.md",
         "docs/release-notes.zh-CN.md",
         "docs/release-notes.md",
