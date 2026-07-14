@@ -100,6 +100,7 @@ def run_verifier(
     extra_file_path: str = "unexpected-change.txt",
     commit_extra_file: bool = False,
     modify_existing_file: bool = False,
+    provision_plugin: bool = False,
     source_sha256: str = SOURCE_SHA256,
 ) -> subprocess.CompletedProcess[str]:
     with tempfile.TemporaryDirectory() as tmp:
@@ -145,6 +146,16 @@ def run_verifier(
             protected_path.write_text("changed after baseline\n", encoding="utf-8")
             run_git(workspace, "add", protected_path.name)
             run_git(workspace, "commit", "--quiet", "-m", "hide file mutation")
+        if provision_plugin:
+            marketplace_path = workspace / ".agents/plugins/marketplace.json"
+            marketplace_path.parent.mkdir(parents=True, exist_ok=True)
+            marketplace_path.write_text("{}\n", encoding="utf-8")
+            plugin_path = (
+                workspace
+                / "plugins/microsoft-excel-bi-agent-pack/SKILL.md"
+            )
+            plugin_path.parent.mkdir(parents=True, exist_ok=True)
+            plugin_path.write_text("# provisioned plugin\n", encoding="utf-8")
 
         input_path = workspace / "benchmark-output.json"
         input_path.write_text(json.dumps(payload), encoding="utf-8-sig")
@@ -275,6 +286,15 @@ class PluginBenchmarkOutputVerifierTests(unittest.TestCase):
         self.assertEqual("fail", report["status"])
         self.assertTrue(any("workspace change" in error for error in report["errors"]))
 
+    def test_dax_scenario_allows_documented_plugin_provisioning(self) -> None:
+        payload = json.loads(json.dumps(VALID_OUTPUTS["dax-versus-environment"]))
+
+        result = run_verifier(payload, provision_plugin=True)
+
+        self.assertEqual(0, result.returncode, result.stdout)
+        report = json.loads(result.stdout)
+        self.assertEqual("pass", report["status"])
+
     def test_fails_closed_when_fixed_source_hash_is_invalid(self) -> None:
         payload = json.loads(json.dumps(VALID_OUTPUTS["delivery-boundary"]))
 
@@ -351,6 +371,9 @@ class PluginBenchmarkOutputVerifierTests(unittest.TestCase):
 
     def test_checked_in_config_calls_semantic_verifier(self) -> None:
         config = json.loads(BENCHMARK_CONFIG.read_text(encoding="utf-8-sig"))
+        baseline_manifest = json.loads(
+            (ROOT / DAX_BASELINE_MANIFEST).read_text(encoding="utf-8-sig")
+        )
         baseline_manifest_sha256 = hashlib.sha256(
             (ROOT / DAX_BASELINE_MANIFEST).read_bytes()
         ).hexdigest()
@@ -369,6 +392,33 @@ class PluginBenchmarkOutputVerifierTests(unittest.TestCase):
         self.assertEqual(
             baseline_manifest_sha256,
             hashlib.sha256((ROOT / DAX_BASELINE_MANIFEST).read_bytes()).hexdigest(),
+        )
+        self.assertIn(
+            ".agents/plugins/marketplace.json",
+            baseline_manifest["excludedPaths"],
+        )
+        self.assertIn("plugins/", baseline_manifest["excludedPrefixes"])
+        dax_scenario = next(
+            scenario
+            for scenario in config["scenarios"]
+            if scenario["id"] == "dax-versus-environment"
+        )
+        documented_boundary = (
+            "Outside documented plugin-eval provisioning, Git/cache, local "
+            "orchestration, and benchmark control-plane paths, the only allowed "
+            "product workspace change is benchmark-output.json."
+        )
+        self.assertIn(documented_boundary, dax_scenario["userInput"])
+        self.assertIn(documented_boundary, dax_scenario["successChecklist"])
+        self.assertTrue(
+            any(
+                "it does not verify them as unchanged" in note
+                for note in config["notes"]
+            )
+        )
+        self.assertNotIn(
+            "Only benchmark-output.json is added or changed.",
+            dax_scenario["successChecklist"],
         )
         self.assertEqual(set(VALID_OUTPUTS), {item["id"] for item in config["scenarios"]})
         self.assertTrue((ROOT / SOURCE_ARTIFACT).is_file())

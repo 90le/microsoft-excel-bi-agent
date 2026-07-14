@@ -7,13 +7,15 @@
     "benchmark-output.json"
   ],
   "excludedPaths": [
+    ".agents/plugins/marketplace.json",
     "benchmarks/fixtures/dax-workspace-baseline.json",
     "benchmarks/plugin-eval-v0.2.1.json"
   ],
   "excludedPrefixes": [
     ".git/",
     ".plugin-eval/",
-    ".superpowers/"
+    ".superpowers/",
+    "plugins/"
   ],
   "files": [
     {
@@ -1530,7 +1532,7 @@
     },
     {
       "path": "tests/test_plugin_benchmark_output_verifier.py",
-      "sha256": "848e2716e60e1327b0905ce58f84bce5b78dc9a1f38048f5999a2ac30989f99c"
+      "sha256": "2477dea6db304bf2702009147c4e877fab03e3f384909c4700931f08efcdf712"
     },
     {
       "path": "tests/test_release_gate_portability.py",
@@ -1814,7 +1816,7 @@
     },
     {
       "path": "tools/verify_plugin_benchmark_output.py",
-      "sha256": "754255d828a796f400a2f661b6f92ab23e15ce6bcf1a265369df39eb33bb0faf"
+      "sha256": "b6c991fc6d1f406befc6c198c0d9e6be965ac02fc867b5000bf77e33bda94d6b"
     }
   ]
 }

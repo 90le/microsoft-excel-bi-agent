@@ -23,6 +23,7 @@ DEFAULT_SOURCE_SHA256 = (
 )
 BASELINE_EXCLUDED_PATHS = frozenset(
     {
+        ".agents/plugins/marketplace.json",
         DAX_BASELINE_MANIFEST.as_posix(),
         "benchmarks/plugin-eval-v0.2.1.json",
     }
@@ -31,6 +32,7 @@ BASELINE_EXCLUDED_PREFIXES = (
     ".git/",
     ".plugin-eval/",
     ".superpowers/",
+    "plugins/",
 )
 BASELINE_EXCLUDED_PARTS = frozenset(
     {"__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache"}
