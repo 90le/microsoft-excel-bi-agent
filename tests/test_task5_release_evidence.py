@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import re
 import sys
 import unittest
 from pathlib import Path
@@ -10,6 +11,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 RELEASE_GATE = PROJECT_ROOT / "tools" / "run_release_gate.py"
 CASE_RUNNER = PROJECT_ROOT / "tools" / "run_case_regression.py"
+DOC_VALIDATOR = PROJECT_ROOT / "tools" / "validate_project_docs.py"
 VERSION = "0.2.0+codex.20260714"
 
 
@@ -25,6 +27,7 @@ def load_module(path: Path, name: str):
 
 release_gate = load_module(RELEASE_GATE, "task5_run_release_gate")
 case_runner = load_module(CASE_RUNNER, "task5_run_case_regression")
+doc_validator = load_module(DOC_VALIDATOR, "task5_validate_project_docs")
 
 
 class Task5ReleaseEvidenceTests(unittest.TestCase):
@@ -121,6 +124,23 @@ class Task5ReleaseEvidenceTests(unittest.TestCase):
             self.assertIn("v0.2.0", readme)
             self.assertIn("docs/compatibility.md", readme)
             self.assertIn("runtime", readme)
+
+    def test_landing_pages_match_manifest_major_minor_release(self) -> None:
+        manifest = json.loads((PROJECT_ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8"))
+        manifest_release = manifest["version"].split("+", 1)[0]
+        manifest_major_minor = tuple(manifest_release.split(".")[:2])
+
+        for path in [PROJECT_ROOT / "docs" / "intro.html", PROJECT_ROOT / "docs" / "intro.zh-CN.html"]:
+            landing = path.read_text(encoding="utf-8")
+            match = re.search(r"/releases/tag/v(\d+\.\d+\.\d+)", landing)
+            self.assertIsNotNone(match, path)
+            landing_release = match.group(1)
+            self.assertEqual(tuple(landing_release.split(".")[:2]), manifest_major_minor)
+            self.assertEqual(landing_release, manifest_release)
+            self.assertIn("./compatibility.md", landing)
+
+        report = doc_validator.validate(PROJECT_ROOT)
+        self.assertEqual(report["status"], "pass", report["errors"])
 
 
 if __name__ == "__main__":
