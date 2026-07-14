@@ -195,6 +195,52 @@ class Task5ReleaseEvidenceTests(unittest.TestCase):
 
         self.assertTrue(doc_validator.benchmark_evidence_boundary_errors(mixed))
 
+    def test_positive_real_success_assertion_is_rejected_even_with_same_block_disclaimer(self) -> None:
+        contradictory_claims = [
+            (
+                "The synthetic trigger benchmark proves real task success. Synthetic benchmark "
+                "output does not prove real task success; observed usage is separate evidence."
+            ),
+            (
+                "The trigger benchmark establishes actual task success. Synthetic output does not "
+                "prove real task success; observed usage is separate evidence."
+            ),
+            (
+                "The trigger benchmark demonstrates live workbook success. Synthetic output does not "
+                "prove real task success; observed usage is separate evidence."
+            ),
+            (
+                "The trigger benchmark confirms real workbook success. Synthetic output does not prove "
+                "real task success; observed usage is separate evidence."
+            ),
+            (
+                "The trigger benchmark validates actual workbook success. Synthetic output does not "
+                "prove real task success; observed usage is separate evidence."
+            ),
+        ]
+        for text in contradictory_claims:
+            with self.subTest(text=text):
+                self.assertTrue(
+                    doc_validator.benchmark_evidence_boundary_errors(
+                        {"docs/release-notes.en-US.md": text}
+                    )
+                )
+
+    def test_benchmark_schema_and_file_references_are_not_outcome_claims(self) -> None:
+        references = [
+            "The benchmark results schema includes score and evidence fields.",
+            "The plugin-eval result is stored in benchmark-result.json.",
+            "Use the benchmark score field when parsing the JSON format.",
+        ]
+        for text in references:
+            with self.subTest(text=text):
+                self.assertEqual(
+                    [],
+                    doc_validator.benchmark_evidence_boundary_errors(
+                        {"docs/task-recipes.md": text}
+                    ),
+                )
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -141,9 +141,21 @@ PRIVATE_LEDGER_LINKS = (
 
 BENCHMARK_SUBJECT_RE = re.compile(r"benchmark|plugin-eval|trigger_cost_tokens|基准", re.IGNORECASE)
 BENCHMARK_OUTCOME_RE = re.compile(
-    r"\b(?:proves?|establish(?:es|ed)?|shows?|demonstrates?|validates?|results?|scores?|"
-    r"success|evidence|improv(?:es|ed|ement)?|decreas(?:es|ed)?|reduc(?:es|ed|tion)?|"
-    r"increas(?:es|ed)?|pass[ -]?rate)\b|成功|结果|证据|得分|改善|降低|减少|提升",
+    r"\b(?:prove(?:s|d)?|establish(?:es|ed)?|shows?|demonstrate(?:s|d)?|confirm(?:s|ed)?|"
+    r"achieve(?:s|d)?|passes|passed|succeeds?|outperform(?:s|ed)?|improv(?:es|ed)?|"
+    r"decreas(?:es|ed)?|reduc(?:es|ed)?|increas(?:es|ed)?|conclusive|successful|better|"
+    r"improved|reduced|higher|lower|passing)\b|证明|建立|显示|确认|改善|降低|减少|提升",
+    re.IGNORECASE,
+)
+POSITIVE_REAL_SUCCESS_RE = re.compile(
+    r"\b(?:prove(?:s|d)?|establish(?:es|ed)?|demonstrate(?:s|d)?|confirm(?:s|ed)?|"
+    r"validate(?:s|d)?)\b(?:\W+\w+){0,3}\W+"
+    r"(?:real|live|actual)\s+(?:(?:task|workbook)\s+){1,2}success\b",
+    re.IGNORECASE,
+)
+NEGATED_ASSERTION_PREFIX_RE = re.compile(
+    r"(?:\b(?:not|never|cannot|can't|doesn't|don't|didn't|isn't|aren't|wasn't|weren't|"
+    r"won't|wouldn't|couldn't|shouldn't)|\bfails?\s+to)\s+$",
     re.IGNORECASE,
 )
 SYNTHETIC_TERMS = ("synthetic", "generated", "合成", "生成")
@@ -191,7 +203,18 @@ def benchmark_evidence_boundary_errors(texts: dict[str, str]) -> list[str]:
         for section_index, section in enumerate(sections):
             blocks = re.split(r"\n\s*\n|(?=^\s*[-*+]\s+)", section, flags=re.MULTILINE)
             for block_index, block in enumerate(blocks):
-                if not (BENCHMARK_SUBJECT_RE.search(block) and BENCHMARK_OUTCOME_RE.search(block)):
+                has_subject = bool(BENCHMARK_SUBJECT_RE.search(block))
+                positive_real_success = any(
+                    not NEGATED_ASSERTION_PREFIX_RE.search(block[max(0, match.start() - 24) : match.start()])
+                    for match in POSITIVE_REAL_SUCCESS_RE.finditer(block)
+                )
+                if has_subject and positive_real_success:
+                    errors.append(
+                        f"{path} benchmark claim in section {section_index + 1}, block "
+                        f"{block_index + 1} makes an unsupported positive real-success assertion"
+                    )
+                    continue
+                if not (has_subject and BENCHMARK_OUTCOME_RE.search(block)):
                     continue
                 lowered = block.casefold()
                 missing: list[str] = []
