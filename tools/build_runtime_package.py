@@ -4,11 +4,15 @@
 from __future__ import annotations
 
 import argparse
+import ast
 import hashlib
 import json
+import os
 import re
 import shutil
 import stat
+import subprocess
+import sys
 import zipfile
 from pathlib import Path
 from typing import Any, Iterable
@@ -23,6 +27,24 @@ REFERENCE_RE = re.compile(
 FORBIDDEN_SUFFIXES = {".xls", ".xlsx", ".xlsm", ".xlsb", ".pdf", ".pyc", ".pyo"}
 FORBIDDEN_PARTS = {".git", ".agents", ".claude", ".opencode", "__pycache__", ".pytest_cache", ".mypy_cache"}
 FORBIDDEN_REPORT_RE = re.compile(r"(^|/)(excel_bi_)?release_gate.*\.(json|md)$", re.IGNORECASE)
+SAFE_FIXTURE_PREFIXES = ("fixtures/real-sanitized-cases/",)
+SAFE_FIXTURE_SUFFIXES = {".json", ".md", ".m", ".txt", ".xml", ".yaml", ".yml"}
+SAFE_REFERENCED_FIXTURE_SUFFIXES = SAFE_FIXTURE_SUFFIXES | {".py", ".ps1", ".sh", ".bas", ".cls", ".frm"}
+PRIVATE_FIXTURE_SUFFIXES = {
+    ".csv",
+    ".tsv",
+    ".parquet",
+    ".feather",
+    ".db",
+    ".sqlite",
+    ".sqlite3",
+    ".sql",
+    ".xls",
+    ".xlsx",
+    ".xlsm",
+    ".xlsb",
+    ".pdf",
+}
 RUNTIME_README = """# Microsoft Excel BI Agent Runtime Package
 
 This compact package is generated from the Microsoft Excel BI Agent source repository for local Codex plugin execution.
@@ -107,16 +129,116 @@ def skill_references(project_root: Path) -> tuple[set[str], list[str]]:
     return references, sorted(unresolved)
 
 
-def expand_tool_references(project_root: Path, initial: Iterable[str]) -> set[str]:
+def local_tool_modules(project_root: Path) -> dict[str, str]:
+    modules: dict[str, str] = {}
+    tools_root = project_root / "tools"
+    for path in sorted(tools_root.rglob("*.py")) if tools_root.is_dir() else []:
+        relative = path.relative_to(tools_root)
+        module_parts = list(relative.with_suffix("").parts)
+        if module_parts[-1] == "__init__":
+            module_parts.pop()
+        if not module_parts:
+            continue
+        module = ".".join(module_parts)
+        packaged_path = f"tools/{relative.as_posix()}"
+        modules[module] = packaged_path
+        modules[f"tools.{module}"] = packaged_path
+    return modules
+
+
+def imported_module_names(project_root: Path, path: Path) -> tuple[set[str], str | None]:
+    try:
+        tree = ast.parse(path.read_text(encoding="utf-8"), filename=path.name)
+    except (OSError, UnicodeDecodeError, SyntaxError) as exc:
+        return set(), f"cannot parse Python imports for {path.name}: {type(exc).__name__}"
+
+    names: set[str] = set()
+    relative = path.relative_to(project_root / "tools").with_suffix("")
+    current_parts = list(relative.parts)
+    current_package = current_parts if current_parts[-1] == "__init__" else current_parts[:-1]
+    if current_package and current_package[-1] == "__init__":
+        current_package.pop()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            names.update(alias.name for alias in node.names)
+        elif isinstance(node, ast.ImportFrom):
+            if node.level:
+                keep = max(0, len(current_package) - (node.level - 1))
+                base_parts = current_package[:keep]
+                if node.module:
+                    base_parts.extend(node.module.split("."))
+                module = ".".join(base_parts)
+            else:
+                module = node.module or ""
+            if module:
+                names.add(module)
+                names.update(f"{module}.{alias.name}" for alias in node.names if alias.name != "*")
+            elif node.level:
+                names.update(alias.name for alias in node.names if alias.name != "*")
+    return names, None
+
+
+def expand_tool_references(project_root: Path, initial: Iterable[str]) -> tuple[set[str], list[str]]:
     selected = {path for path in initial if path.startswith("tools/") and (project_root / path).is_file()}
     pending = list(selected)
+    module_paths = local_tool_modules(project_root)
+    errors: set[str] = set()
     while pending:
         reference = pending.pop()
         for nested in text_references(project_root / reference):
             if nested.startswith("tools/") and nested not in selected and (project_root / nested).is_file():
                 selected.add(nested)
                 pending.append(nested)
-    return selected
+        if not reference.endswith(".py"):
+            continue
+        imported, parse_error = imported_module_names(project_root, project_root / reference)
+        if parse_error:
+            errors.add(f"{reference}: {parse_error}")
+            continue
+        for module in sorted(imported):
+            dependency = module_paths.get(module)
+            if dependency and dependency not in selected:
+                selected.add(dependency)
+                pending.append(dependency)
+    return selected, sorted(errors)
+
+
+def fixture_forbidden_reason(relative: str) -> str | None:
+    path = Path(relative)
+    fixture_parts = path.parts[1:]
+    if any(part.startswith(".") for part in fixture_parts):
+        return "fixture dotfile is not distributable"
+    if path.suffix.lower() in PRIVATE_FIXTURE_SUFFIXES:
+        return f"private/customer-data fixture suffix {path.suffix.lower()}"
+    return forbidden_reason(relative)
+
+
+def select_fixture_files(
+    project_root: Path,
+    references: set[str],
+) -> tuple[set[str], list[str], list[str]]:
+    selected: set[str] = set()
+    forbidden: list[str] = []
+    warnings: list[str] = []
+    fixtures_root = project_root / "fixtures"
+    for path in relative_files(fixtures_root):
+        relative = f"fixtures/{path.as_posix()}"
+        reason = fixture_forbidden_reason(relative)
+        if reason:
+            forbidden.append(f"{relative}: {reason}")
+            continue
+        explicitly_referenced = relative in references
+        structured_sanitized = relative.startswith(SAFE_FIXTURE_PREFIXES)
+        safe_suffix = (
+            structured_sanitized and path.suffix.lower() in SAFE_FIXTURE_SUFFIXES
+        ) or (
+            explicitly_referenced and path.suffix.lower() in SAFE_REFERENCED_FIXTURE_SUFFIXES
+        )
+        if safe_suffix:
+            selected.add(relative)
+        else:
+            warnings.append(f"Excluded unallowlisted fixture: {relative}")
+    return selected, forbidden, warnings
 
 
 def forbidden_reason(relative: str) -> str | None:
@@ -144,8 +266,8 @@ def copy_payload_file(source: Path, destination: Path) -> None:
 def prepare_output_dir(project_root: Path, out_dir: Path) -> None:
     project_root = project_root.resolve()
     out_dir = out_dir.resolve()
-    if out_dir == project_root or out_dir in project_root.parents:
-        raise ValueError(f"Refusing to replace project root or its parent: {out_dir}")
+    if out_dir == project_root or out_dir in project_root.parents or project_root in out_dir.parents:
+        raise ValueError(f"Runtime staging directory must be outside the project tree: {out_dir}")
     if out_dir.exists():
         shutil.rmtree(out_dir)
     out_dir.mkdir(parents=True)
@@ -188,11 +310,19 @@ def write_json(path: Path, payload: dict[str, Any]) -> None:
     )
 
 
+def validate_zip_path(project_root: Path, out_dir: Path, zip_path: Path) -> None:
+    project_root = project_root.resolve()
+    out_dir = out_dir.resolve()
+    zip_path = zip_path.resolve()
+    if zip_path == project_root or zip_path in project_root.parents or project_root in zip_path.parents:
+        raise ValueError(f"Zip output must be outside the project tree: {zip_path}")
+    if zip_path == out_dir or out_dir in zip_path.parents:
+        raise ValueError("Zip output must be outside the runtime staging directory")
+
+
 def write_deterministic_zip(out_dir: Path, zip_path: Path) -> None:
     out_dir = out_dir.resolve()
     zip_path = zip_path.resolve()
-    if zip_path == out_dir or out_dir in zip_path.parents:
-        raise ValueError("Zip output must be outside the runtime staging directory")
     zip_path.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
         for path in sorted(item for item in out_dir.rglob("*") if item.is_file()):
@@ -205,6 +335,41 @@ def write_deterministic_zip(out_dir: Path, zip_path: Path) -> None:
             archive.writestr(info, path.read_bytes(), compress_type=zipfile.ZIP_DEFLATED, compresslevel=9)
 
 
+def smoke_python_tools(out_dir: Path) -> tuple[list[dict[str, Any]], list[str]]:
+    results: list[dict[str, Any]] = []
+    errors: list[str] = []
+    tools_root = out_dir / "tools"
+    environment = os.environ.copy()
+    environment["PYTHONDONTWRITEBYTECODE"] = "1"
+    environment["PYTHONUTF8"] = "1"
+    environment["PYTHONPATH"] = os.pathsep.join(
+        item for item in [str(out_dir), str(tools_root), environment.get("PYTHONPATH", "")] if item
+    )
+    paths = sorted(tools_root.rglob("*.py")) if tools_root.is_dir() else []
+    for path in paths:
+        relative = path.relative_to(out_dir).as_posix()
+        try:
+            completed = subprocess.run(
+                [sys.executable, str(path), "--help"],
+                cwd=str(tools_root),
+                env=environment,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                timeout=30,
+                check=False,
+            )
+            return_code: int | None = completed.returncode
+            status = "pass" if completed.returncode == 0 else "fail"
+        except subprocess.TimeoutExpired:
+            return_code = None
+            status = "timeout"
+        results.append({"path": relative, "status": status, "returnCode": return_code})
+        if status != "pass":
+            detail = "timeout" if return_code is None else f"exit {return_code}"
+            errors.append(f"python tool --help smoke failed: {relative} ({detail})")
+    return results, errors
+
+
 def build_runtime_package(
     project_root: Path,
     out_dir: Path,
@@ -213,6 +378,10 @@ def build_runtime_package(
 ) -> dict[str, Any]:
     project_root = Path(project_root).expanduser().resolve()
     out_dir = Path(out_dir).expanduser().resolve()
+    resolved_zip = Path(zip_path).expanduser().resolve() if zip_path is not None else None
+    if resolved_zip is not None:
+        validate_zip_path(project_root, out_dir, resolved_zip)
+    prepare_output_dir(project_root, out_dir)
     manifest_path = project_root / ".codex-plugin" / "plugin.json"
     license_path = project_root / "LICENSE"
     skills_root = project_root / "skills"
@@ -228,18 +397,20 @@ def build_runtime_package(
     references, unresolved = skill_references(project_root)
     if unresolved:
         errors.append(f"unresolved skill references: {', '.join(unresolved)}")
-    runtime_tools = expand_tool_references(project_root, references)
+    runtime_tools, dependency_errors = expand_tool_references(project_root, references)
+    errors.extend(dependency_errors)
 
     candidates: set[str] = set()
-    for root_name in [".codex-plugin", "skills", "fixtures", "schemas"]:
+    for root_name in [".codex-plugin", "skills", "schemas"]:
         root = project_root / root_name
         candidates.update(f"{root_name}/{path.as_posix()}" for path in relative_files(root))
+    fixture_files, forbidden_files, fixture_warnings = select_fixture_files(project_root, references)
+    candidates.update(fixture_files)
+    warnings.extend(fixture_warnings)
     candidates.update(runtime_tools)
     if license_path.is_file():
         candidates.add("LICENSE")
 
-    forbidden_files: list[str] = []
-    prepare_output_dir(project_root, out_dir)
     for relative in sorted(candidates):
         reason = forbidden_reason(relative)
         if reason:
@@ -257,6 +428,9 @@ def build_runtime_package(
 
     if forbidden_files:
         errors.append(f"forbidden runtime files: {', '.join(forbidden_files)}")
+
+    python_tool_smoke, smoke_errors = smoke_python_tools(out_dir)
+    errors.extend(smoke_errors)
 
     mirror = compare_skill_mirror(project_root)
     if mirror["status"] == "drift":
@@ -276,14 +450,15 @@ def build_runtime_package(
         "reductionPercent": round((1 - total_bytes / source_bytes) * 100, 2) if source_bytes else 0.0,
         "allowedRoots": [".codex-plugin/", "skills/", "tools/", "fixtures/", "schemas/", "LICENSE", "README.md"],
         "skillMirror": mirror,
+        "pythonToolSmoke": python_tool_smoke,
         "unresolvedReferences": unresolved,
         "forbiddenFiles": forbidden_files,
         "warnings": warnings,
         "errors": errors,
     }
     write_json(out_dir / MANIFEST_NAME, manifest)
-    if zip_path is not None:
-        write_deterministic_zip(out_dir, Path(zip_path))
+    if resolved_zip is not None:
+        write_deterministic_zip(out_dir, resolved_zip)
     return manifest
 
 

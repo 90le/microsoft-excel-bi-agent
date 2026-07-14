@@ -111,10 +111,136 @@ class RuntimePackageTests(unittest.TestCase):
             root = Path(tmp)
             first_zip = root / "first.zip"
             second_zip = root / "second.zip"
-            runtime_package.build_runtime_package(PROJECT_ROOT, root / "first", zip_path=first_zip)
-            runtime_package.build_runtime_package(PROJECT_ROOT, root / "second", zip_path=second_zip)
+            first_manifest = runtime_package.build_runtime_package(PROJECT_ROOT, root / "first", zip_path=first_zip)
+            second_manifest = runtime_package.build_runtime_package(PROJECT_ROOT, root / "second", zip_path=second_zip)
 
             self.assertEqual(first_zip.read_bytes(), second_zip.read_bytes())
+            self.assertEqual(first_manifest["sourceBytes"], second_manifest["sourceBytes"])
+
+    def test_python_dependency_closure_and_help_smoke(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            out_dir = Path(tmp) / "runtime"
+            manifest = runtime_package.build_runtime_package(PROJECT_ROOT, out_dir)
+            paths = {item["path"] for item in manifest["files"]}
+
+            self.assertIn("tools/mdx_references.py", paths)
+            self.assertIn("tools/create_external_dependency_fixture.py", paths)
+            self.assertIn("tools/create_pure_deliverable_fixture.py", paths)
+            self.assertIn("tools/create_power_query_lineage_fixture.py", paths)
+
+            packaged_python = sorted(path for path in paths if path.startswith("tools/") and path.endswith(".py"))
+            smoke = manifest["pythonToolSmoke"]
+            self.assertEqual(packaged_python, [item["path"] for item in smoke])
+            self.assertTrue(all(item["status"] == "pass" for item in smoke), smoke)
+
+    def test_require_pass_rejects_python_tool_with_missing_dependency(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "source"
+            write_minimal_project(root)
+            tools_dir = root / "tools"
+            tools_dir.mkdir()
+            (tools_dir / "entry.py").write_text(
+                "import definitely_missing_runtime_dependency\n",
+                encoding="utf-8",
+            )
+            skill = root / "skills" / "demo" / "SKILL.md"
+            skill.write_text(skill.read_text(encoding="utf-8") + "\nUse `tools/entry.py`.\n", encoding="utf-8")
+            out_dir = Path(tmp) / "runtime"
+            completed = subprocess.run(
+                [
+                    sys.executable,
+                    str(BUILDER_PATH),
+                    "--project-root",
+                    str(root),
+                    "--out-dir",
+                    str(out_dir),
+                    "--require-pass",
+                ],
+                cwd=str(PROJECT_ROOT),
+                text=True,
+                capture_output=True,
+            )
+
+            self.assertEqual(1, completed.returncode)
+            manifest = json.loads((out_dir / "runtime-package-manifest.json").read_text(encoding="utf-8"))
+            self.assertEqual("fail", manifest["status"])
+            self.assertEqual("fail", manifest["pythonToolSmoke"][0]["status"])
+            self.assertTrue(any("entry.py" in error for error in manifest["errors"]))
+
+    def test_output_directory_inside_project_is_rejected_without_deleting_source(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "source"
+            write_minimal_project(root)
+            protected = root / "tools" / "keep-source.txt"
+            protected.parent.mkdir()
+            protected.write_text("must survive\n", encoding="utf-8")
+
+            for unsafe in [root, root.parent, root / "tools" / "runtime"]:
+                with self.subTest(unsafe=unsafe), self.assertRaises(ValueError):
+                    runtime_package.prepare_output_dir(root, unsafe)
+
+            self.assertEqual("must survive\n", protected.read_text(encoding="utf-8"))
+
+    def test_zip_inside_project_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "source"
+            write_minimal_project(root)
+            out_dir = Path(tmp) / "runtime"
+            zip_path = root / "artifacts" / "runtime.zip"
+
+            for unsafe in [root, root.parent, zip_path]:
+                with self.subTest(unsafe=unsafe), self.assertRaises(ValueError):
+                    runtime_package.validate_zip_path(root, out_dir, unsafe)
+
+            self.assertFalse(zip_path.exists())
+
+    def test_fixture_allowlist_excludes_private_and_unstructured_files(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "source"
+            write_minimal_project(root)
+            safe_fixture = root / "fixtures" / "real-sanitized-cases" / "manifest.json"
+            safe_fixture.parent.mkdir(parents=True)
+            safe_fixture.write_text('{"synthetic": true}\n', encoding="utf-8")
+            referenced_fixture = root / "fixtures" / "synthetic" / "Sample.bas"
+            referenced_fixture.parent.mkdir()
+            referenced_fixture.write_text("Attribute VB_Name = \"Sample\"\n", encoding="utf-8")
+            skill = root / "skills" / "demo" / "SKILL.md"
+            skill.write_text(
+                skill.read_text(encoding="utf-8") + "\nUse `fixtures/synthetic/Sample.bas`.\n",
+                encoding="utf-8",
+            )
+            (root / "fixtures" / ".env").write_text("CUSTOMER_SECRET=1\n", encoding="utf-8")
+            (root / "fixtures" / "customers.csv").write_text("name\nprivate\n", encoding="utf-8")
+            misc_fixture = root / "fixtures" / "misc" / "opaque.bin"
+            misc_fixture.parent.mkdir()
+            misc_fixture.write_bytes(b"opaque")
+            out_dir = Path(tmp) / "runtime"
+            completed = subprocess.run(
+                [
+                    sys.executable,
+                    str(BUILDER_PATH),
+                    "--project-root",
+                    str(root),
+                    "--out-dir",
+                    str(out_dir),
+                    "--require-pass",
+                ],
+                cwd=str(PROJECT_ROOT),
+                text=True,
+                capture_output=True,
+            )
+
+            self.assertEqual(1, completed.returncode)
+            manifest = json.loads((out_dir / "runtime-package-manifest.json").read_text(encoding="utf-8"))
+            paths = {item["path"] for item in manifest["files"]}
+            self.assertIn("fixtures/real-sanitized-cases/manifest.json", paths)
+            self.assertIn("fixtures/synthetic/Sample.bas", paths)
+            self.assertNotIn("fixtures/.env", paths)
+            self.assertNotIn("fixtures/customers.csv", paths)
+            self.assertNotIn("fixtures/misc/opaque.bin", paths)
+            self.assertTrue(any("fixtures/.env" in item for item in manifest["forbiddenFiles"]))
+            self.assertTrue(any("fixtures/customers.csv" in item for item in manifest["forbiddenFiles"]))
+            self.assertTrue(any("opaque.bin" in warning for warning in manifest["warnings"]))
 
     def test_require_pass_rejects_unresolved_skill_reference(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
