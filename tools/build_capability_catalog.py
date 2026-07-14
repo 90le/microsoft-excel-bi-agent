@@ -58,6 +58,8 @@ REQUIRED_TOOLS = {
     "create_visual_qa_fixture.py",
     "deploy-local-plugin.py",
     "validate_skill_trigger_benchmark.py",
+    "validate_observed_usage.py",
+    "summarize_observed_usage.py",
 }
 
 WORKFLOWS = [
@@ -255,6 +257,17 @@ WORKFLOWS = [
             "build_capability_catalog.py",
         ],
         "boundary": "The case library tracks sanitized problem shapes and fixture-backed validation plans. It does not store or prove private customer workbooks.",
+    },
+    {
+        "id": "observed-usage-evidence",
+        "title": "Local observed-usage evidence workflow",
+        "skills": ["excel-bi-router", "excel-testing-fixtures"],
+        "tools": [
+            "validate_observed_usage.py",
+            "summarize_observed_usage.py",
+            "run_release_gate.py",
+        ],
+        "boundary": "Recording is opt-in and local only. Sanitize data before logging; do not store customer artifacts, paths, credentials, or workbook contents. Aggregate summaries describe recorded usage, not Excel runtime proof.",
     },
     {
         "id": "visual-qa-fixture-regression",

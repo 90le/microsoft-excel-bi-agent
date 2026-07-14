@@ -431,19 +431,19 @@ def validate(project_root: Path) -> dict[str, Any]:
             errors.append(f"release notes do not document public check: {command}")
 
     for path, text in [("docs/release-notes.en-US.md", release_notes_en), ("docs/release-notes.zh-CN.md", release_notes_zh)]:
-        if "v0.2.1" not in text or "0.2.1+codex.20260714" not in text:
-            errors.append(f"{path} does not document the v0.2.1 release and plugin version")
+        if "v0.2.2" not in text or "0.2.2+codex.20260714" not in text:
+            errors.append(f"{path} does not document the v0.2.2 release and plugin version")
 
     release_state_contracts = [
-        ("README.md", readme_en, "Current stable release: **v0.2.1**"),
-        ("README.zh-CN.md", readme_zh, "当前稳定版：**v0.2.1**"),
+        ("README.md", readme_en, "Current stable release: **v0.2.2**"),
+        ("README.zh-CN.md", readme_zh, "当前稳定版：**v0.2.2**"),
         ("docs/current-status.md", current_status, "## Current Stable Release"),
-        ("docs/release-notes.en-US.md", release_notes_en, "Current stable release: v0.2.1."),
-        ("docs/release-notes.zh-CN.md", release_notes_zh, "当前稳定版：v0.2.1。"),
+        ("docs/release-notes.en-US.md", release_notes_en, "Current stable release: v0.2.2."),
+        ("docs/release-notes.zh-CN.md", release_notes_zh, "当前稳定版：v0.2.2。"),
     ]
     for path, text, stable_marker in release_state_contracts:
         if stable_marker not in text:
-            errors.append(f"{path} does not identify v0.2.1 as the stable release")
+            errors.append(f"{path} does not identify v0.2.2 as the stable release")
 
     for command in PUBLIC_CHECK_COMMANDS:
         if command not in distribution_doc.replace("\\", "/"):

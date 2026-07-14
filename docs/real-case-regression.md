@@ -30,6 +30,14 @@ V1 is complete when:
 | `vba-button-binding-runtime` | VBA | Buttons can look valid while OnAction or macro runtime behavior is broken. | sanitized spec |
 | `deliverable-clean-copy` | Deliverable | Clean client copies need pre-clean dependency scan, non-destructive plan, and post-clean verification. | sanitized spec |
 | `visual-report-readability` | Visual QA | Structurally valid workbooks can still fail presentation readiness due to clipping, blank report surfaces, or unreadable output areas. | fixture-backed |
+| `excel-capability-routing` | Environment | Platform and host questions need capability-first routing and explicit evidence levels. | sanitized spec |
+| `pq-refresh-lineage-boundary` | Power Query | Refresh lineage boundaries need source-transition and shape evidence before live refresh. | sanitized spec |
+| `dax-measure-rename-impact` | DAX | Measure renames can leave synthetic downstream references unresolved. | sanitized spec |
+| `cube-mdx-escaped-member-grain` | CUBE/MDX | Escaped members and measure grain require separate parsing and live-model checks. | sanitized spec |
+| `vba-onaction-scope-mismatch` | VBA | OnAction targets can exist in source yet remain uncallable from a workbook control. | sanitized spec |
+| `deliverable-external-dependency-readiness` | Deliverable | A copied deliverable needs dependency readiness evidence before release. | sanitized spec |
+
+The five additional cases extend known Excel BI boundaries while remaining deterministic and synthetic. They track repeatable problem shapes and package-tool checks; they cannot replace workbook-behavior proof from a sanitized live workbook in its target environment.
 
 ## Validation
 
@@ -44,8 +52,12 @@ python tools\run_case_regression.py `
 Expected V1 result:
 
 - status: `pass`
-- case count: `6`
-- covered layers: `cube-mdx`, `dax`, `deliverable`, `power-query`, `vba`, `visual-qa`
+- case count: `12`
+- covered layers: `cube-mdx`, `dax`, `deliverable`, `environment`, `power-query`, `vba`, `visual-qa`
+
+## Optional Local Observed Usage
+
+The regression library tracks sanitized problem shapes. It is separate from optional, local observed-usage evidence: users who choose to record sanitized workflow events can validate and summarize them with the commands in [Local observed-usage evidence](observed-usage.md). No usage log, Excel installation, or execution telemetry is required for this case-regression workflow or the release gate.
 
 ## Next Best Work
 

@@ -1,6 +1,6 @@
 {
   "name": "microsoft-excel-bi-agent-pack",
-  "version": "0.2.1+codex.20260714",
+  "version": "0.2.2+codex.20260714",
   "description": "Cross-agent skills, task profiles, references, regression cases, and scripts for Microsoft Excel BI workbooks, VBA, Power Query M, Power Pivot DAX, MDX/CUBE formulas, ADO/SQL automation, deliverable publishing, workbook QA, Office diagnostics, report building, semantic model review, and sanitized fixtures.",
   "author": {
     "name": "Qiu Binbin (丘彬彬)"

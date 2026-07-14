@@ -6,13 +6,13 @@ Use `docs/maintenance-goals.en-US.md` or `docs/maintenance-goals.zh-CN.md` for t
 ## Current Stable Release
 
 ```text
-v0.2.1
+v0.2.2
 ```
 
 Package cachebuster version:
 
 ```text
-0.2.1+codex.20260714
+0.2.2+codex.20260714
 ```
 
 ## Current Capability Shape
@@ -30,6 +30,7 @@ Package cachebuster version:
 - GitHub community-health files, safe issue/PR intake, security reporting, and governance validation are complete for `v0.1.5`.
 - Capability-first compatibility evidence, four synthetic probe/report contracts, seven sanitized regression cases, compact runtime packaging, exact three-prompt manifest validation, synchronized project mirrors, and an optional Windows live capability probe are complete for `v0.2.0`.
 - Three shorter starter prompts, 12 trigger-only skill descriptions, the 36-case trigger corpus, three real plugin-eval benchmark scenarios, and synchronized project mirrors are complete for `v0.2.1`; the 12 skill IDs and Excel feature scope remain unchanged. These scenarios use synthetic/generated inputs and do not prove real task success; observed usage is separate evidence.
+- Twelve deterministic sanitized regression cases and an opt-in, local-only observed-usage validation and aggregation workflow are complete for `v0.2.2`. It rejects paths, credentials, and customer artifact names and never collects, uploads, or reads workbooks automatically.
 
 ## v0.2.0 Evidence Model
 

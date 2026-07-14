@@ -1,0 +1,28 @@
+{
+  "id": "dax-measure-rename-impact",
+  "title": "DAX measure rename impact across synthetic downstream dependencies",
+  "layer": "dax",
+  "evidenceMode": "sanitized-spec",
+  "originSignal": "A measure rename is requested while report formulas and dependent measures may still reference the old name.",
+  "riskPattern": "A rename can leave escaped references, helper formulas, or downstream measures unresolved even when the edited expression looks valid.",
+  "regressionChecks": [
+    "Analyze direct and transitive dependencies for a synthetic measure rename.",
+    "Generate a rewrite plan before changing dependent expressions.",
+    "Separate static reference coverage from target-host calculation behavior."
+  ],
+  "packageTools": [
+    "tools/analyze_measure_rename_impact.py",
+    "tools/build_measure_rename_rewrite_plan.py",
+    ".agents/skills/power-pivot-dax-modeling/scripts/analyze_dax_dependencies.py"
+  ],
+  "expectedEvidence": [
+    "Rename impact report lists synthetic direct and downstream references.",
+    "Rewrite plan identifies expressions requiring a safe name update.",
+    "Dependency report makes unresolved references visible before publication."
+  ],
+  "boundaries": [
+    "Synthetic dependency analysis does not prove semantic equivalence of a business measure.",
+    "Workbook behavior proof requires recalculation in the intended Excel Power Pivot host."
+  ],
+  "nextLiveWorkbookRequirement": "Apply the rename to a sanitized model with report formulas, refresh calculation in Excel, and capture before-and-after result checks."
+}

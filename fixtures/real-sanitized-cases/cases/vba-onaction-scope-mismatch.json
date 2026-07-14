@@ -1,0 +1,28 @@
+{
+  "id": "vba-onaction-scope-mismatch",
+  "title": "VBA OnAction scope mismatch for synthetic workbook controls",
+  "layer": "vba",
+  "evidenceMode": "sanitized-spec",
+  "originSignal": "A workbook control has an OnAction target whose module scope, workbook qualification, or public entry point is ambiguous.",
+  "riskPattern": "A control can reference a procedure name that exists in source text but is not callable from the workbook control at runtime.",
+  "regressionChecks": [
+    "Inventory synthetic control OnAction strings and their resolved procedure targets.",
+    "Lint public entry points and identify scope or qualification mismatches.",
+    "Keep static binding findings separate from Windows Excel macro execution evidence."
+  ],
+  "packageTools": [
+    "tools/build_vba_button_binding_report.py",
+    ".agents/skills/excel-vba-workbook-engineering/scripts/lint_vba_source.py",
+    "tools/inspect_excel_bi_workbook.py"
+  ],
+  "expectedEvidence": [
+    "Button binding report flags unresolved or scope-mismatched synthetic OnAction targets.",
+    "VBA lint report records public procedure and source-level findings.",
+    "Inventory evidence identifies the control and target string without private workbook content."
+  ],
+  "boundaries": [
+    "Static inspection cannot prove Trust Center access, macro enablement, or button-click behavior.",
+    "The case uses deterministic synthetic control names and contains no customer VBA artifacts."
+  ],
+  "nextLiveWorkbookRequirement": "Open a sanitized xlsm in Windows Excel, enable macros under the intended policy, and run a harmless OnAction smoke test."
+}
