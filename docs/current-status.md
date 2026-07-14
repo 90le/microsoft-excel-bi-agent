@@ -6,18 +6,10 @@ Use `docs/maintenance-goals.en-US.md` or `docs/maintenance-goals.zh-CN.md` for t
 ## Current Stable Release
 
 ```text
-v0.2.0
-```
-
-## Unreleased Release Candidate
-
-The branch is preparing a draft pull request for:
-
-```text
 v0.2.1
 ```
 
-Candidate package cachebuster version:
+Package cachebuster version:
 
 ```text
 0.2.1+codex.20260714
@@ -37,7 +29,7 @@ Candidate package cachebuster version:
 - Public growth goals, maintainer attribution, social metadata, and reusable marketing copy are complete for `v0.1.4`.
 - GitHub community-health files, safe issue/PR intake, security reporting, and governance validation are complete for `v0.1.5`.
 - Capability-first compatibility evidence, four synthetic probe/report contracts, seven sanitized regression cases, compact runtime packaging, exact three-prompt manifest validation, synchronized project mirrors, and an optional Windows live capability probe are complete for `v0.2.0`.
-- Three shorter starter prompts, 12 trigger-only skill descriptions, the 36-case trigger corpus, three real plugin-eval benchmark scenarios, and synchronized project mirrors are prepared in the unreleased `v0.2.1` candidate; the 12 skill IDs and Excel feature scope remain unchanged. These scenarios use synthetic/generated inputs and do not prove real task success; observed usage is separate evidence.
+- Three shorter starter prompts, 12 trigger-only skill descriptions, the 36-case trigger corpus, three real plugin-eval benchmark scenarios, and synchronized project mirrors are complete for `v0.2.1`; the 12 skill IDs and Excel feature scope remain unchanged. These scenarios use synthetic/generated inputs and do not prove real task success; observed usage is separate evidence.
 
 ## v0.2.0 Evidence Model
 
@@ -46,7 +38,7 @@ Candidate package cachebuster version:
 - Workbook behavior evidence is required for high confidence and applies only to the tested workbook path and authoring, automation, consumer, or recipient target.
 - Excel 2007/2010/2013/2016/2019, Office LTSC, Microsoft 365, macOS, Excel for web, Linux, offline, 32-bit/64-bit, WPS, and LibreOffice targets retain explicit boundaries in `docs/compatibility.md`.
 
-## v0.2.1 Candidate Efficiency Evidence
+## v0.2.1 Efficiency Evidence
 
 The staged static plugin-eval comparison measured `trigger_cost_tokens` at 682 versus the v0.2.0 baseline of 1,161, a 41.26% decrease, and `invoke_cost_tokens` at 14,886 versus 15,365, a decrease of 479. The 36-case corpus and generated/synthetic scenario responses validate routing and benchmark mechanics only and do not prove real task success; observed usage is separate evidence.
 
