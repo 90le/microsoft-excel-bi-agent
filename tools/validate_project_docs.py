@@ -434,6 +434,19 @@ def validate(project_root: Path) -> dict[str, Any]:
         if "v0.2.1" not in text or "0.2.1+codex.20260714" not in text:
             errors.append(f"{path} does not document the v0.2.1 release and plugin version")
 
+    release_state_contracts = [
+        ("README.md", readme_en, "Current stable release: **v0.2.0**", "Unreleased release candidate: **v0.2.1**"),
+        ("README.zh-CN.md", readme_zh, "当前稳定版：**v0.2.0**", "未发布候选：**v0.2.1**"),
+        ("docs/current-status.md", current_status, "## Current Stable Release", "## Unreleased Release Candidate"),
+        ("docs/release-notes.en-US.md", release_notes_en, "v0.2.0", "Unreleased Release Candidate"),
+        ("docs/release-notes.zh-CN.md", release_notes_zh, "v0.2.0", "未发布候选"),
+    ]
+    for path, text, stable_marker, candidate_marker in release_state_contracts:
+        if stable_marker not in text:
+            errors.append(f"{path} does not identify v0.2.0 as the stable release")
+        if candidate_marker not in text or "0.2.1+codex.20260714" not in text:
+            errors.append(f"{path} does not identify 0.2.1+codex.20260714 as an unreleased candidate")
+
     for command in PUBLIC_CHECK_COMMANDS:
         if command not in distribution_doc.replace("\\", "/"):
             errors.append(f"distribution checklist does not document public check: {command}")
@@ -455,6 +468,10 @@ def validate(project_root: Path) -> dict[str, Any]:
             if private_link in texts.get(path, ""):
                 errors.append(f"{path} links maintainer-only ignored document: {private_link}")
 
+    landing_candidates = {
+        "docs/intro.html": "Unreleased release candidate",
+        "docs/intro.zh-CN.html": "未发布候选",
+    }
     for path, text in [("docs/intro.html", intro_en), ("docs/intro.zh-CN.html", intro_zh)]:
         if 'name="viewport"' not in text:
             errors.append(f"{path} is missing responsive viewport meta")
@@ -463,10 +480,14 @@ def validate(project_root: Path) -> dict[str, Any]:
         release_links = re.findall(r"/releases/tag/v(\d+\.\d+\.\d+)", text)
         if not release_links:
             errors.append(f"{path} does not expose a latest release link")
-        elif plugin_release and release_links[0] != plugin_release:
+        elif release_links[0] != "0.2.0":
             errors.append(
-                f"{path} latest release v{release_links[0]} does not match plugin manifest v{plugin_release}"
+                f"{path} latest stable release link is v{release_links[0]}, expected v0.2.0"
             )
+        if plugin_release and plugin_release in release_links:
+            errors.append(f"{path} links unreleased manifest candidate v{plugin_release} as a release tag")
+        if landing_candidates[path] not in text or (plugin_release and f"v{plugin_release}" not in text):
+            errors.append(f"{path} does not label manifest v{plugin_release} as an unreleased candidate")
         if "./compatibility.md" not in text:
             errors.append(f"{path} does not link the compatibility matrix")
         if "release-notes" not in text:

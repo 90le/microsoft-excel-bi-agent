@@ -13,6 +13,7 @@ RELEASE_GATE = PROJECT_ROOT / "tools" / "run_release_gate.py"
 CASE_RUNNER = PROJECT_ROOT / "tools" / "run_case_regression.py"
 DOC_VALIDATOR = PROJECT_ROOT / "tools" / "validate_project_docs.py"
 VERSION = "0.2.1+codex.20260714"
+STABLE_RELEASE = "0.2.0"
 
 
 def load_module(path: Path, name: str):
@@ -115,28 +116,40 @@ class Task5ReleaseEvidenceTests(unittest.TestCase):
         current_status = (PROJECT_ROOT / "docs" / "current-status.md").read_text(encoding="utf-8")
         release_en = (PROJECT_ROOT / "docs" / "release-notes.en-US.md").read_text(encoding="utf-8")
         release_zh = (PROJECT_ROOT / "docs" / "release-notes.zh-CN.md").read_text(encoding="utf-8")
-        for text in [current_status, release_en, release_zh]:
-            self.assertIn("v0.2.1", text)
-            self.assertIn(VERSION, text)
+        self.assertIn("Current Stable Release", current_status)
+        self.assertIn(f"v{STABLE_RELEASE}", current_status)
+        self.assertIn("Unreleased Release Candidate", current_status)
+        self.assertIn(VERSION, current_status)
+        self.assertIn("Unreleased Release Candidate", release_en)
+        self.assertIn(VERSION, release_en)
+        self.assertIn("未发布候选", release_zh)
+        self.assertIn(VERSION, release_zh)
 
-        for path in [PROJECT_ROOT / "README.md", PROJECT_ROOT / "README.zh-CN.md"]:
-            readme = path.read_text(encoding="utf-8").lower()
-            self.assertIn("v0.2.1", readme)
+        readme_en = (PROJECT_ROOT / "README.md").read_text(encoding="utf-8")
+        readme_zh = (PROJECT_ROOT / "README.zh-CN.md").read_text(encoding="utf-8")
+        self.assertIn(f"Current stable release: **v{STABLE_RELEASE}**", readme_en)
+        self.assertIn("Unreleased release candidate: **v0.2.1**", readme_en)
+        self.assertIn(f"当前稳定版：**v{STABLE_RELEASE}**", readme_zh)
+        self.assertIn("未发布候选：**v0.2.1**", readme_zh)
+        for readme in [readme_en.lower(), readme_zh.lower()]:
             self.assertIn("docs/compatibility.md", readme)
             self.assertIn("runtime", readme)
 
-    def test_landing_pages_match_manifest_major_minor_release(self) -> None:
+    def test_landing_pages_keep_stable_release_link_and_label_manifest_candidate(self) -> None:
         manifest = json.loads((PROJECT_ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8"))
-        manifest_release = manifest["version"].split("+", 1)[0]
-        manifest_major_minor = tuple(manifest_release.split(".")[:2])
-
-        for path in [PROJECT_ROOT / "docs" / "intro.html", PROJECT_ROOT / "docs" / "intro.zh-CN.html"]:
+        candidate_release = manifest["version"].split("+", 1)[0]
+        pages = [
+            (PROJECT_ROOT / "docs" / "intro.html", "Unreleased release candidate"),
+            (PROJECT_ROOT / "docs" / "intro.zh-CN.html", "未发布候选"),
+        ]
+        for path, candidate_marker in pages:
             landing = path.read_text(encoding="utf-8")
-            match = re.search(r"/releases/tag/v(\d+\.\d+\.\d+)", landing)
-            self.assertIsNotNone(match, path)
-            landing_release = match.group(1)
-            self.assertEqual(tuple(landing_release.split(".")[:2]), manifest_major_minor)
-            self.assertEqual(landing_release, manifest_release)
+            release_links = re.findall(r"/releases/tag/v(\d+\.\d+\.\d+)", landing)
+            self.assertTrue(release_links, path)
+            self.assertEqual(STABLE_RELEASE, release_links[0])
+            self.assertNotIn(candidate_release, release_links)
+            self.assertIn(f"v{candidate_release}", landing)
+            self.assertIn(candidate_marker, landing)
             self.assertIn("./compatibility.md", landing)
 
         report = doc_validator.validate(PROJECT_ROOT)

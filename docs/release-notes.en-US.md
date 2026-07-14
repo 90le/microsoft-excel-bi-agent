@@ -1,8 +1,8 @@
 # Release Notes
 
-## v0.2.1 - Trigger Efficiency And Measured Discovery Cost
+## v0.2.1 (Unreleased Release Candidate) - Trigger Efficiency And Measured Discovery Cost
 
-Release focus: reduce plugin discovery cost and sharpen skill routing without changing the 12 published skill IDs or adding Excel functionality.
+Candidate focus: prepare a draft pull request that reduces plugin discovery cost and sharpens skill routing without changing the 12 published skill IDs or adding Excel functionality.
 
 ### Changed
 
