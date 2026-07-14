@@ -190,24 +190,23 @@ def benchmark_evidence_boundary_errors(texts: dict[str, str]) -> list[str]:
         sections = re.split(r"(?m)(?=^#{1,6}\s+)", text)
         for section_index, section in enumerate(sections):
             blocks = re.split(r"\n\s*\n|(?=^\s*[-*+]\s+)", section, flags=re.MULTILINE)
-            if not any(
-                BENCHMARK_SUBJECT_RE.search(block) and BENCHMARK_OUTCOME_RE.search(block)
-                for block in blocks
-            ):
-                continue
-            lowered = section.casefold()
-            missing: list[str] = []
-            if not any(term in lowered for term in SYNTHETIC_TERMS):
-                missing.append("synthetic/generated evidence")
-            if not any(term in lowered for term in NO_REAL_TASK_PROOF_TERMS):
-                missing.append("synthetic output does not prove real task success")
-            if not any(term in lowered for term in OBSERVED_TERMS):
-                missing.append("separate observed/measured evidence")
-            if missing:
-                errors.append(
-                    f"{path} benchmark claim in section {section_index + 1} is missing boundary language: "
-                    + ", ".join(missing)
-                )
+            for block_index, block in enumerate(blocks):
+                if not (BENCHMARK_SUBJECT_RE.search(block) and BENCHMARK_OUTCOME_RE.search(block)):
+                    continue
+                lowered = block.casefold()
+                missing: list[str] = []
+                if not any(term in lowered for term in SYNTHETIC_TERMS):
+                    missing.append("synthetic/generated evidence")
+                if not any(term in lowered for term in NO_REAL_TASK_PROOF_TERMS):
+                    missing.append("synthetic output does not prove real task success")
+                if not any(term in lowered for term in OBSERVED_TERMS):
+                    missing.append("separate observed/measured evidence")
+                if missing:
+                    errors.append(
+                        f"{path} benchmark claim in section {section_index + 1}, block "
+                        f"{block_index + 1} is missing boundary language: "
+                        + ", ".join(missing)
+                    )
     return errors
 
 

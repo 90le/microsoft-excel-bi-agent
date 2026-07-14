@@ -184,6 +184,17 @@ class Task5ReleaseEvidenceTests(unittest.TestCase):
 
         self.assertTrue(doc_validator.benchmark_evidence_boundary_errors(mixed))
 
+    def test_benchmark_boundaries_do_not_leak_between_claim_blocks_in_one_section(self) -> None:
+        mixed = {
+            "docs/release-notes.en-US.md": (
+                "## Results\n\nSynthetic benchmark output validates mechanics only and does not prove "
+                "real task success; observed usage is separate evidence.\n\n"
+                "The trigger benchmark proves real task success with a 98% success result."
+            )
+        }
+
+        self.assertTrue(doc_validator.benchmark_evidence_boundary_errors(mixed))
+
 
 if __name__ == "__main__":
     unittest.main()

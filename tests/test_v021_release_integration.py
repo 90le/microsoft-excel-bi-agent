@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+import argparse
+import contextlib
 import importlib.util
 import json
+import os
 import shutil
 import sys
 import tempfile
@@ -55,7 +58,10 @@ class V021ReleaseIntegrationTests(unittest.TestCase):
         self.assertIsNotNone(result.command)
         self.assertEqual("validate_skill_trigger_benchmark.py", Path(result.command[1]).name)
         self.assertIn("--require-pass", result.command or [])
-        self.assertIn(Path(result.command[0]).name.lower(), {"python", "python.exe"})
+        self.assertEqual(
+            os.path.normcase(os.path.realpath(sys.executable)),
+            os.path.normcase(os.path.realpath(result.command[0])),
+        )
         self.assertEqual(12, result.metadata["skillCount"])
         self.assertEqual(36, result.metadata["caseCount"])
         self.assertEqual(3, result.metadata["realBenchmarkScenarioCount"])
@@ -67,6 +73,80 @@ class V021ReleaseIntegrationTests(unittest.TestCase):
         )
         catalog_check = release_gate.capability_catalog_fixture_check(PROJECT_ROOT)
         self.assertEqual("pass", catalog_check.status, catalog_check.detail)
+
+    def test_structural_main_executes_skill_trigger_efficiency_check(self) -> None:
+        def passing_check(*_args, **_kwargs):
+            return release_gate.CheckResult(name="stubbed check", status="pass")
+
+        observed_roots: list[Path] = []
+
+        def trigger_check(project_root: Path):
+            observed_roots.append(project_root)
+            return release_gate.CheckResult(
+                name="Skill trigger efficiency benchmark",
+                status="pass",
+            )
+
+        with tempfile.TemporaryDirectory() as tmp:
+            report_path = Path(tmp) / "release-gate.json"
+            args = argparse.Namespace(
+                project_root=str(PROJECT_ROOT),
+                plugin_validator="",
+                local_plugin="",
+                cache_plugin="",
+                out_json=str(report_path),
+                out_md="",
+                profile="structural",
+                strict_excel_process=False,
+                no_default_sensitive_markers=False,
+                sensitive_marker=[],
+            )
+            with contextlib.ExitStack() as stack:
+                stack.enter_context(mock.patch.object(release_gate, "parse_args", return_value=args))
+                stack.enter_context(
+                    mock.patch.object(
+                        release_gate,
+                        "read_plugin_json",
+                        return_value={"name": "synthetic-plugin", "version": "0.0.0"},
+                    )
+                )
+                stack.enter_context(
+                    mock.patch.object(
+                        release_gate,
+                        "default_plugin_validator",
+                        return_value=Path(tmp) / "missing-validator.py",
+                    )
+                )
+                stack.enter_context(mock.patch.object(release_gate, "find_powershell", return_value=None))
+                stack.enter_context(mock.patch.object(release_gate, "find_bash", return_value=None))
+                stack.enter_context(mock.patch.object(release_gate, "run_command", side_effect=passing_check))
+                stack.enter_context(mock.patch.object(release_gate, "scan_regex", side_effect=passing_check))
+                stack.enter_context(
+                    mock.patch.object(release_gate, "scan_sensitive_markers", side_effect=passing_check)
+                )
+                for name, value in vars(release_gate).items():
+                    if (
+                        name.endswith("_check")
+                        and name != "skill_trigger_efficiency_benchmark_check"
+                        and callable(value)
+                    ):
+                        stack.enter_context(mock.patch.object(release_gate, name, side_effect=passing_check))
+                stack.enter_context(
+                    mock.patch.object(
+                        release_gate,
+                        "skill_trigger_efficiency_benchmark_check",
+                        side_effect=trigger_check,
+                    )
+                )
+                stack.enter_context(mock.patch("builtins.print"))
+
+                exit_code = release_gate.main()
+
+            report = json.loads(report_path.read_text(encoding="utf-8"))
+            check_names = [item["name"] for item in report["checks"]]
+            self.assertEqual(0, exit_code)
+            self.assertEqual([PROJECT_ROOT.resolve()], observed_roots)
+            self.assertIn("Skill trigger efficiency benchmark", check_names)
 
     def test_release_gate_rejects_unsafe_workspace_sources(self) -> None:
         unsafe_sources = [
