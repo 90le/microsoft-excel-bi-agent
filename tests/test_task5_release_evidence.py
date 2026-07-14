@@ -145,8 +145,7 @@ class Task5ReleaseEvidenceTests(unittest.TestCase):
     def test_benchmark_claims_require_synthetic_and_observed_evidence_boundary(self) -> None:
         unsafe = {
             "docs/release-notes.en-US.md": (
-                "The 36-case trigger benchmark and three plugin-eval scenarios prove real task success. "
-                "Observed usage confirms the result."
+                "The synthetic trigger benchmark proves real task success with a 98% success result."
             )
         }
         safe = {
@@ -159,6 +158,31 @@ class Task5ReleaseEvidenceTests(unittest.TestCase):
 
         self.assertTrue(doc_validator.benchmark_evidence_boundary_errors(unsafe))
         self.assertEqual([], doc_validator.benchmark_evidence_boundary_errors(safe))
+
+    def test_benchmark_output_format_reference_is_not_an_evidence_claim(self) -> None:
+        subject_only = {
+            "docs/task-recipes.md": "See the benchmark output format in benchmark-output.json."
+        }
+
+        self.assertEqual([], doc_validator.benchmark_evidence_boundary_errors(subject_only))
+
+    def test_benchmark_evidence_claim_is_detected_when_claim_precedes_subject(self) -> None:
+        unsafe = {
+            "docs/release-notes.en-US.md": "Evidence from the trigger benchmark is conclusive."
+        }
+
+        self.assertTrue(doc_validator.benchmark_evidence_boundary_errors(unsafe))
+
+    def test_benchmark_boundaries_do_not_leak_across_sections(self) -> None:
+        mixed = {
+            "docs/release-notes.en-US.md": (
+                "## Mechanics\n\nSynthetic benchmark output validates mechanics only and does not prove "
+                "real task success; observed usage is separate evidence.\n\n"
+                "## Results\n\nThe trigger benchmark proves real task success with a 98% success result."
+            )
+        }
+
+        self.assertTrue(doc_validator.benchmark_evidence_boundary_errors(mixed))
 
 
 if __name__ == "__main__":

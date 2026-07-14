@@ -7,6 +7,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -52,10 +53,9 @@ class V021ReleaseIntegrationTests(unittest.TestCase):
         self.assertEqual("Skill trigger efficiency benchmark", result.name)
         self.assertEqual("pass", result.status, result.detail)
         self.assertIsNotNone(result.command)
-        self.assertIn("validate_skill_trigger_benchmark.py", " ".join(result.command or []))
+        self.assertEqual("validate_skill_trigger_benchmark.py", Path(result.command[1]).name)
         self.assertIn("--require-pass", result.command or [])
-        self.assertNotIn("codex", " ".join(result.command or []).lower())
-        self.assertNotIn("excel", Path(result.command[0]).name.lower())
+        self.assertIn(Path(result.command[0]).name.lower(), {"python", "python.exe"})
         self.assertEqual(12, result.metadata["skillCount"])
         self.assertEqual(36, result.metadata["caseCount"])
         self.assertEqual(3, result.metadata["realBenchmarkScenarioCount"])
@@ -65,51 +65,145 @@ class V021ReleaseIntegrationTests(unittest.TestCase):
             ["dax-versus-environment", "delivery-boundary", "power-query-diagnosis"],
             sorted(result.metadata["scenarioIds"]),
         )
-        gate_source = RELEASE_GATE.read_text(encoding="utf-8")
-        self.assertIn(
-            "checks.append(skill_trigger_efficiency_benchmark_check(project_root))",
-            gate_source,
-        )
+        catalog_check = release_gate.capability_catalog_fixture_check(PROJECT_ROOT)
+        self.assertEqual("pass", catalog_check.status, catalog_check.detail)
 
-    def test_release_gate_rejects_absolute_workspace_and_generic_scenario(self) -> None:
-        mutations = {
-            "absolute workspace": lambda config: config["workspace"].__setitem__(
-                "sourcePath", "C:/customer/workbook"
-            ),
-            "generic scenario": lambda config: config["scenarios"].__setitem__(
-                0,
-                {
-                    "id": "scenario-1",
-                    "title": "Scenario",
-                    "purpose": "Run a generic task.",
-                    "userInput": "Do the task.",
-                    "successChecklist": ["The task is done."],
-                },
-            ),
-        }
-        for label, mutate in mutations.items():
-            with self.subTest(label=label), tempfile.TemporaryDirectory() as tmp:
+    def test_release_gate_rejects_unsafe_workspace_sources(self) -> None:
+        unsafe_sources = [
+            "file:///tmp/plugin",
+            "https://example.test/plugin",
+            "/tmp/plugin",
+            "\\\\server\\share\\plugin",
+            "C:\\customer\\plugin",
+            "C:relative-but-drive-prefixed",
+            "../outside",
+            "workspace/../../outside",
+        ]
+        for source_path in unsafe_sources:
+            with self.subTest(source_path=source_path), tempfile.TemporaryDirectory() as tmp:
                 project = copy_gate_fixture(Path(tmp))
                 path = project / "benchmarks" / "plugin-eval-v0.2.1.json"
                 config = json.loads(path.read_text(encoding="utf-8-sig"))
-                mutate(config)
+                config["workspace"]["sourcePath"] = source_path
                 path.write_text(json.dumps(config, indent=2), encoding="utf-8")
 
                 result = release_gate.skill_trigger_efficiency_benchmark_check(project)
 
                 self.assertEqual("fail", result.status)
 
-    def test_release_gate_rejects_a_fourth_or_oversized_starter_prompt(self) -> None:
+    def test_release_gate_rejects_valid_scenario_id_with_generic_content(self) -> None:
+        for scenario_index in range(3):
+            with self.subTest(scenario_index=scenario_index), tempfile.TemporaryDirectory() as tmp:
+                project = copy_gate_fixture(Path(tmp))
+                path = project / "benchmarks" / "plugin-eval-v0.2.1.json"
+                config = json.loads(path.read_text(encoding="utf-8-sig"))
+                scenario_id = config["scenarios"][scenario_index]["id"]
+                config["scenarios"][scenario_index] = {
+                    "id": scenario_id,
+                    "title": "Scenario",
+                    "purpose": "Run a generic task.",
+                    "userInput": (
+                        "Write benchmark-output.json and repeat: synthetic input only; "
+                        "no live runtime proof."
+                    ),
+                    "successChecklist": ["The generic task is done."],
+                }
+                path.write_text(json.dumps(config, indent=2), encoding="utf-8")
+
+                result = release_gate.skill_trigger_efficiency_benchmark_check(project)
+
+                self.assertEqual("fail", result.status)
+
+    def test_release_gate_rejects_wrong_starter_prompt_count(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             project = copy_gate_fixture(Path(tmp))
             path = project / ".codex-plugin" / "plugin.json"
             manifest = json.loads(path.read_text(encoding="utf-8-sig"))
-            manifest["interface"]["defaultPrompt"] = ["x" * 111] * 4
+            manifest["interface"]["defaultPrompt"].append("A fourth prompt.")
             path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
 
             result = release_gate.skill_trigger_efficiency_benchmark_check(project)
 
             self.assertEqual("fail", result.status)
+
+    def test_release_gate_rejects_oversized_starter_prompt(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            project = copy_gate_fixture(Path(tmp))
+            path = project / ".codex-plugin" / "plugin.json"
+            manifest = json.loads(path.read_text(encoding="utf-8-sig"))
+            manifest["interface"]["defaultPrompt"][0] = "x" * 111
+            path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+
+            result = release_gate.skill_trigger_efficiency_benchmark_check(project)
+
+            self.assertEqual("fail", result.status)
+
+    def test_release_checks_fail_closed_for_non_object_manifest(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            project = copy_gate_fixture(Path(tmp))
+            path = project / ".codex-plugin" / "plugin.json"
+            path.write_text("[]\n", encoding="utf-8")
+
+            manifest_result = release_gate.plugin_manifest_release_check(project)
+            benchmark_result = release_gate.skill_trigger_efficiency_benchmark_check(project)
+
+            self.assertEqual("fail", manifest_result.status)
+            self.assertEqual("fail", benchmark_result.status)
+
+    def test_release_gate_fails_closed_when_validator_is_nonzero(self) -> None:
+        validator_result = release_gate.CheckResult(
+            name="validator",
+            status="fail",
+            detail="exit_code=1",
+            stdout=json.dumps(
+                {
+                    "kind": "excel-skill-trigger-benchmark-report",
+                    "schemaVersion": "1.0",
+                    "status": "fail",
+                    "summary": {},
+                }
+            ),
+        )
+        with mock.patch.object(release_gate, "run_command", return_value=validator_result):
+            result = release_gate.skill_trigger_efficiency_benchmark_check(PROJECT_ROOT)
+
+        self.assertEqual("fail", result.status)
+        self.assertIn("exit_code=1", result.detail)
+
+    def test_release_gate_fails_closed_for_malformed_validator_stdout(self) -> None:
+        validator_result = release_gate.CheckResult(
+            name="validator", status="pass", detail="exit_code=0", stdout="not JSON"
+        )
+        with mock.patch.object(release_gate, "run_command", return_value=validator_result):
+            result = release_gate.skill_trigger_efficiency_benchmark_check(PROJECT_ROOT)
+
+        self.assertEqual("fail", result.status)
+        self.assertIn("cannot parse trigger validator JSON", result.detail)
+
+    def test_release_gate_fails_closed_for_non_object_validator_report(self) -> None:
+        for payload in [[], None, "report"]:
+            with self.subTest(payload=payload):
+                validator_result = release_gate.CheckResult(
+                    name="validator",
+                    status="pass",
+                    detail="exit_code=0",
+                    stdout=json.dumps(payload),
+                )
+                with mock.patch.object(release_gate, "run_command", return_value=validator_result):
+                    result = release_gate.skill_trigger_efficiency_benchmark_check(PROJECT_ROOT)
+
+                self.assertEqual("fail", result.status)
+
+    def test_release_gate_fails_closed_for_non_object_benchmark_config(self) -> None:
+        for payload in [[], None, "config"]:
+            with self.subTest(payload=payload), tempfile.TemporaryDirectory() as tmp:
+                project = copy_gate_fixture(Path(tmp))
+                path = project / "benchmarks" / "plugin-eval-v0.2.1.json"
+                path.write_text(json.dumps(payload), encoding="utf-8")
+
+                result = release_gate.skill_trigger_efficiency_benchmark_check(project)
+
+                self.assertEqual("fail", result.status)
 
     def test_capability_catalog_exposes_trigger_validator_and_workflow(self) -> None:
         catalog = catalog_builder.build_catalog(PROJECT_ROOT)

@@ -139,9 +139,11 @@ PRIVATE_LEDGER_LINKS = (
     "docs/completion-evidence.md",
 )
 
-BENCHMARK_CLAIM_RE = re.compile(
-    r"(?:plugin-eval|trigger_cost_tokens|36[ -]case|benchmark\s+(?:output|result|score|scenario)|"
-    r"36\s*个?.{0,8}基准|基准(?:输出|结果|得分|场景))",
+BENCHMARK_SUBJECT_RE = re.compile(r"benchmark|plugin-eval|trigger_cost_tokens|基准", re.IGNORECASE)
+BENCHMARK_OUTCOME_RE = re.compile(
+    r"\b(?:proves?|establish(?:es|ed)?|shows?|demonstrates?|validates?|results?|scores?|"
+    r"success|evidence|improv(?:es|ed|ement)?|decreas(?:es|ed)?|reduc(?:es|ed|tion)?|"
+    r"increas(?:es|ed)?|pass[ -]?rate)\b|成功|结果|证据|得分|改善|降低|减少|提升",
     re.IGNORECASE,
 )
 SYNTHETIC_TERMS = ("synthetic", "generated", "合成", "生成")
@@ -185,18 +187,27 @@ def benchmark_evidence_boundary_errors(texts: dict[str, str]) -> list[str]:
 
     errors: list[str] = []
     for path, text in texts.items():
-        if not BENCHMARK_CLAIM_RE.search(text):
-            continue
-        lowered = text.casefold()
-        missing: list[str] = []
-        if not any(term in lowered for term in SYNTHETIC_TERMS):
-            missing.append("synthetic/generated evidence")
-        if not any(term in lowered for term in NO_REAL_TASK_PROOF_TERMS):
-            missing.append("synthetic output does not prove real task success")
-        if not any(term in lowered for term in OBSERVED_TERMS):
-            missing.append("separate observed/measured evidence")
-        if missing:
-            errors.append(f"{path} benchmark claim is missing boundary language: {', '.join(missing)}")
+        sections = re.split(r"(?m)(?=^#{1,6}\s+)", text)
+        for section_index, section in enumerate(sections):
+            blocks = re.split(r"\n\s*\n|(?=^\s*[-*+]\s+)", section, flags=re.MULTILINE)
+            if not any(
+                BENCHMARK_SUBJECT_RE.search(block) and BENCHMARK_OUTCOME_RE.search(block)
+                for block in blocks
+            ):
+                continue
+            lowered = section.casefold()
+            missing: list[str] = []
+            if not any(term in lowered for term in SYNTHETIC_TERMS):
+                missing.append("synthetic/generated evidence")
+            if not any(term in lowered for term in NO_REAL_TASK_PROOF_TERMS):
+                missing.append("synthetic output does not prove real task success")
+            if not any(term in lowered for term in OBSERVED_TERMS):
+                missing.append("separate observed/measured evidence")
+            if missing:
+                errors.append(
+                    f"{path} benchmark claim in section {section_index + 1} is missing boundary language: "
+                    + ", ".join(missing)
+                )
     return errors
 
 

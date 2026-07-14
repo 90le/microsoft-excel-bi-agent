@@ -130,7 +130,74 @@ def read_plugin_json(project_root: Path) -> dict[str, object]:
     manifest = project_root / ".codex-plugin" / "plugin.json"
     if not manifest.is_file():
         return {}
-    return json.loads(manifest.read_text(encoding="utf-8"))
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    return payload if isinstance(payload, dict) else {}
+
+
+def is_safe_relative_workspace_path(value: object) -> bool:
+    if not isinstance(value, str) or not value.strip():
+        return False
+    normalized = value.strip().replace("\\", "/")
+    if re.match(r"^[A-Za-z][A-Za-z0-9+.-]*:", normalized):
+        return False
+    if normalized.startswith("/"):
+        return False
+    depth = 0
+    for part in normalized.split("/"):
+        if part in {"", "."}:
+            continue
+        if part == "..":
+            depth -= 1
+            if depth < 0:
+                return False
+        else:
+            depth += 1
+    return True
+
+
+def scenario_semantic_contract_errors(scenario: dict[str, object], index: int) -> list[str]:
+    """Check stable scenario semantics without pinning exact prose."""
+
+    contracts: dict[str, dict[str, tuple[tuple[str, ...], ...]]] = {
+        "power-query-diagnosis": {
+            "title": (("power query", "m-query"), ("diagnosis", "diagnostic")),
+            "purpose": (("synthetic",), ("power query", "m-query"), ("select", "route"), ("report", "evidence")),
+            "userInput": (("power-query-m-engineering",), ("benchmark-output.json",), ("synthetic",), ("no live runtime proof",)),
+            "successChecklist": (("power-query-m-engineering",), ("benchmark-output.json",), ("verifier", "parse")),
+        },
+        "dax-versus-environment": {
+            "title": (("dax",), ("environment", "host", "platform")),
+            "purpose": (("formula", "dax"), ("host", "platform", "environment"), ("compatibility",), ("unrelated", "preserv")),
+            "userInput": (("power-pivot-dax-modeling",), ("office-environment-diagnostics",), ("benchmark-output.json",), ("synthetic",), ("no live runtime proof",)),
+            "successChecklist": (("power-pivot-dax-modeling",), ("office-environment-diagnostics",), ("benchmark-output.json",)),
+        },
+        "delivery-boundary": {
+            "title": (("delivery",), ("preserv", "boundary")),
+            "purpose": (("sanitized", "synthetic"), ("workbook",), ("preserv",), ("source",)),
+            "userInput": (("excel-deliverable-publisher",), ("benchmark-output.json",), ("synthetic",), ("source",), ("no live runtime proof",)),
+            "successChecklist": (("excel-deliverable-publisher",), ("source",), ("output", "benchmark-output.json")),
+        },
+    }
+    scenario_id = scenario.get("id")
+    contract = contracts.get(str(scenario_id))
+    if contract is None:
+        return []
+
+    errors: list[str] = []
+    for field_name, token_groups in contract.items():
+        value = scenario.get(field_name)
+        if field_name == "successChecklist" and isinstance(value, list):
+            field_text = " ".join(str(item) for item in value).casefold()
+        else:
+            field_text = value.casefold() if isinstance(value, str) else ""
+        missing_groups = [group for group in token_groups if not any(token in field_text for token in group)]
+        if missing_groups:
+            expected = ["/".join(group) for group in missing_groups]
+            errors.append(
+                f"benchmark scenario[{index}].{field_name} is missing semantic tokens: "
+                + ", ".join(expected)
+            )
+    return errors
 
 
 def find_bash() -> str | None:
@@ -1318,15 +1385,8 @@ def skill_trigger_efficiency_benchmark_check(project_root: Path) -> CheckResult:
         failures.append("benchmark workspace is not an object")
         workspace = {}
     source_path = workspace.get("sourcePath")
-    source_is_absolute = (
-        not isinstance(source_path, str)
-        or not source_path.strip()
-        or Path(source_path).is_absolute()
-        or bool(re.match(r"^[A-Za-z]:[\\/]", source_path))
-        or source_path.startswith(("/", "\\"))
-    )
-    if source_is_absolute:
-        failures.append("benchmark workspace.sourcePath must be relative")
+    if not is_safe_relative_workspace_path(source_path):
+        failures.append("benchmark workspace.sourcePath must be a contained relative local path")
     if workspace.get("setupMode") != "copy":
         failures.append(f"benchmark workspace.setupMode={workspace.get('setupMode')!r}")
     if workspace.get("preserve") != "on-failure":
@@ -1367,6 +1427,7 @@ def skill_trigger_efficiency_benchmark_check(project_root: Path) -> CheckResult:
             isinstance(item, str) and item.strip() for item in checklist
         ):
             failures.append(f"benchmark scenario[{index}].successChecklist must be non-empty")
+        failures.extend(scenario_semantic_contract_errors(scenario, index))
         scenario_text = json.dumps(scenario, ensure_ascii=False).casefold()
         if "synthetic" not in scenario_text or "no live runtime proof" not in scenario_text:
             failures.append(
