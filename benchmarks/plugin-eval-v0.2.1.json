@@ -1,0 +1,66 @@
+{
+  "kind": "plugin-eval-benchmark",
+  "schemaVersion": 2,
+  "version": 2,
+  "targetKind": "plugin",
+  "targetName": "microsoft-excel-bi-agent-pack",
+  "runner": {
+    "type": "codex-cli",
+    "model": "gpt-5.4",
+    "sandbox": "workspace-write",
+    "approvalPolicy": "never",
+    "extraArgs": []
+  },
+  "workspace": {
+    "sourcePath": ".",
+    "setupMode": "copy",
+    "preserve": "on-failure"
+  },
+  "targetProvisioning": {
+    "mode": "workspace-plugin-marketplace"
+  },
+  "verifiers": {
+    "commands": [
+      "python -m json.tool benchmark-output.json"
+    ]
+  },
+  "notes": [
+    "These scenarios use synthetic or sanitized inputs and do not establish real workbook task success.",
+    "Each scenario runs in an isolated copied workspace and writes benchmark-output.json for mechanical verification."
+  ],
+  "scenarios": [
+    {
+      "id": "power-query-diagnosis",
+      "title": "Power Query diagnosis",
+      "purpose": "Check that a synthetic M-query diagnosis selects the Power Query skill and records an evidence-qualified report.",
+      "userInput": "Inspect this supplied synthetic M query: let Source = Table.FromRecords({[Amount=\"10\"]}), Typed = Table.TransformColumnTypes(Source, {{\"Amount\", Int64.Type}}) in Typed. Select the correct specialist skill, diagnose the type-conversion risk, and write benchmark-output.json with selectedSkill, findings, and evidenceLimits fields. Do not claim that Excel refresh was executed.",
+      "successChecklist": [
+        "The selected skill is power-query-m-engineering.",
+        "benchmark-output.json contains a concrete diagnosis and evidence limits.",
+        "The verifier parses the report as JSON."
+      ]
+    },
+    {
+      "id": "dax-versus-environment",
+      "title": "DAX versus environment boundary",
+      "purpose": "Distinguish formula compatibility from host and platform compatibility without editing unrelated files.",
+      "userInput": "Classify two requests: (1) whether a CALCULATE measure is compatible with Excel Power Pivot, and (2) whether Excel COM can run on a Linux host. Write only benchmark-output.json with one selectedSkill and rationale per request plus an evidenceLimits field. Do not edit unrelated files or claim runtime validation.",
+      "successChecklist": [
+        "The DAX request selects power-pivot-dax-modeling.",
+        "The Linux COM request selects office-environment-diagnostics.",
+        "Only benchmark-output.json is added or changed."
+      ]
+    },
+    {
+      "id": "delivery-boundary",
+      "title": "Delivery boundary and source preservation",
+      "purpose": "Create an audit plan for a sanitized workbook case while preserving the supplied source artifact.",
+      "userInput": "Use the sanitized workbook case at fixtures/real-sanitized-cases/cases/deliverable-clean-copy.json as the supplied source artifact. Select the delivery specialist, create an evidence-qualified audit plan, and write it to benchmark-output.json with selectedSkill, sourcePreserved, plan, and evidenceLimits fields. Do not modify the supplied case or claim a workbook was opened in Excel.",
+      "successChecklist": [
+        "The selected skill is excel-deliverable-publisher.",
+        "The plan preserves the supplied source artifact.",
+        "The output does not turn synthetic evidence into a real task-success claim."
+      ]
+    }
+  ]
+}
