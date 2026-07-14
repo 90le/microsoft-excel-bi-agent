@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/microsoft-excel-bi-agent/schemas/excel-capability-probe.schema.json",
+  "title": "Excel Capability Probe",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "kind",
+    "generatedAt",
+    "probe",
+    "environment",
+    "capabilities",
+    "boundaries",
+    "errors"
+  ],
+  "properties": {
+    "schemaVersion": {"const": "1.0"},
+    "kind": {"const": "excel-capability-probe"},
+    "generatedAt": {"type": "string", "format": "date-time"},
+    "probe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile", "platform", "syntheticFixture"],
+      "properties": {
+        "profile": {"enum": ["inventory", "runtime"]},
+        "platform": {"const": "windows"},
+        "syntheticFixture": {"type": "boolean"}
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "osVersion",
+        "is64BitOperatingSystem",
+        "is64BitProcess",
+        "powershellVersion",
+        "excelVersion",
+        "excelBuild"
+      ],
+      "properties": {
+        "osVersion": {"type": "string"},
+        "is64BitOperatingSystem": {"type": "boolean"},
+        "is64BitProcess": {"type": "boolean"},
+        "powershellVersion": {"type": "string"},
+        "excelVersion": {"type": "string"},
+        "excelBuild": {"type": "string"}
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "excel.com.activation": {"$ref": "#/$defs/capability"},
+        "excel.workbook.roundtrip": {"$ref": "#/$defs/capability"},
+        "excel.vba.project-access": {"$ref": "#/$defs/capability"},
+        "excel.power-query.object-model": {"$ref": "#/$defs/capability"},
+        "excel.power-query.async-wait": {"$ref": "#/$defs/capability"},
+        "excel.data-model.object-model": {"$ref": "#/$defs/capability"},
+        "excel.pdf-export": {"$ref": "#/$defs/capability"},
+        "ado.com.activation": {"$ref": "#/$defs/capability"},
+        "ace.workbook-sql": {"$ref": "#/$defs/capability"},
+        "msolap.registration": {"$ref": "#/$defs/capability"},
+        "adomd.com.activation": {"$ref": "#/$defs/capability"}
+      }
+    },
+    "boundaries": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "errors": {"type": "array", "items": {"type": "string", "minLength": 1}}
+  },
+  "$defs": {
+    "capability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "evidenceLevel", "detail", "errorCategory", "error"],
+      "properties": {
+        "status": {"enum": ["pass", "fail", "skip", "error"]},
+        "evidenceLevel": {"enum": ["registration", "activation", "smoke", "not-tested"]},
+        "detail": {"type": "string", "minLength": 1},
+        "errorCategory": {"type": "string"},
+        "error": {"type": "string"}
+      }
+    }
+  }
+}

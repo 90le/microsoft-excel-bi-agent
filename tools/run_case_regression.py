@@ -23,6 +23,7 @@ REQUIRED_LAYERS = {
     "cube-mdx",
     "vba",
     "deliverable",
+    "environment",
     "visual-qa",
 }
 

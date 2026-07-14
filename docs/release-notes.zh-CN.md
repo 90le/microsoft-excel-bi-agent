@@ -1,5 +1,39 @@
 # 发布说明
 
+## v0.2.0 - 能力感知的 Excel 兼容性与精简运行时包
+
+发布重点：在旧版、桌面、离线、Mac/Web、Microsoft 365 和接收方环境之间建立基于证据的兼容性结论，同时缩小 Codex 安装运行时载荷。
+
+### 变更
+
+- 新增稳定的 Windows capability probe 合约，覆盖 Excel COM、工作簿保存/重开、VBA 项目访问、Power Query 对象模型与等待、Data Model、PDF 导出、ADO/ACE、MSOLAP 和 ADOMD。
+- 新增跨平台 compatibility report，严格区分 structural evidence、runtime capability evidence 和 workbook behavior evidence；显式必需能力可阻塞交付，但可选组件不可用不会被伪装成包崩溃。
+- 新增 capability-first 路由：平台、宿主、运行与可用性问题交给 `office-environment-diagnostics`；DAX/Power Pivot 公式与函数兼容性继续交给 `power-pivot-dax-modeling`。
+- 新增四组合成 capability fixture 和 `excel-capability-routing` 脱敏回归案例，不需要也不发布私有工作簿。
+- 新增白名单式、确定性的 runtime package builder，包含 SHA-256 清单、依赖闭包、精简 README、确定性 zip 和私有制品排除规则。
+- 发布门禁新增 compatibility fixture/report、runtime package、版本 manifest 以及恰好三条 inspect/diagnose/publish starter prompts 检查；Windows full gate 额外执行可选 live capability probe。
+- 文档覆盖 Windows、macOS、Excel for web、Linux、Excel 2007/2010/2013/2016/2019、Office LTSC、Microsoft 365、32/64 位、offline、WPS/LibreOffice 仅结构兼容，以及 authoring/automation/consumer/recipient 目标。
+- 从 `.agents/skills/` 同步生成 `skills/`、`.claude/skills/` 和 `.opencode/skills/` 镜像。
+- 插件 manifest 版本升至 `0.2.0+codex.20260714`。
+
+### 校验
+
+```bash
+python -m unittest discover -s tests -v
+python tools/validate-skills.py .
+python tools/run_release_gate.py --project-root . --profile structural
+```
+
+在 Windows 桌面版 Excel 上，full gate 还会尝试 live capability probe：
+
+```powershell
+python tools\run_release_gate.py --project-root .
+```
+
+### 边界
+
+结构证据不能证明 Excel 已执行。运行时能力证据只适用于被探测机器。高置信度兼容性需要在每个存在实质差异的目标环境中取得代表性工作簿行为证据；第三方表格软件在对应宿主完成验证前只能声称结构兼容。
+
 ## v0.1.5 - GitHub 社区健康与安全入口
 
 发布重点：通过更安全的 issue 入口、PR 审阅、安全报告和仓库文档表面，降低公开协作风险。

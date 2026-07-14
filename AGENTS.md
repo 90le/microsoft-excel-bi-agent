@@ -47,7 +47,7 @@ Use:
 - `excel-ado-sql-data-access` for VBA ADO/OLEDB/ADOMD, SQL against Excel tables, and query templates.
 - `excel-deliverable-publisher` for copied clean deliverables, values-only outputs, link/query/model cleanup, and post-clean verification.
 - `excel-workbook-qa-auditor` for pre-delivery workbook QA, visual QA, and prioritized risk findings.
-- `office-environment-diagnostics` for Excel COM, provider, bitness, Trust Center, and local automation readiness.
+- `office-environment-diagnostics` for platform/version compatibility, Excel COM, provider, bitness, Trust Center, and local or recipient automation readiness.
 - `excel-report-builder` for polished Excel report/dashboard workbook surfaces.
 - `power-bi-semantic-model` for Power BI semantic model concepts and Excel Power Pivot portability boundaries.
 - `excel-testing-fixtures` for sanitized workbook fixtures, regression cases, and forward-test prompts.
@@ -66,7 +66,7 @@ Use `tools/run_task_profile.py` when a request fits a common workflow and the ag
 - `pq-refresh`: Power Query refresh plus status report.
 - `dax-review`: exported model/DAX review.
 - `cube-trace`: CUBE/MDX report-layer tracing.
-- `env-diagnostics`: Office/provider diagnostics.
+- `env-diagnostics`: capability-aware Office/provider diagnostics; accepts captured capability probes and explicit required capability IDs.
 - `report-build`: report-surface validation.
 - `fixture`: sanitized fixture bundle.
 - `case-regression`: real/sanitized regression case library validation.
@@ -74,10 +74,13 @@ Use `tools/run_task_profile.py` when a request fits a common workflow and the ag
 
 ## Cross-Platform Rules
 
+Keep the execution environment where an agent runs separate from the target environment where the workbook must work. Report evidence as one of: structural evidence, runtime capability evidence, or workbook behavior evidence.
+
 - Windows desktop Excel + PowerShell can perform full Excel COM validation, VBA import/export, macro execution, query refresh, and Solver checks.
 - Windows desktop Excel + PowerShell can also export rendered Visual QA PDF evidence for sanitized report sheets.
 - Windows Git Bash must call PowerShell/Excel COM through wrapper scripts.
 - Linux/macOS can inspect OpenXML workbook structure and generate code, but cannot truthfully validate Excel VBA execution, Power Query refresh, Power Pivot Data Model contents, Solver, rendered Excel PDFs, or button click behavior without desktop Excel.
+- macOS, Excel for web, Linux, and third-party spreadsheet targets require their own host-specific evidence; Windows COM evidence is not transferable proof.
 - Always state which environment was used for validation.
 
 ## Editing Rules

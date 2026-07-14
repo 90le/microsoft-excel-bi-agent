@@ -124,6 +124,9 @@ ROUTES: tuple[Route, ...] = (
             "Static DAX lint does not prove relationship grain or measure results.",
         ),
         keywords=(
+            "dax compatibility",
+            "power pivot compatibility",
+            "excel power pivot compatibility",
             "power pivot",
             "data model",
             "dax",
@@ -274,10 +277,12 @@ ROUTES: tuple[Route, ...] = (
         layer="Office environment",
         skill="office-environment-diagnostics",
         validation_needed=(
-            "Probe local Office, Excel COM, ACE/OLEDB, MSOLAP, ADODB, ADOMD, and bitness before running provider-dependent automation.",
-            "Use structural-only boundaries on Linux/macOS unless desktop Excel or compatible providers are actually available.",
+            "Separate the execution environment from the target environment before deciding which capability evidence applies.",
+            "Use structural evidence cross-platform, Windows capability probes for local runtime readiness, and workbook-specific tests for final behavior.",
         ),
         scripts=(
+            "tools/probe_excel_capabilities.ps1",
+            "tools/build_excel_compatibility_report.py",
             "tools/probe_excel_bi_providers.ps1",
             "tools/build_provider_environment_report.py",
             "tools/create_provider_environment_fixture.py",
@@ -285,9 +290,26 @@ ROUTES: tuple[Route, ...] = (
         ),
         boundaries=(
             "Environment readiness is separate from workbook correctness.",
+            "A captured probe describes its source machine; it does not automatically describe the workbook recipient's target environment.",
             "Synthetic provider fixtures prove report logic only.",
         ),
         keywords=(
+            "compatibility",
+            "compatible",
+            "platform",
+            "supported environment",
+            "support matrix",
+            "can this run",
+            "windows",
+            "linux",
+            "macos",
+            "mac os",
+            "excel online",
+            "excel web",
+            "microsoft 365",
+            "office ltsc",
+            "offline",
+            "excel com",
             "environment",
             "diagnostic",
             "diagnose",
@@ -408,8 +430,49 @@ MIXED_VALIDATION = (
 )
 
 
+DAX_FORMULA_SUBJECT = re.compile(
+    r"\b(?:dax|power\s+pivot|measure|calculated\s+column|calculate|removefilters|selectedvalue|divide|summarize)\b"
+)
+DAX_COMPATIBILITY_INTENT = re.compile(r"\b(?:compatib(?:le|ility)|support(?:ed|s)?)\b")
+PLATFORM_HOST = re.compile(
+    r"\b(?:windows|linux|mac\s*os|macos|platform|host|environment|machine|operating\s+system|"
+    r"excel\s+(?:online|web)|office\s+ltsc|microsoft\s+365|bitness)\b"
+)
+PLATFORM_AVAILABILITY_INTENT = re.compile(
+    r"\b(?:run|runs|running|work|works|working|execute|executes|executing|"
+    r"support|supports|supported|available|availability|compatib(?:le|ility))\b"
+)
+
+
 def normalize(text: str) -> str:
     return re.sub(r"\s+", " ", text.casefold()).strip()
+
+
+def route_for_skill(skill: str) -> Route:
+    return next(route for route in ROUTES if route.skill == skill)
+
+
+def explicit_intent_route(task: str) -> tuple[Route, str] | None:
+    """Resolve compatibility intent before generic keyword scoring.
+
+    An explicit operating-system or host availability question belongs to
+    environment diagnostics even when it names a specialist layer. DAX and
+    Power Pivot formula/function compatibility remains with the DAX specialist
+    when no platform-host question is present.
+    """
+
+    text = normalize(task)
+    if PLATFORM_HOST.search(text) and PLATFORM_AVAILABILITY_INTENT.search(text):
+        return (
+            route_for_skill("office-environment-diagnostics"),
+            "Explicit platform or host runtime-availability intent requires Office environment diagnostics.",
+        )
+    if DAX_FORMULA_SUBJECT.search(text) and DAX_COMPATIBILITY_INTENT.search(text):
+        return (
+            route_for_skill("power-pivot-dax-modeling"),
+            "Explicit DAX or Power Pivot formula/function compatibility intent requires the DAX specialist.",
+        )
+    return None
 
 
 def keyword_score(text: str, keyword: str) -> int:
@@ -450,6 +513,7 @@ def score_routes(task: str) -> list[dict[str, Any]]:
 
 def build_report(task: str) -> dict[str, Any]:
     scored = score_routes(task)
+    explicit = explicit_intent_route(task)
     positive = [item for item in scored if int(item["score"]) > 0]
     top = positive[0] if positive else None
     second = positive[1] if len(positive) > 1 else None
@@ -460,7 +524,15 @@ def build_report(task: str) -> dict[str, Any]:
     if len(strong_positive) >= 3:
         is_mixed = True
 
-    if top is None:
+    if explicit is not None:
+        route, why = explicit
+        status = PASS
+        layer = route.layer
+        skill = route.skill
+        validation_needed = list(route.validation_needed)
+        scripts = list(route.scripts)
+        boundaries = list(route.boundaries)
+    elif top is None:
         status = WARN
         layer = "Unknown"
         skill = "excel-bi-router"

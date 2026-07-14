@@ -12,6 +12,7 @@
     "cube-mdx",
     "vba",
     "deliverable",
+    "environment",
     "visual-qa"
   ],
   "cases": [
@@ -38,6 +39,10 @@
     {
       "id": "visual-report-readability",
       "specPath": "cases/visual-report-readability.json"
+    },
+    {
+      "id": "excel-capability-routing",
+      "specPath": "cases/excel-capability-routing.json"
     }
   ]
 }

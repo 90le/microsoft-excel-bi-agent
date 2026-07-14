@@ -52,3 +52,34 @@ jobs:
 
       - name: Check installer
         run: node tools/install.mjs --check
+
+  windows-portability:
+    name: Windows localized-path structural gate
+    runs-on: windows-latest
+    env:
+      PYTHONUTF8: "1"
+      PYTHONIOENCODING: utf-8
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run structural gate from Chinese and space path
+        shell: pwsh
+        run: |
+          $target = Join-Path $env:RUNNER_TEMP "中文 空格路径\microsoft-excel-bi-agent"
+          New-Item -ItemType Directory -Force -Path (Split-Path -Parent $target) | Out-Null
+          git clone --no-hardlinks $env:GITHUB_WORKSPACE $target
+          Push-Location $target
+          try {
+            python tools/run_release_gate.py --project-root . --profile structural
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+          finally {
+            Pop-Location
+          }

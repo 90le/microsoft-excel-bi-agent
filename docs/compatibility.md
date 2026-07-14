@@ -20,18 +20,80 @@ The pack targets the common `AGENTS.md` + `SKILL.md` model used by modern coding
 - `~/.codex/skills` is an optional generated user-level mirror.
 - Use `tools/sync-skills.py --check-drift` before claiming any mirror is current.
 
-## Platform Matrix
+## Evidence And Confidence Contract
 
-| Platform | Excel COM | OpenXML inspection | VBA import/export | Macro execution |
-|---|---:|---:|---:|---:|
-| Windows PowerShell + Excel | yes | yes | yes | yes |
-| Windows Git Bash + Excel | via wrapper | yes | via wrapper | via wrapper |
-| Linux | no | yes | no VBE automation | no |
-| macOS | limited/non-COM | yes | no Windows VBE automation | only manual Excel validation |
+Every compatibility statement must name its target and one of these evidence tiers:
 
-## Rule
+1. **Structural evidence**: file/package inspection, source lint, schema checks, synthetic fixtures, or generated plans. It can show that a workbook or formula has a compatible shape; it cannot prove that Excel executed it.
+2. **Runtime capability evidence**: a capability probe on one identified machine and host, such as Excel COM activation, workbook roundtrip, provider activation, Power Query object-model access, Data Model access, or PDF export. It applies only to the probed environment.
+3. **Workbook behavior evidence**: a representative workbook was opened and the required refresh, macro, model calculation, rendered output, or user path was exercised in the target host. Business correctness still needs domain review.
 
-Never report Linux/macOS structural checks as proof that Excel VBA, Power Query refresh, Power Pivot, Solver, or button clicks work in desktop Excel.
+Use explicit confidence labels:
+
+| Confidence | Minimum evidence | Meaning |
+|---|---|---|
+| `low` | Structural evidence only | Candidate-compatible; runtime behavior is unknown. |
+| `medium` | Runtime capability evidence on the named environment | The machine/host can perform the operation; the workbook itself may still fail. |
+| `high` | Workbook behavior evidence in the intended target environment | The tested workbook path worked under the recorded conditions; do not generalize to other recipients or versions. |
+
+`Unsupported`, `blocked`, and `unknown` are results, not low-confidence success. Missing capability evidence must remain unknown.
+
+## Compatibility Targets
+
+Record each distinct target before implementation:
+
+| Target | Question to answer |
+|---|---|
+| **Authoring target** | Where will formulas, queries, VBA, model objects, and report surfaces be created or edited? |
+| **Automation target** | Which machine, Office build, bitness, policy, providers, and credentials will execute automation? |
+| **Consumer target** | Which Excel host will open, refresh, calculate, and interact with the workbook? |
+| **Recipient target** | What environment will each recipient actually receive, including offline/cloud restrictions? |
+
+The agent's execution environment is not automatically any of these targets. Evidence from the automation target must not be transferred to a recipient target without verification.
+
+## Platform And Host Matrix
+
+| Platform/host | Structural evidence | Runtime capability evidence | Workbook behavior evidence |
+|---|---|---|---|
+| Windows desktop Excel + PowerShell | Yes | Full capability probe, Excel COM, providers, bitness, Trust Center policy | Automated representative-workbook tests are available |
+| Windows Git Bash + desktop Excel | Yes | Via the packaged PowerShell wrappers | Same Windows host, with wrapper commands recorded |
+| macOS desktop Excel | Yes | No Windows COM proof; use host-specific/manual evidence | Validate manually or with a supported Mac automation path |
+| Excel for web | Package/source inspection only | No desktop COM/VBE/provider proof | Test the workbook in Excel for web, including refresh and unsupported-feature behavior |
+| Linux | OpenXML/source/synthetic checks | No Microsoft desktop Excel runtime probe | No Excel workbook behavior proof without a separate supported host |
+| Third-party spreadsheet applications such as WPS or LibreOffice | **Structural compatibility only** until tested | Microsoft Excel capability probes do not apply | Require application-specific workbook behavior evidence |
+
+## Excel Version Policy
+
+Version labels describe support posture, not proof. Use the exact target build when possible.
+
+| Excel family | Policy |
+|---|---|
+| Excel 2007 | Structural inspection and conservative workbook compatibility only; Power Query and modern Data Model automation must be treated as unavailable unless separately demonstrated. |
+| Excel 2010 | Best effort; Power Query/Power Pivot may depend on separately installed legacy add-ins and cannot be inferred from the version number. |
+| Excel 2013 | Best effort; probe actual add-ins, object model, providers, and workbook behavior. |
+| Excel 2016 | Legacy-compatible target; use lifecycle warnings and probe the exact MSI/C2R build rather than forcing an upgrade. |
+| Excel 2019 | Legacy-compatible target; modern Microsoft 365 functions and service behavior are not implied. |
+| Office LTSC | Supported as a fixed-feature target when the exact LTSC release/build and capability probe are recorded. |
+| Microsoft 365 | Active channel target; channel/build drift means a successful probe is time- and machine-specific. |
+
+Excel 2007/2010/2013/2016/2019, LTSC, and Microsoft 365 can expose different functions, object models, providers, and security defaults. DAX or Power Pivot formula/function compatibility stays with `power-pivot-dax-modeling`; platform, host, run, support, and availability compatibility belongs to `office-environment-diagnostics`.
+
+## Bitness, Offline, And Policy Profiles
+
+- Record Windows OS bitness, Office **32-bit** or **64-bit**, the agent process bitness, and provider bitness. ACE/OLEDB, COM, and add-in readiness can fail when architectures differ.
+- Treat **offline** and cloud-prohibited operation as first-class recipient policies. Local files, cached credentials, gateways, web connectors, SharePoint/OneDrive, licensing, and sign-in-dependent features must be assessed separately.
+- An offline structural gate can validate package shape and source rules. It cannot prove cloud-source refresh or subscription-backed functionality.
+- Trust Center access to the VBA project object model, macros, protected view, signed code, and external-content policy are environment evidence, not workbook-format facts.
+
+## Capability Workflow
+
+1. Classify authoring, automation, consumer, and recipient targets.
+2. Run structural checks everywhere.
+3. On Windows, capture `tools/probe_excel_capabilities.ps1` output or use an explicitly supplied captured probe.
+4. Build the compatibility report with `tools/build_excel_compatibility_report.py`; add `--require-capability` only for operations the task truly requires.
+5. Route implementation to the specialist skill, then gather workbook behavior evidence in every materially different target environment.
+
+Never report Linux/macOS/web/third-party structural checks as proof that Excel VBA, Power Query refresh, Power Pivot, Solver, provider access, PDF rendering, or button clicks work in desktop Excel.
 
 Use the structural release gate on Linux/macOS or non-Excel environments:
 

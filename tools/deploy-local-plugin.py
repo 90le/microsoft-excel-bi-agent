@@ -10,6 +10,7 @@ import shutil
 import subprocess
 import sys
 import os
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -99,6 +100,29 @@ def copy_plugin(project_root: Path, destination: Path, replace: bool) -> None:
             shutil.copytree(item, target, ignore=ignore)
         else:
             shutil.copy2(item, target)
+
+
+def deploy_runtime_plugin(project_root: Path, destination: Path, replace: bool) -> dict[str, Any]:
+    builder = project_root / "tools" / "build_runtime_package.py"
+    if not builder.is_file():
+        raise FileNotFoundError(f"Runtime package builder not found: {builder}")
+    with tempfile.TemporaryDirectory(prefix="excel_bi_runtime_deploy_") as tmp:
+        staging = Path(tmp) / "runtime"
+        subprocess.run(
+            [
+                sys.executable,
+                str(builder),
+                "--project-root",
+                str(project_root),
+                "--out-dir",
+                str(staging),
+                "--require-pass",
+            ],
+            check=True,
+        )
+        runtime_manifest = load_json(staging / "runtime-package-manifest.json")
+        copy_plugin(staging, destination, replace)
+    return runtime_manifest
 
 
 def update_marketplace(marketplace_path: Path, name: str, category: str) -> str:
@@ -208,7 +232,7 @@ def main() -> int:
     if args.update_cachebuster:
         next_version = update_cachebuster(project_root, args.cachebuster)
     sync_plugin_skills(project_root)
-    copy_plugin(project_root, destination, args.replace)
+    runtime_manifest = deploy_runtime_plugin(project_root, destination, args.replace)
     marketplace_name = update_marketplace(marketplace_path, name, args.category)
     if args.install:
         install_with_codex(name, marketplace_name)
@@ -220,6 +244,8 @@ def main() -> int:
         "marketplaceName": marketplace_name,
         "version": next_version,
         "installed": bool(args.install),
+        "runtimeFileCount": runtime_manifest.get("fileCount"),
+        "runtimeBytes": runtime_manifest.get("totalBytes"),
     }, indent=2))
     return 0
 

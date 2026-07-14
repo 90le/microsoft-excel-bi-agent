@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/microsoft-excel-bi-agent/schemas/excel-compatibility-report.schema.json",
+  "title": "Excel Compatibility Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "kind",
+    "status",
+    "generatedAt",
+    "source",
+    "environment",
+    "summary",
+    "capabilities",
+    "operations",
+    "requirements",
+    "boundaries",
+    "probeErrors",
+    "errors"
+  ],
+  "properties": {
+    "schemaVersion": {"const": "1.0"},
+    "kind": {"const": "excel-compatibility-report"},
+    "status": {"enum": ["pass", "fail"]},
+    "generatedAt": {"type": "string", "format": "date-time"},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["probeJson", "probeSchemaVersion", "profile"],
+      "properties": {
+        "probeJson": {"type": "string"},
+        "probeSchemaVersion": {"type": "string"},
+        "profile": {"enum": ["", "inventory", "runtime"]}
+      }
+    },
+    "environment": {"type": "object"},
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["passCount", "failCount", "skipCount", "errorCount", "requiredCount", "unmetRequiredCount"],
+      "properties": {
+        "passCount": {"type": "integer", "minimum": 0},
+        "failCount": {"type": "integer", "minimum": 0},
+        "skipCount": {"type": "integer", "minimum": 0},
+        "errorCount": {"type": "integer", "minimum": 0},
+        "requiredCount": {"type": "integer", "minimum": 0},
+        "unmetRequiredCount": {"type": "integer", "minimum": 0}
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "excel.com.activation",
+        "excel.workbook.roundtrip",
+        "excel.vba.project-access",
+        "excel.power-query.object-model",
+        "excel.power-query.async-wait",
+        "excel.data-model.object-model",
+        "excel.pdf-export",
+        "ado.com.activation",
+        "ace.workbook-sql",
+        "msolap.registration",
+        "adomd.com.activation"
+      ],
+      "properties": {
+        "excel.com.activation": {"$ref": "#/$defs/capability"},
+        "excel.workbook.roundtrip": {"$ref": "#/$defs/capability"},
+        "excel.vba.project-access": {"$ref": "#/$defs/capability"},
+        "excel.power-query.object-model": {"$ref": "#/$defs/capability"},
+        "excel.power-query.async-wait": {"$ref": "#/$defs/capability"},
+        "excel.data-model.object-model": {"$ref": "#/$defs/capability"},
+        "excel.pdf-export": {"$ref": "#/$defs/capability"},
+        "ado.com.activation": {"$ref": "#/$defs/capability"},
+        "ace.workbook-sql": {"$ref": "#/$defs/capability"},
+        "msolap.registration": {"$ref": "#/$defs/capability"},
+        "adomd.com.activation": {"$ref": "#/$defs/capability"}
+      }
+    },
+    "operations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workbook-automation",
+        "vba-engineering",
+        "power-query-automation",
+        "data-model-inspection",
+        "ado-workbook-sql",
+        "adomd-endpoint-query",
+        "rendered-pdf-evidence"
+      ],
+      "properties": {
+        "workbook-automation": {"$ref": "#/$defs/operation"},
+        "vba-engineering": {"$ref": "#/$defs/operation"},
+        "power-query-automation": {"$ref": "#/$defs/operation"},
+        "data-model-inspection": {"$ref": "#/$defs/operation"},
+        "ado-workbook-sql": {"$ref": "#/$defs/operation"},
+        "adomd-endpoint-query": {"$ref": "#/$defs/operation"},
+        "rendered-pdf-evidence": {"$ref": "#/$defs/operation"}
+      }
+    },
+    "requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requested", "unmet"],
+      "properties": {
+        "requested": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "unmet": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+      }
+    },
+    "boundaries": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "probeErrors": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "errors": {"type": "array", "items": {"type": "string", "minLength": 1}}
+  },
+  "$defs": {
+    "capabilityId": {
+      "enum": [
+        "excel.com.activation",
+        "excel.workbook.roundtrip",
+        "excel.vba.project-access",
+        "excel.power-query.object-model",
+        "excel.power-query.async-wait",
+        "excel.data-model.object-model",
+        "excel.pdf-export",
+        "ado.com.activation",
+        "ace.workbook-sql",
+        "msolap.registration",
+        "adomd.com.activation"
+      ]
+    },
+    "capability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "evidenceLevel", "detail", "errorCategory", "error"],
+      "properties": {
+        "status": {"enum": ["pass", "fail", "skip", "error"]},
+        "evidenceLevel": {"enum": ["registration", "activation", "smoke", "not-tested"]},
+        "detail": {"type": "string", "minLength": 1},
+        "errorCategory": {"type": "string"},
+        "error": {"type": "string"}
+      }
+    },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["readiness", "requires", "missing"],
+      "properties": {
+        "readiness": {"enum": ["ready", "blocked", "unknown", "requires-user-input"]},
+        "requires": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/capabilityId"}},
+        "missing": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/capabilityId"}}
+      }
+    }
+  }
+}

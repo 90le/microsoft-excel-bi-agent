@@ -167,6 +167,16 @@ def validate(project_root: Path) -> dict[str, Any]:
     errors: list[str] = []
     warnings: list[str] = []
 
+    plugin_manifest_path = project_root / ".codex-plugin" / "plugin.json"
+    plugin_release = ""
+    try:
+        plugin_manifest = json.loads(plugin_manifest_path.read_text(encoding="utf-8"))
+        plugin_release = str(plugin_manifest.get("version", "")).split("+", 1)[0]
+        if not re.fullmatch(r"\d+\.\d+\.\d+", plugin_release):
+            errors.append(f"plugin manifest release is not semantic version text: {plugin_release!r}")
+    except (OSError, json.JSONDecodeError) as exc:
+        errors.append(f"cannot read plugin manifest release: {exc}")
+
     missing_docs = [path for path in PUBLIC_DOCS if not (project_root / rel(path)).is_file()]
     for path in missing_docs:
         errors.append(f"missing public document: {path}")
@@ -345,8 +355,8 @@ def validate(project_root: Path) -> dict[str, Any]:
             errors.append(f"release notes do not document public check: {command}")
 
     for path, text in [("docs/release-notes.en-US.md", release_notes_en), ("docs/release-notes.zh-CN.md", release_notes_zh)]:
-        if "v0.1.5" not in text or "0.1.5+codex.20260623175347" not in text:
-            errors.append(f"{path} does not document the v0.1.5 release and plugin version")
+        if "v0.2.0" not in text or "0.2.0+codex.20260714" not in text:
+            errors.append(f"{path} does not document the v0.2.0 release and plugin version")
 
     for command in PUBLIC_CHECK_COMMANDS:
         if command not in distribution_doc.replace("\\", "/"):
@@ -374,8 +384,15 @@ def validate(project_root: Path) -> dict[str, Any]:
             errors.append(f"{path} is missing responsive viewport meta")
         if "<html" not in text or "</html>" not in text:
             errors.append(f"{path} does not look like a complete HTML page")
-        if "v0.1.5" not in text:
-            errors.append(f"{path} does not expose the latest release")
+        release_links = re.findall(r"/releases/tag/v(\d+\.\d+\.\d+)", text)
+        if not release_links:
+            errors.append(f"{path} does not expose a latest release link")
+        elif plugin_release and release_links[0] != plugin_release:
+            errors.append(
+                f"{path} latest release v{release_links[0]} does not match plugin manifest v{plugin_release}"
+            )
+        if "./compatibility.md" not in text:
+            errors.append(f"{path} does not link the compatibility matrix")
         if "release-notes" not in text:
             errors.append(f"{path} does not link release notes")
         if "growth-goals" not in text:

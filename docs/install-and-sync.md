@@ -89,7 +89,9 @@ python tools/deploy-local-plugin.py --project-root . --replace --install
 python tools/sync-skills.py --project-root . --all-project-mirrors --codex-user --replace
 ```
 
-安装器会安装本地 Codex 插件，并把 `.agents/skills/` 同步到 Codex、Claude、OpenCode 对应目录。
+`deploy-local-plugin.py` refreshes the Codex `skills/` mirror, builds a compact runtime staging package, copies only that runtime package into the local Codex plugin directory, updates the personal marketplace, and optionally invokes `codex plugin add`. The second command preserves the existing source-repository behavior by syncing canonical skills to the project mirrors and user-level Codex skills.
+
+`deploy-local-plugin.py` 会先刷新 Codex 的 `skills/` 镜像，再构建精简 runtime staging，只把 runtime 包复制到本地 Codex 插件目录，并更新个人 marketplace、按需执行 `codex plugin add`。第二条命令继续保持源码仓库原有语义：把 canonical skills 同步到项目镜像和用户级 Codex skills。
 
 ## Option C: Manual Install / 手动安装
 
@@ -112,6 +114,35 @@ Use `--update-cachebuster` only when behavior changed and a new installed plugin
 ```powershell
 python tools\deploy-local-plugin.py --project-root . --replace --install --update-cachebuster
 ```
+
+## Compact Runtime Package / 精简运行时包
+
+The source repository remains the authoring and cross-agent distribution surface. A local Codex plugin cache does not need canonical authoring sources, duplicate Claude/OpenCode mirrors, Git history, development documentation, or release-maintainer files.
+
+源码仓库仍然是编辑和跨 Agent 分发入口。本地 Codex 插件缓存不需要 canonical 编辑源、重复的 Claude/OpenCode 镜像、Git 历史、开发文档或发布维护文件。
+
+Build a runtime staging tree and deterministic zip without installing it:
+
+```powershell
+python tools\build_runtime_package.py --project-root . --out-dir "$env:TEMP\excel-bi-runtime" --zip "$env:TEMP\excel-bi-runtime.zip" --require-pass
+```
+
+```bash
+python tools/build_runtime_package.py --project-root . --out-dir "${TMPDIR:-/tmp}/excel-bi-runtime" --zip "${TMPDIR:-/tmp}/excel-bi-runtime.zip" --require-pass
+```
+
+The runtime allowlist contains:
+
+- `.codex-plugin/` and the current `skills/` Codex mirror.
+- Runtime tools referenced by packaged skills, plus their referenced helper tools.
+- Sanitized `fixtures/` and compatibility `schemas/` when present.
+- `LICENSE`, a compact generated `README.md`, and `runtime-package-manifest.json`.
+
+It excludes `.agents/`, `.claude/`, `.opencode/`, `.git/`, development docs, private workbooks, generated release evidence, caches, and lock files. The manifest records sorted relative paths, byte sizes, SHA-256 hashes, total payload bytes, source/runtime size reduction, validation errors, and mirror status. Zip entry order, timestamps, permissions, and separators are normalized for deterministic output.
+
+`build_runtime_package.py` does not sync or edit any skill mirror. If `.agents/skills/` and `skills/` differ, the manifest reports drift as a warning and packages the existing `skills/` tree. Maintainers must run the documented sync command before a final release; runtime packaging must never silently change canonical or generated skill sources.
+
+`--require-pass` fails for unresolved file references in packaged skills or forbidden payload artifacts. `node tools/install.mjs --check` builds and discards a temporary runtime package as part of public validation.
 
 ## Claude And OpenCode / Claude 与 OpenCode
 

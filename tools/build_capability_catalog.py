@@ -51,12 +51,28 @@ REQUIRED_TOOLS = {
     "run_release_gate.py",
     "run_release_gate.sh",
     "run_task_profile.py",
+    "probe_excel_capabilities.ps1",
+    "build_excel_compatibility_report.py",
+    "create_excel_capability_fixture.py",
     "run_case_regression.py",
     "create_visual_qa_fixture.py",
     "deploy-local-plugin.py",
 }
 
 WORKFLOWS = [
+    {
+        "id": "excel-compatibility",
+        "title": "Excel platform and runtime capability compatibility workflow",
+        "skills": ["office-environment-diagnostics"],
+        "tools": [
+            "probe_excel_capabilities.ps1",
+            "build_excel_compatibility_report.py",
+            "create_excel_capability_fixture.py",
+            "probe_excel_bi_providers.ps1",
+            "build_provider_environment_report.py",
+        ],
+        "boundary": "Capability reports separate structural evidence, local runtime readiness, and workbook behavior; captured evidence applies only to its source environment.",
+    },
     {
         "id": "route-then-triage",
         "title": "Route and triage a mixed Excel BI workbook",
@@ -336,6 +352,8 @@ def shell_description(path: Path) -> str:
 
 def script_domain(name: str) -> str:
     lower = name.lower()
+    if "compatibility" in lower or "capabilit" in lower:
+        return "Office environment/compatibility"
     if "power_query" in lower or "power-query" in lower:
         return "Power Query M"
     if "dax" in lower or "model" in lower or "measure" in lower:

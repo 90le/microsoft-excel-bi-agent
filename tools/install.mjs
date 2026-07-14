@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-import { existsSync } from "node:fs";
+import { existsSync, mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
@@ -51,7 +52,8 @@ function requireRepoShape() {
     "skills",
     ".agents/skills",
     "tools/sync-skills.py",
-    "tools/deploy-local-plugin.py"
+    "tools/deploy-local-plugin.py",
+    "tools/build_runtime_package.py"
   ];
   for (const item of required) {
     if (!existsSync(join(root, item))) fail(`Missing required project path: ${item}`);
@@ -66,6 +68,19 @@ function runChecks(py) {
   run(py, ["tools/validate_official_docs_index.py", "--project-root", "."]);
   run(py, ["tools/build_artifact_hygiene_report.py", "--project-root", ".", "--require-pass"]);
   run(py, ["tools/build_goal_coverage_report.py", "--project-root", ".", "--require-pass"]);
+  const runtimeCheckRoot = mkdtempSync(join(tmpdir(), "excel-bi-runtime-check-"));
+  try {
+    run(py, [
+      "tools/build_runtime_package.py",
+      "--project-root",
+      ".",
+      "--out-dir",
+      join(runtimeCheckRoot, "runtime"),
+      "--require-pass"
+    ]);
+  } finally {
+    rmSync(runtimeCheckRoot, { recursive: true, force: true });
+  }
 }
 
 function installLocal(py) {

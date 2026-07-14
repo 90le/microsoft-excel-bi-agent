@@ -1,5 +1,39 @@
 # Release Notes
 
+## v0.2.0 - Capability-Aware Excel Compatibility And Compact Runtime
+
+Release focus: make compatibility claims evidence-based across legacy, desktop, offline, Mac/web, Microsoft 365, and recipient environments while reducing the installed Codex runtime payload.
+
+### Changed
+
+- Added a stable Windows capability probe contract covering Excel COM, workbook roundtrip, VBA project access, Power Query object-model/wait behavior, Data Model access, PDF export, ADO/ACE, MSOLAP, and ADOMD.
+- Added a cross-platform compatibility report that separates structural evidence, runtime capability evidence, and workbook behavior evidence; explicit capability requirements can block a handoff without treating an unavailable optional component as a package crash.
+- Added capability-first routing: platform/host/runtime availability requests go to `office-environment-diagnostics`, while DAX and Power Pivot formula/function compatibility remains with `power-pivot-dax-modeling`.
+- Added four synthetic capability fixtures and the `excel-capability-routing` sanitized regression case. No private workbook is required or shipped.
+- Added an allowlisted, deterministic runtime-package builder with SHA-256 inventory, dependency closure, compact README, deterministic zip, and private-artifact exclusions.
+- Added structural release checks for compatibility fixture/report behavior, runtime-package contents, release manifest version, and exactly three inspect/diagnose/publish starter prompts. The full Windows gate adds an optional live capability probe.
+- Documented Windows, macOS, Excel for web, Linux, Excel 2007/2010/2013/2016/2019, Office LTSC, Microsoft 365, 32-bit/64-bit, offline, WPS/LibreOffice structural-only boundaries, and authoring/automation/consumer/recipient targets.
+- Synchronized generated `skills/`, `.claude/skills/`, and `.opencode/skills/` mirrors from `.agents/skills/`.
+- Bumped the plugin manifest to `0.2.0+codex.20260714`.
+
+### Validation
+
+```bash
+python -m unittest discover -s tests -v
+python tools/validate-skills.py .
+python tools/run_release_gate.py --project-root . --profile structural
+```
+
+On Windows desktop Excel, the full gate also attempts the live capability probe:
+
+```powershell
+python tools\run_release_gate.py --project-root .
+```
+
+### Boundary
+
+Structural evidence does not prove Excel execution. Runtime capability evidence applies only to the probed machine. High-confidence compatibility requires representative workbook behavior evidence in each materially different target environment; third-party spreadsheet applications remain structural-only until tested in that host.
+
 ## v0.1.5 - GitHub Community Health And Safe Intake
 
 Release focus: reduce public collaboration risk by making issue intake, PR review, security reporting, and repository documentation surfaces safer.

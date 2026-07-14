@@ -6,21 +6,21 @@ Use `docs/maintenance-goals.en-US.md` or `docs/maintenance-goals.zh-CN.md` for t
 ## Current Release
 
 ```text
-v0.1.5
+v0.2.0
 ```
 
 Package cachebuster version:
 
 ```text
-0.1.5+codex.20260623175347
+0.2.0+codex.20260714
 ```
 
 ## Current Capability Shape
 
 - 12 canonical skills.
-- 77 package tools/scripts, including task profiles, GitHub community-health validation, the real/sanitized case regression runner, visual QA fixture tools, and Excel COM render-evidence export.
+- 82 cataloged package tools/scripts, including capability probes/reports, compact runtime packaging, task profiles, the real/sanitized case regression runner, visual QA fixture tools, and Excel COM render-evidence export.
 - 14 cataloged workflows.
-- 54 release-gate check functions.
+- 58 release-gate check functions.
 - Core Excel BI skills, six upper-layer scenario skills, and maintenance task profiles are complete.
 - The real/sanitized case regression library V1 is complete for `0.1.0+codex.20260622033808`.
 - The workbook-backed sanitized Visual QA case V1 is complete for `0.1.0+codex.20260622045441`.
@@ -28,6 +28,14 @@ Package cachebuster version:
 - Public maintenance goals, risk backlog, and CI-backed structural validation are complete for `v0.1.3`.
 - Public growth goals, maintainer attribution, social metadata, and reusable marketing copy are complete for `v0.1.4`.
 - GitHub community-health files, safe issue/PR intake, security reporting, and governance validation are complete for `v0.1.5`.
+- Capability-first compatibility evidence, four synthetic probe/report contracts, seven sanitized regression cases, compact runtime packaging, exact three-prompt manifest validation, synchronized project mirrors, and an optional Windows live capability probe are complete for `v0.2.0`.
+
+## v0.2.0 Evidence Model
+
+- Structural evidence is cross-platform and supports low-confidence candidate compatibility only.
+- Runtime capability evidence belongs to one recorded machine, Office build, bitness, policy, and provider set; it supports medium confidence for operations, not workbook correctness.
+- Workbook behavior evidence is required for high confidence and applies only to the tested workbook path and authoring, automation, consumer, or recipient target.
+- Excel 2007/2010/2013/2016/2019, Office LTSC, Microsoft 365, macOS, Excel for web, Linux, offline, 32-bit/64-bit, WPS, and LibreOffice targets retain explicit boundaries in `docs/compatibility.md`.
 
 ## Daily Entry Points
 
@@ -41,6 +49,8 @@ Package cachebuster version:
 | Review growth goals and marketing copy | `docs/growth-goals.en-US.md`, `docs/growth-goals.zh-CN.md`, `docs/marketing-copy.en-US.md`, or `docs/marketing-copy.zh-CN.md` |
 | Review GitHub governance and contribution rules | `docs/repository-governance-goals.en-US.md`, `docs/repository-governance-goals.zh-CN.md`, `CONTRIBUTING.md`, or `SECURITY.md` |
 | Review release notes | `docs/release-notes.en-US.md` or `docs/release-notes.zh-CN.md` |
+| Check platform/version/recipient compatibility | `docs/compatibility.md`, then `tools/run_task_profile.py --profile env-diagnostics` |
+| Build the compact Codex runtime package | `tools/build_runtime_package.py --project-root . --out-dir <temp-dir> --require-pass` |
 | Choose a skill or workflow | `excel-bi-router` or `tools/run_task_profile.py` |
 | Audit a workbook | `tools/run_task_profile.py --profile audit` |
 | Publish a pure deliverable | `tools/run_task_profile.py --profile publish` |
