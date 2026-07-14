@@ -24,7 +24,7 @@ PROFILE_DESCRIPTIONS = {
     "pq-refresh": "Windows Excel COM Power Query refresh and refresh-status reporting.",
     "dax-review": "Power Pivot/DAX compatibility and dependency review from exported model data.",
     "cube-trace": "CUBE/MDX report-layer dependency tracing from workbook inventory.",
-    "env-diagnostics": "Office, Excel COM, ACE/OLEDB, MSOLAP, ADOMD environment diagnostics.",
+    "env-diagnostics": "Capability-aware Office, Excel COM, provider, and target-environment diagnostics.",
     "report-build": "Report-surface validation checks before publish cleanup.",
     "fixture": "Customer-data-free sanitized fixture bundle generation and validation.",
     "case-regression": "Real/sanitized case regression library validation.",
@@ -55,7 +55,16 @@ def profile_commands(args: argparse.Namespace) -> list[dict[str, Any]]:
     workbook = Path(args.workbook).expanduser().resolve() if args.workbook else None
     model_json = Path(args.model_json).expanduser().resolve() if args.model_json else None
     query_dir = Path(args.query_dir).expanduser().resolve() if args.query_dir else None
+    captured_probe = (
+        Path(getattr(args, "probe_json", "")).expanduser().resolve()
+        if getattr(args, "probe_json", "")
+        else None
+    )
+    required_capabilities = list(dict.fromkeys(getattr(args, "require_capability", []) or []))
     profile = args.profile
+
+    if profile != "env-diagnostics" and (captured_probe is not None or required_capabilities):
+        raise SystemExit("--probe-json and --require-capability are only valid for profile env-diagnostics")
 
     openxml_json = out_dir / "openxml.json"
     formula_json = out_dir / "formula-quality.json"
@@ -162,16 +171,44 @@ def profile_commands(args: argparse.Namespace) -> list[dict[str, Any]]:
         )
 
     elif profile == "env-diagnostics":
-        probe_json = out_dir / "provider-probe.json"
+        if captured_probe is None:
+            provider_probe_json = out_dir / "provider-probe.json"
+            add(
+                "Probe Office and BI providers",
+                ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", rel(project_root / "tools" / "probe_excel_bi_providers.ps1"), "-RunExcelComSmoke", "-RunAdoWorkbookSmoke", "-OutJson", rel(provider_probe_json)],
+                "Machine-specific provider detail; keep output outside the plugin package and separate from workbook behavior evidence.",
+            )
+            add(
+                "Build provider environment report",
+                [sys.executable, rel(project_root / "tools" / "build_provider_environment_report.py"), "--project-root", rel(project_root), "--probe-json", rel(provider_probe_json), "--excel-com", "--ado-workbook-smoke", "--out-json", rel(out_dir / "provider-environment.json"), "--out-md", rel(out_dir / "provider-environment.md")],
+                "Preserves detailed provider and drift evidence; it does not prove workbook business correctness.",
+            )
+            capability_probe_json = out_dir / "excel-capabilities.json"
+            add(
+                "Probe Excel compatibility capabilities",
+                ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", rel(project_root / "tools" / "probe_excel_capabilities.ps1"), "-OutJson", rel(capability_probe_json), "-Profile", "runtime"],
+                "Runtime capability evidence comes from the current execution environment and generated fixtures, not the target workbook.",
+            )
+        else:
+            capability_probe_json = captured_probe
+
+        compatibility_command = [
+            sys.executable,
+            rel(project_root / "tools" / "build_excel_compatibility_report.py"),
+            "--probe-json",
+            rel(capability_probe_json),
+            "--out-json",
+            rel(out_dir / "excel-compatibility.json"),
+            "--out-md",
+            rel(out_dir / "excel-compatibility.md"),
+            "--require-pass",
+        ]
+        for capability_id in required_capabilities:
+            compatibility_command.extend(["--require-capability", capability_id])
         add(
-            "Probe Office and BI providers",
-            ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", rel(project_root / "tools" / "probe_excel_bi_providers.ps1"), "-RunExcelComSmoke", "-RunAdoWorkbookSmoke", "-OutJson", rel(probe_json)],
-            "Machine-specific runtime evidence; keep output outside the plugin package.",
-        )
-        add(
-            "Build provider environment report",
-            [sys.executable, rel(project_root / "tools" / "build_provider_environment_report.py"), "--project-root", rel(project_root), "--probe-json", rel(probe_json), "--excel-com", "--ado-workbook-smoke", "--out-json", rel(out_dir / "provider-environment.json"), "--out-md", rel(out_dir / "provider-environment.md")],
-            "Summarizes local readiness and drift; does not prove workbook business correctness.",
+            "Build Excel compatibility report",
+            compatibility_command,
+            "A captured probe describes its source execution environment; match it to the target environment and obtain workbook behavior evidence separately.",
         )
 
     elif profile == "report-build":
@@ -237,12 +274,15 @@ def build_report(args: argparse.Namespace, commands: list[dict[str, Any]]) -> di
         "workbook": str(Path(args.workbook).expanduser().resolve()) if args.workbook else "",
         "modelJson": str(Path(args.model_json).expanduser().resolve()) if args.model_json else "",
         "queryDir": str(Path(args.query_dir).expanduser().resolve()) if args.query_dir else "",
+        "probeJson": str(Path(getattr(args, "probe_json", "")).expanduser().resolve()) if getattr(args, "probe_json", "") else "",
+        "requiredCapabilities": list(dict.fromkeys(getattr(args, "require_capability", []) or [])),
         "executionMode": "execute" if args.execute else "plan-only",
         "commands": commands,
         "boundaries": [
             "Profile plans are convenience wrappers, not substitutes for specialist judgment.",
             "Run destructive workbook actions only on copied workbooks.",
             "Static OpenXML reports do not prove Excel runtime calculation, refresh, Data Model, or VBA behavior.",
+            "Keep execution-environment capability evidence separate from target-environment workbook behavior evidence.",
         ],
     }
 
@@ -303,6 +343,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--workbook", default="", help="Workbook path for workbook-specific profiles")
     parser.add_argument("--model-json", default="", help="Exported model JSON for DAX review profiles")
     parser.add_argument("--query-dir", default="", help="Exported Power Query .m folder for optional lineage checks")
+    parser.add_argument("--probe-json", default="", help="Captured excel-capability-probe JSON for env-diagnostics; skips live probing")
+    parser.add_argument("--require-capability", action="append", default=[], help="Capability ID that env-diagnostics must require; repeat as needed")
     parser.add_argument("--out-dir", default="tmp/excel-bi-task-profile")
     parser.add_argument("--out-json", default="")
     parser.add_argument("--out-md", default="")

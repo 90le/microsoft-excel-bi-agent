@@ -823,6 +823,18 @@ def excel_bi_router_fixture_check(project_root: Path) -> CheckResult:
             "layer": "Power Pivot DAX",
         },
         {
+            "id": "platform-compatibility",
+            "text": "Can this Excel COM automation run on Linux or macOS, and what compatibility evidence is available?",
+            "skill": "office-environment-diagnostics",
+            "layer": "Office environment",
+        },
+        {
+            "id": "dax-compatibility",
+            "text": "Review DAX compatibility of this Power Pivot measure using REMOVEFILTERS in Excel.",
+            "skill": "power-pivot-dax-modeling",
+            "layer": "Power Pivot DAX",
+        },
+        {
             "id": "mdx-cube",
             "text": "CUBEVALUE formulas and CUBEMEMBER helper cells need MDX dependency mapping for [Measures].[Revenue].",
             "skill": "mdx-cubevalue-extraction",
@@ -896,12 +908,115 @@ def excel_bi_router_fixture_check(project_root: Path) -> CheckResult:
         return CheckResult(
             name=name,
             status=PASS,
-            detail="router selected expected layer and skill for Workbook/VBA, Power Query, DAX, MDX/CUBE, ADO/SQL, and mixed tasks",
+            detail="router selected expected layer and skill for platform compatibility, DAX compatibility, Workbook/VBA, Power Query, MDX/CUBE, ADO/SQL, and mixed tasks",
             metadata={
                 "caseCount": len(cases),
                 "skills": sorted({str(item.get("skill")) for item in reports}),
                 "layers": sorted({str(item.get("layer")) for item in reports}),
             },
+        )
+
+
+def task_profile_compatibility_fixture_check(project_root: Path) -> CheckResult:
+    name = "Task profile compatibility fixture smoke"
+    script = project_root / "tools" / "run_task_profile.py"
+    if not script.is_file():
+        return CheckResult(name=name, status=FAIL, detail=f"script not found: {script}")
+
+    with tempfile.TemporaryDirectory(prefix="excel_bi_task_profile_compat_") as tmp:
+        tmp_dir = Path(tmp)
+        captured_probe = tmp_dir / "captured-capabilities.json"
+        captured_plan = tmp_dir / "captured-plan.json"
+        live_plan = tmp_dir / "live-plan.json"
+        cases = [
+            (
+                "captured",
+                [
+                    sys.executable,
+                    str(script),
+                    "--profile",
+                    "env-diagnostics",
+                    "--project-root",
+                    str(project_root),
+                    "--out-dir",
+                    str(tmp_dir / "captured-out"),
+                    "--probe-json",
+                    str(captured_probe),
+                    "--require-capability",
+                    "excel.com.activation",
+                    "--require-capability",
+                    "excel.vba.project-access",
+                    "--out-json",
+                    str(captured_plan),
+                ],
+                captured_plan,
+            ),
+            (
+                "live",
+                [
+                    sys.executable,
+                    str(script),
+                    "--profile",
+                    "env-diagnostics",
+                    "--project-root",
+                    str(project_root),
+                    "--out-dir",
+                    str(tmp_dir / "live-out"),
+                    "--out-json",
+                    str(live_plan),
+                ],
+                live_plan,
+            ),
+        ]
+        reports: dict[str, dict[str, object]] = {}
+        outputs: list[str] = []
+        for case_id, command, report_path in cases:
+            result = run_command(command, project_root, f"{name}: {case_id}")
+            outputs.append(result.stdout)
+            if result.status != PASS:
+                return CheckResult(
+                    name=name,
+                    status=FAIL,
+                    detail=f"{case_id} plan failed: {result.detail}",
+                    command=result.command,
+                    stdout=result.stdout,
+                    stderr=result.stderr,
+                )
+            try:
+                reports[case_id] = json.loads(report_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as exc:
+                return CheckResult(name=name, status=FAIL, detail=f"cannot read {case_id} plan: {exc}")
+
+        captured_commands = reports["captured"].get("commands", [])
+        live_commands = reports["live"].get("commands", [])
+        captured_names = [str(item.get("name", "")) for item in captured_commands if isinstance(item, dict)]
+        live_names = [str(item.get("name", "")) for item in live_commands if isinstance(item, dict)]
+        failures: list[str] = []
+        if captured_names != ["Build Excel compatibility report"]:
+            failures.append(f"captured commands={captured_names}")
+        if len(captured_commands) == 1 and isinstance(captured_commands[0], dict):
+            command = [str(item) for item in captured_commands[0].get("command", [])]
+            if command.count("--require-capability") != 2:
+                failures.append("captured requirements were not forwarded")
+            if "--require-pass" not in command:
+                failures.append("captured report is missing --require-pass")
+        expected_live = [
+            "Probe Office and BI providers",
+            "Build provider environment report",
+            "Probe Excel compatibility capabilities",
+            "Build Excel compatibility report",
+        ]
+        if live_names != expected_live:
+            failures.append(f"live commands={live_names}")
+
+        return CheckResult(
+            name=name,
+            status=PASS if not failures else FAIL,
+            detail="captured evidence skips live probing, explicit requirements are forwarded, and live mode preserves provider detail"
+            if not failures
+            else "; ".join(failures),
+            stdout="\n".join(item for item in outputs if item),
+            metadata={"capturedCommands": captured_names, "liveCommands": live_names},
         )
 
 
@@ -965,12 +1080,16 @@ def capability_catalog_fixture_check(project_root: Path) -> CheckResult:
             "inspect_excel_bi_workbook.py",
             "build_workbook_triage_report.py",
             "build_power_query_refresh_report.py",
+            "probe_excel_capabilities.ps1",
+            "build_excel_compatibility_report.py",
+            "create_excel_capability_fixture.py",
             "run_release_gate.py",
             "deploy-local-plugin.py",
         ]:
             if required_tool not in tools:
                 failures.append(f"missing tool={required_tool}")
         for required_workflow in [
+            "excel-compatibility",
             "route-then-triage",
             "power-query-lifecycle",
             "power-pivot-cube",
@@ -6392,6 +6511,7 @@ def main() -> int:
     checks.append(cross_agent_forward_test_handoff_bundle_check(project_root))
     checks.append(cross_agent_response_collection_report_check(project_root))
     checks.append(excel_bi_router_fixture_check(project_root))
+    checks.append(task_profile_compatibility_fixture_check(project_root))
     checks.append(capability_catalog_fixture_check(project_root))
     checks.append(agent_bootstrap_bundle_fixture_check(project_root))
     checks.append(goal_coverage_report_check(project_root))
