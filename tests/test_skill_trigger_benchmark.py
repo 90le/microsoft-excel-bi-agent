@@ -150,6 +150,9 @@ class SkillTriggerBenchmarkTests(unittest.TestCase):
     def test_case_text_rejects_private_or_credential_like_artifacts(self) -> None:
         source = json.loads(CASES.read_text(encoding="utf-8-sig"))
         unsafe_texts = (
+            r"Open (C:\Users\customer\private\report) and inspect it.",
+            r"Open '\\server\share\private\report' and inspect it.",
+            "Open (/srv/customer/private/report) and inspect it.",
             r"Open C:\Users\customer\private\report.xlsx and inspect it.",
             "Connect with password=Summer2026! and refresh the query.",
             "Inspect customer-finance.xlsx and publish a clean copy.",
@@ -165,6 +168,61 @@ class SkillTriggerBenchmarkTests(unittest.TestCase):
                     report = validate_trigger_cases(ROOT, path)
                     self.assertEqual("fail", report["status"])
                     self.assertTrue(report["errors"])
+
+    def test_case_known_fields_reject_wrong_types_without_crashing(self) -> None:
+        source = json.loads(CASES.read_text(encoding="utf-8-sig"))
+        invalid_values = (None, 42, [], {})
+
+        with tempfile.TemporaryDirectory() as tmp:
+            for field in ("kind", "targetSkill", "expectedSkill", "text"):
+                for value_index, invalid_value in enumerate(invalid_values):
+                    with self.subTest(field=field, value=invalid_value):
+                        variant = json.loads(json.dumps(source))
+                        variant["cases"][0][field] = invalid_value
+                        path = Path(tmp) / f"{field}-{value_index}.json"
+                        path.write_text(json.dumps(variant), encoding="utf-8")
+                        report = validate_trigger_cases(ROOT, path)
+                        self.assertEqual("fail", report["status"])
+                        self.assertTrue(any(field in error for error in report["errors"]))
+
+            for value_index, invalid_value in enumerate((None, 42, {}, "not-an-array", ["ok", 42])):
+                with self.subTest(field="successChecklist", value=invalid_value):
+                    variant = json.loads(json.dumps(source))
+                    variant["cases"][0]["successChecklist"] = invalid_value
+                    path = Path(tmp) / f"success-checklist-{value_index}.json"
+                    path.write_text(json.dumps(variant), encoding="utf-8")
+                    report = validate_trigger_cases(ROOT, path)
+                    self.assertEqual("fail", report["status"])
+                    self.assertTrue(
+                        any("successChecklist" in error for error in report["errors"])
+                    )
+
+    def test_manifest_known_fields_reject_wrong_types_without_crashing(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            project = Path(tmp) / "synthetic-plugin"
+            write_synthetic_project(project)
+            manifest_path = project / ".codex-plugin" / "plugin.json"
+            valid_manifest = json.loads(manifest_path.read_text(encoding="utf-8-sig"))
+
+            for value_index, invalid_interface in enumerate((None, 42, [], "not-an-object")):
+                with self.subTest(field="interface", value=invalid_interface):
+                    manifest = json.loads(json.dumps(valid_manifest))
+                    manifest["interface"] = invalid_interface
+                    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+                    report = benchmark.validate_benchmark(project, CASES)
+                    self.assertEqual("fail", report["status"])
+                    self.assertTrue(any("interface" in error for error in report["errors"]))
+
+            for value_index, invalid_prompts in enumerate(
+                (None, 42, {}, "not-an-array", ["valid", None, "valid"])
+            ):
+                with self.subTest(field="defaultPrompt", value=invalid_prompts):
+                    manifest = json.loads(json.dumps(valid_manifest))
+                    manifest["interface"]["defaultPrompt"] = invalid_prompts
+                    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+                    report = benchmark.validate_benchmark(project, CASES)
+                    self.assertEqual("fail", report["status"])
+                    self.assertTrue(any("defaultPrompt" in error for error in report["errors"]))
 
 
 if __name__ == "__main__":

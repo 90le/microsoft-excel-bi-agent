@@ -43,8 +43,8 @@ CASE_FIELDS = frozenset(
 )
 CASE_KINDS = frozenset({"positive", "confusable-negative"})
 
-WINDOWS_ABSOLUTE_PATH = re.compile(r"(?i)(?:^|\s)(?:[a-z]:[\\/]|\\\\)")
-POSIX_ABSOLUTE_PATH = re.compile(r"(?:^|\s)/(?:home|users|tmp|var|etc|opt)/", re.IGNORECASE)
+WINDOWS_ABSOLUTE_PATH = re.compile(r"(?i)(?<![a-z0-9])(?:[a-z]:[\\/]|\\\\)")
+POSIX_ABSOLUTE_PATH = re.compile(r"(?<![a-z0-9:/])/(?!\s)", re.IGNORECASE)
 FILE_URI = re.compile(r"file://", re.IGNORECASE)
 CREDENTIAL_TEXT = re.compile(
     r"(?i)\b(?:password|passwd|pwd|secret|api[-_ ]?key|access[-_ ]?token|client[-_ ]?secret)\s*[:=]"
@@ -232,11 +232,20 @@ def validate_trigger_cases(project_root: Path | str, cases_json: Path | str) -> 
         text = case["text"]
         checklist = case["successChecklist"]
 
-        if case_kind not in CASE_KINDS:
+        kind_is_string = isinstance(case_kind, str)
+        target_is_string = isinstance(target, str)
+        expected_is_string = isinstance(expected, str)
+        if not kind_is_string:
+            errors.append(f"{label} kind must be a string")
+        elif case_kind not in CASE_KINDS:
             errors.append(f"{label} kind must be positive or confusable-negative")
-        if target not in CANONICAL_SKILL_SET:
+        if not target_is_string:
+            errors.append(f"{label} targetSkill must be a string")
+        elif target not in CANONICAL_SKILL_SET:
             errors.append(f"{label} targetSkill is not canonical: {target!r}")
-        if expected not in CANONICAL_SKILL_SET:
+        if not expected_is_string:
+            errors.append(f"{label} expectedSkill must be a string")
+        elif expected not in CANONICAL_SKILL_SET:
             errors.append(f"{label} expectedSkill is not canonical: {expected!r}")
         if not isinstance(text, str) or not text.strip():
             errors.append(f"{label} text must be a non-empty string")
@@ -258,7 +267,12 @@ def validate_trigger_cases(project_root: Path | str, cases_json: Path | str) -> 
                             f"{label} successChecklist[{checklist_index}] contains {reason}"
                         )
 
-        if target in CANONICAL_SKILL_SET and case_kind in CASE_KINDS:
+        if (
+            target_is_string
+            and target in CANONICAL_SKILL_SET
+            and kind_is_string
+            and case_kind in CASE_KINDS
+        ):
             if case_kind == "positive":
                 report["summary"]["positiveCount"] += 1
                 skill_counts[target]["positiveCount"] += 1
@@ -329,7 +343,14 @@ def _validate_metadata(project_root: Path, report: dict[str, Any]) -> None:
     except (OSError, json.JSONDecodeError) as exc:
         errors.append(f"cannot read plugin manifest: {exc}")
         return
-    prompts = manifest.get("interface", {}).get("defaultPrompt") if isinstance(manifest, dict) else None
+    if not isinstance(manifest, dict):
+        errors.append("plugin manifest must be an object")
+        return
+    interface = manifest.get("interface")
+    if not isinstance(interface, dict):
+        errors.append("plugin interface must be an object")
+        return
+    prompts = interface.get("defaultPrompt")
     if not isinstance(prompts, list):
         errors.append("plugin interface.defaultPrompt must be an array")
         return
