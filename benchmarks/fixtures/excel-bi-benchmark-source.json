@@ -1,0 +1,18 @@
+{
+  "kind": "excel-bi-sanitized-benchmark-source",
+  "schemaVersion": "1.0",
+  "synthetic": true,
+  "workbookLabel": "sanitized-excel-bi-benchmark",
+  "powerQuery": {
+    "mExpression": "let Source = Table.FromRecords({[Amount=\"10\"], [Amount=\"not-a-number\"]}), Typed = Table.TransformColumnTypes(Source, {{\"Amount\", Int64.Type}}) in Typed"
+  },
+  "compatibilityRequests": [
+    "Is this CALCULATE measure compatible with Excel Power Pivot?",
+    "Can Excel COM run on a Linux host?"
+  ],
+  "deliveryChecks": [
+    "preserve the source",
+    "plan external-link and formula checks",
+    "separate static evidence from live Excel proof"
+  ]
+}
