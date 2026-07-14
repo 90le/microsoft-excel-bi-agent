@@ -217,6 +217,14 @@ class Task5ReleaseEvidenceTests(unittest.TestCase):
                 "The trigger benchmark validates actual workbook success. Synthetic output does not "
                 "prove real task success; observed usage is separate evidence."
             ),
+            (
+                "The trigger benchmark shows real task success. Synthetic output does not prove real "
+                "task success; observed usage is separate evidence."
+            ),
+            (
+                "The trigger benchmark achieves actual task success. Synthetic output does not prove "
+                "real task success; observed usage is separate evidence."
+            ),
         ]
         for text in contradictory_claims:
             with self.subTest(text=text):

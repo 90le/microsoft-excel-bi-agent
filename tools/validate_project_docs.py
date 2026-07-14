@@ -140,16 +140,19 @@ PRIVATE_LEDGER_LINKS = (
 )
 
 BENCHMARK_SUBJECT_RE = re.compile(r"benchmark|plugin-eval|trigger_cost_tokens|基准", re.IGNORECASE)
+BENCHMARK_POSITIVE_ASSERTION_VERB_PATTERN = (
+    r"(?:prove(?:s|d)?|establish(?:es|ed)?|show(?:s|ed|n)?|demonstrate(?:s|d)?|"
+    r"confirm(?:s|ed)?|validate(?:s|d)?|achieve(?:s|d)?)"
+)
 BENCHMARK_OUTCOME_RE = re.compile(
-    r"\b(?:prove(?:s|d)?|establish(?:es|ed)?|shows?|demonstrate(?:s|d)?|confirm(?:s|ed)?|"
-    r"achieve(?:s|d)?|passes|passed|succeeds?|outperform(?:s|ed)?|improv(?:es|ed)?|"
+    rf"\b(?:{BENCHMARK_POSITIVE_ASSERTION_VERB_PATTERN}|passes|passed|succeeds?|"
+    r"outperform(?:s|ed)?|improv(?:es|ed)?|"
     r"decreas(?:es|ed)?|reduc(?:es|ed)?|increas(?:es|ed)?|conclusive|successful|better|"
     r"improved|reduced|higher|lower|passing)\b|证明|建立|显示|确认|改善|降低|减少|提升",
     re.IGNORECASE,
 )
 POSITIVE_REAL_SUCCESS_RE = re.compile(
-    r"\b(?:prove(?:s|d)?|establish(?:es|ed)?|demonstrate(?:s|d)?|confirm(?:s|ed)?|"
-    r"validate(?:s|d)?)\b(?:\W+\w+){0,3}\W+"
+    rf"\b{BENCHMARK_POSITIVE_ASSERTION_VERB_PATTERN}\b(?:\W+\w+){{0,3}}\W+"
     r"(?:real|live|actual)\s+(?:(?:task|workbook)\s+){1,2}success\b",
     re.IGNORECASE,
 )
