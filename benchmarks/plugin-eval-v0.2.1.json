@@ -21,12 +21,13 @@
   },
   "verifiers": {
     "commands": [
-      "python tools/verify_plugin_benchmark_output.py --input benchmark-output.json --source-sha256 1610e349e03bcb5e7bfab93c84f25c5add842fd35b01884d319c365a3138373b --dax-allowlist-sha256 3372305a7de1948289a972cda845fb1ee0b9d335ad1b7d5dd65025d8458dee7f"
+      "python tools/verify_plugin_benchmark_output.py --input benchmark-output.json --source-sha256 1610e349e03bcb5e7bfab93c84f25c5add842fd35b01884d319c365a3138373b --dax-baseline-manifest-sha256 f5f2f87e81120db12a8613660c74288c738331bc7150d66f235b8cf58fd1380a"
     ]
   },
   "notes": [
     "These scenarios use synthetic or sanitized inputs and do not establish real workbook task success.",
-    "Each scenario runs in an isolated copied workspace and writes benchmark-output.json for mechanical verification."
+    "Each scenario runs in an isolated copied workspace and writes benchmark-output.json for mechanical verification.",
+    "After legitimate repository changes, regenerate the DAX baseline with: python tools/verify_plugin_benchmark_output.py --write-baseline-manifest benchmarks/fixtures/dax-workspace-baseline.json, then update the verifier command with the emitted manifestSha256."
   ],
   "scenarios": [
     {

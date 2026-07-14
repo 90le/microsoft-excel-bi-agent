@@ -6,10 +6,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import os
 import re
-import shutil
-import subprocess
 import sys
 from pathlib import Path
 from typing import Any
@@ -18,15 +15,27 @@ from typing import Any
 REPORT_KIND = "excel-plugin-benchmark-output-verification"
 REPORT_SCHEMA_VERSION = "1.0"
 SOURCE_ARTIFACT = Path("benchmarks/fixtures/excel-bi-benchmark-source.json")
-DAX_CHANGE_ALLOWLIST = Path(
-    "benchmarks/fixtures/dax-workspace-change-allowlist.json"
+DAX_BASELINE_MANIFEST = Path(
+    "benchmarks/fixtures/dax-workspace-baseline.json"
 )
 DEFAULT_SOURCE_SHA256 = (
     "1610e349e03bcb5e7bfab93c84f25c5add842fd35b01884d319c365a3138373b"
 )
-DEFAULT_DAX_ALLOWLIST_SHA256 = (
-    "3372305a7de1948289a972cda845fb1ee0b9d335ad1b7d5dd65025d8458dee7f"
+BASELINE_EXCLUDED_PATHS = frozenset(
+    {
+        DAX_BASELINE_MANIFEST.as_posix(),
+        "benchmarks/plugin-eval-v0.2.1.json",
+    }
 )
+BASELINE_EXCLUDED_PREFIXES = (
+    ".git/",
+    ".plugin-eval/",
+    ".superpowers/",
+)
+BASELINE_EXCLUDED_PARTS = frozenset(
+    {"__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache"}
+)
+BASELINE_ALLOWED_EXTRA_PATHS = frozenset({"benchmark-output.json"})
 
 EXPECTED_SKILLS: dict[str, object] = {
     "power-query-diagnosis": "power-query-m-engineering",
@@ -65,7 +74,10 @@ EXECUTION_SUCCESS_CLAIM = re.compile(
     re.IGNORECASE | re.DOTALL,
 )
 NEGATED_EXECUTION = re.compile(
-    r"\b(?:no|not|never)\b(?:\W+\w+){0,3}\W*$", re.IGNORECASE
+    r"\b(?:no|not|never|wasn['’]t|weren['’]t|isn['’]t|aren['’]t|didn['’]t|"
+    r"doesn['’]t|don['’]t|hasn['’]t|haven['’]t|hadn['’]t|can['’]t|couldn['’]t)"
+    r"\b(?:\W+\w+){0,3}\W*$",
+    re.IGNORECASE,
 )
 SHA256_PATTERN = re.compile(r"[0-9a-f]{64}", re.IGNORECASE)
 
@@ -122,21 +134,6 @@ def _iter_output_strings(value: object, path: str = "$"):
             yield from _iter_output_strings(item, f"{path}[{index}]")
 
 
-def _find_git_executable() -> str | None:
-    discovered = shutil.which("git")
-    if discovered:
-        return discovered
-    candidates = []
-    for variable in ("ProgramFiles", "ProgramFiles(x86)"):
-        base = os.environ.get(variable)
-        if base:
-            candidates.append(Path(base) / "Git" / "cmd" / "git.exe")
-    for candidate in candidates:
-        if candidate.is_file():
-            return str(candidate)
-    return None
-
-
 def _sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
@@ -170,85 +167,118 @@ def _source_artifact_errors(
     return errors
 
 
-def _load_dax_allowlist(
+def _is_baseline_excluded(relative_path: str) -> bool:
+    path = Path(relative_path)
+    return (
+        relative_path in BASELINE_EXCLUDED_PATHS
+        or relative_path in BASELINE_ALLOWED_EXTRA_PATHS
+        or relative_path.startswith(BASELINE_EXCLUDED_PREFIXES)
+        or any(part in BASELINE_EXCLUDED_PARTS for part in path.parts)
+        or path.suffix in {".pyc", ".pyo"}
+    )
+
+
+def _workspace_file_hashes(workspace: Path) -> dict[str, str]:
+    hashes: dict[str, str] = {}
+    for path in workspace.rglob("*"):
+        if not path.is_file():
+            continue
+        relative_path = path.relative_to(workspace).as_posix()
+        if _is_baseline_excluded(relative_path):
+            continue
+        hashes[relative_path] = _sha256(path.read_bytes())
+    return dict(sorted(hashes.items()))
+
+
+def build_workspace_baseline_manifest(workspace: Path) -> dict[str, Any]:
+    return {
+        "kind": "excel-bi-dax-workspace-baseline",
+        "schemaVersion": "1.0",
+        "algorithm": "sha256",
+        "scenarioId": "dax-versus-environment",
+        "allowedExtraPaths": sorted(BASELINE_ALLOWED_EXTRA_PATHS),
+        "excludedPaths": sorted(BASELINE_EXCLUDED_PATHS),
+        "excludedPrefixes": list(BASELINE_EXCLUDED_PREFIXES),
+        "files": [
+            {"path": path, "sha256": digest}
+            for path, digest in _workspace_file_hashes(workspace).items()
+        ],
+    }
+
+
+def write_workspace_baseline_manifest(
+    workspace: Path, output_path: Path
+) -> str:
+    manifest = build_workspace_baseline_manifest(workspace)
+    payload = json.dumps(manifest, ensure_ascii=False, indent=2) + "\n"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    payload_bytes = payload.encode("utf-8")
+    output_path.write_bytes(payload_bytes)
+    return _sha256(payload_bytes)
+
+
+def _load_dax_baseline_manifest(
     workspace: Path, expected_sha256: str
-) -> tuple[dict[str, Any] | None, list[str]]:
+) -> tuple[dict[str, str] | None, list[str]]:
     content, errors = _fixed_file_errors(
-        workspace / DAX_CHANGE_ALLOWLIST,
+        workspace / DAX_BASELINE_MANIFEST,
         expected_sha256,
-        label="DAX workspace change allowlist",
+        label="DAX workspace baseline manifest",
     )
     if errors or content is None:
         return None, errors
     try:
-        allowlist = json.loads(content.decode("utf-8-sig"))
+        manifest = json.loads(content.decode("utf-8-sig"))
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
-        return None, [f"DAX workspace change allowlist is invalid: {exc}"]
-    if not isinstance(allowlist, dict):
-        return None, ["DAX workspace change allowlist must be an object"]
-    if allowlist.get("scenarioId") != "dax-versus-environment":
-        return None, ["DAX workspace change allowlist scenarioId is invalid"]
-    for field in ("allowedChangedPaths", "allowedChangedPrefixes"):
-        value = allowlist.get(field)
-        if not isinstance(value, list) or not all(
-            isinstance(item, str) and item for item in value
+        return None, [f"DAX workspace baseline manifest is invalid: {exc}"]
+    if not isinstance(manifest, dict):
+        return None, ["DAX workspace baseline manifest must be an object"]
+    if (
+        manifest.get("kind") != "excel-bi-dax-workspace-baseline"
+        or manifest.get("schemaVersion") != "1.0"
+        or manifest.get("algorithm") != "sha256"
+        or manifest.get("scenarioId") != "dax-versus-environment"
+    ):
+        return None, ["DAX workspace baseline manifest metadata is invalid"]
+    files = manifest.get("files")
+    if not isinstance(files, list):
+        return None, ["DAX workspace baseline manifest files must be an array"]
+    expected: dict[str, str] = {}
+    for index, item in enumerate(files):
+        if not isinstance(item, dict):
+            return None, [f"DAX workspace baseline files[{index}] is invalid"]
+        path = item.get("path")
+        digest = item.get("sha256")
+        if (
+            not isinstance(path, str)
+            or not path
+            or path in expected
+            or not isinstance(digest, str)
+            or not SHA256_PATTERN.fullmatch(digest)
         ):
-            return None, [f"DAX workspace change allowlist {field} is invalid"]
-    return allowlist, []
-
-
-def _status_paths(output: str) -> list[str]:
-    paths: list[str] = []
-    for line in output.splitlines():
-        if len(line) < 4:
-            continue
-        value = line[3:].replace("\\", "/")
-        if " -> " in value:
-            paths.extend(part.strip('"') for part in value.split(" -> ", 1))
-        else:
-            paths.append(value.strip('"'))
-    return paths
+            return None, [f"DAX workspace baseline files[{index}] is invalid"]
+        expected[path] = digest.lower()
+    return expected, []
 
 
 def _dax_workspace_change_errors(
-    workspace: Path, expected_allowlist_sha256: str
+    workspace: Path, expected_manifest_sha256: str
 ) -> list[str]:
-    allowlist, errors = _load_dax_allowlist(
-        workspace, expected_allowlist_sha256
+    expected, errors = _load_dax_baseline_manifest(
+        workspace, expected_manifest_sha256
     )
-    if errors or allowlist is None:
+    if errors or expected is None:
         return errors
-
-    git_executable = _find_git_executable()
-    if not git_executable:
-        return ["git is unavailable for DAX workspace change verification"]
-    try:
-        completed = subprocess.run(
-            [
-                git_executable,
-                "-C",
-                str(workspace),
-                "status",
-                "--porcelain=v1",
-                "--untracked-files=all",
-                "--",
-            ],
-            text=True,
-            capture_output=True,
-            check=False,
-        )
-    except OSError as exc:
-        return [f"DAX workspace change verification is unavailable: {exc}"]
-    if completed.returncode != 0:
-        return ["DAX workspace change verification failed closed"]
-
-    allowed_paths = set(allowlist["allowedChangedPaths"])
-    allowed_prefixes = tuple(allowlist["allowedChangedPrefixes"])
-    return [
-        f"DAX workspace change is not allowed: {path}"
-        for path in _status_paths(completed.stdout)
-        if path not in allowed_paths and not path.startswith(allowed_prefixes)
-    ]
+    actual = _workspace_file_hashes(workspace)
+    errors = []
+    for path in sorted(expected.keys() - actual.keys()):
+        errors.append(f"DAX workspace change removed baseline file: {path}")
+    for path in sorted(actual.keys() - expected.keys()):
+        errors.append(f"DAX workspace change added unexpected file: {path}")
+    for path in sorted(expected.keys() & actual.keys()):
+        if expected[path] != actual[path]:
+            errors.append(f"DAX workspace change modified baseline file: {path}")
+    return errors
 
 
 def _has_unsupported_claim(value: str) -> bool:
@@ -339,7 +369,7 @@ def verify_file(
     *,
     workspace: Path,
     source_sha256: str,
-    dax_allowlist_sha256: str,
+    dax_baseline_manifest_sha256: str,
 ) -> dict[str, Any]:
     expected_scenario_id = _infer_expected_scenario(workspace)
     try:
@@ -359,30 +389,49 @@ def verify_file(
     )
     if expected_scenario_id == "dax-versus-environment":
         report["errors"].extend(
-            _dax_workspace_change_errors(workspace, dax_allowlist_sha256)
+            _dax_workspace_change_errors(
+                workspace, dax_baseline_manifest_sha256
+            )
         )
     return _finish(report)
 
 
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--input", type=Path, required=True)
+    mode = parser.add_mutually_exclusive_group(required=True)
+    mode.add_argument("--input", type=Path)
+    mode.add_argument("--write-baseline-manifest", type=Path)
     parser.add_argument(
         "--source-sha256", default=DEFAULT_SOURCE_SHA256
     )
     parser.add_argument(
-        "--dax-allowlist-sha256", default=DEFAULT_DAX_ALLOWLIST_SHA256
+        "--dax-baseline-manifest-sha256", default=""
     )
     return parser.parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> int:
     args = _parse_args(argv)
+    if args.write_baseline_manifest:
+        manifest_sha256 = write_workspace_baseline_manifest(
+            Path.cwd(), args.write_baseline_manifest
+        )
+        payload = {
+            "kind": "excel-bi-dax-workspace-baseline-generation",
+            "schemaVersion": "1.0",
+            "status": "pass",
+            "fileCount": len(
+                build_workspace_baseline_manifest(Path.cwd())["files"]
+            ),
+            "manifestSha256": manifest_sha256,
+        }
+        sys.stdout.write(json.dumps(payload, ensure_ascii=False, indent=2) + "\n")
+        return 0
     report = verify_file(
         args.input,
         workspace=Path.cwd(),
         source_sha256=args.source_sha256,
-        dax_allowlist_sha256=args.dax_allowlist_sha256,
+        dax_baseline_manifest_sha256=args.dax_baseline_manifest_sha256,
     )
     sys.stdout.write(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
     return 0 if report["status"] == "pass" else 1

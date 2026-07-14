@@ -16,9 +16,8 @@ ROOT = Path(__file__).resolve().parents[1]
 VERIFIER = ROOT / "tools" / "verify_plugin_benchmark_output.py"
 BENCHMARK_CONFIG = ROOT / "benchmarks" / "plugin-eval-v0.2.1.json"
 SOURCE_ARTIFACT = Path("benchmarks/fixtures/excel-bi-benchmark-source.json")
-DAX_CHANGE_ALLOWLIST = Path("benchmarks/fixtures/dax-workspace-change-allowlist.json")
+DAX_BASELINE_MANIFEST = Path("benchmarks/fixtures/dax-workspace-baseline.json")
 SOURCE_SHA256 = "1610e349e03bcb5e7bfab93c84f25c5add842fd35b01884d319c365a3138373b"
-DAX_ALLOWLIST_SHA256 = "3372305a7de1948289a972cda845fb1ee0b9d335ad1b7d5dd65025d8458dee7f"
 
 
 def find_git() -> str:
@@ -98,6 +97,9 @@ def run_verifier(
     mutate_source: bool = False,
     commit_mutation: bool = False,
     extra_file: bool = False,
+    extra_file_path: str = "unexpected-change.txt",
+    commit_extra_file: bool = False,
+    modify_existing_file: bool = False,
     source_sha256: str = SOURCE_SHA256,
 ) -> subprocess.CompletedProcess[str]:
     with tempfile.TemporaryDirectory() as tmp:
@@ -107,8 +109,12 @@ def run_verifier(
         artifact_path = workspace / SOURCE_ARTIFACT
         artifact_path.parent.mkdir(parents=True)
         artifact_path.write_bytes((ROOT / SOURCE_ARTIFACT).read_bytes())
-        allowlist_path = workspace / DAX_CHANGE_ALLOWLIST
-        allowlist_path.write_bytes((ROOT / DAX_CHANGE_ALLOWLIST).read_bytes())
+        protected_path = workspace / "protected-existing.txt"
+        protected_path.write_text("fixed baseline\n", encoding="utf-8")
+        baseline_manifest_path = workspace / DAX_BASELINE_MANIFEST
+        baseline_manifest_sha256 = verifier.write_workspace_baseline_manifest(
+            workspace, baseline_manifest_path
+        )
         run_git(workspace, "init", "--quiet")
         run_git(workspace, "config", "user.email", "benchmark@example.invalid")
         run_git(workspace, "config", "user.name", "Benchmark Test")
@@ -117,7 +123,8 @@ def run_verifier(
             workspace,
             "add",
             SOURCE_ARTIFACT.as_posix(),
-            DAX_CHANGE_ALLOWLIST.as_posix(),
+            DAX_BASELINE_MANIFEST.as_posix(),
+            protected_path.name,
         )
         run_git(workspace, "commit", "--quiet", "-m", "add benchmark fixtures")
         if mutate_source:
@@ -126,9 +133,18 @@ def run_verifier(
                 run_git(workspace, "add", SOURCE_ARTIFACT.as_posix())
                 run_git(workspace, "commit", "--quiet", "-m", "replace source baseline")
         if extra_file:
-            (workspace / "unexpected-change.txt").write_text(
+            unexpected_path = workspace / extra_file_path
+            unexpected_path.parent.mkdir(parents=True, exist_ok=True)
+            unexpected_path.write_text(
                 "must be rejected\n", encoding="utf-8"
             )
+            if commit_extra_file:
+                run_git(workspace, "add", extra_file_path)
+                run_git(workspace, "commit", "--quiet", "-m", "hide extra file")
+        if modify_existing_file:
+            protected_path.write_text("changed after baseline\n", encoding="utf-8")
+            run_git(workspace, "add", protected_path.name)
+            run_git(workspace, "commit", "--quiet", "-m", "hide file mutation")
 
         input_path = workspace / "benchmark-output.json"
         input_path.write_text(json.dumps(payload), encoding="utf-8-sig")
@@ -140,8 +156,8 @@ def run_verifier(
                 str(input_path),
                 "--source-sha256",
                 source_sha256,
-                "--dax-allowlist-sha256",
-                DAX_ALLOWLIST_SHA256,
+                "--dax-baseline-manifest-sha256",
+                baseline_manifest_sha256,
             ],
             cwd=str(workspace),
             text=True,
@@ -225,7 +241,34 @@ class PluginBenchmarkOutputVerifierTests(unittest.TestCase):
     def test_dax_scenario_rejects_extra_workspace_file(self) -> None:
         payload = json.loads(json.dumps(VALID_OUTPUTS["dax-versus-environment"]))
 
-        result = run_verifier(payload, extra_file=True)
+        result = run_verifier(
+            payload, extra_file=True, commit_extra_file=True
+        )
+
+        self.assertEqual(1, result.returncode)
+        report = json.loads(result.stdout)
+        self.assertEqual("fail", report["status"])
+        self.assertTrue(any("workspace change" in error for error in report["errors"]))
+
+    def test_dax_scenario_rejects_committed_existing_file_change(self) -> None:
+        payload = json.loads(json.dumps(VALID_OUTPUTS["dax-versus-environment"]))
+
+        result = run_verifier(payload, modify_existing_file=True)
+
+        self.assertEqual(1, result.returncode)
+        report = json.loads(result.stdout)
+        self.assertEqual("fail", report["status"])
+        self.assertTrue(any("workspace change" in error for error in report["errors"]))
+
+    def test_dax_scenario_rejects_extra_file_under_plugin_path(self) -> None:
+        payload = json.loads(json.dumps(VALID_OUTPUTS["dax-versus-environment"]))
+
+        result = run_verifier(
+            payload,
+            extra_file=True,
+            extra_file_path=".agents/plugins/unexpected.txt",
+            commit_extra_file=True,
+        )
 
         self.assertEqual(1, result.returncode)
         report = json.loads(result.stdout)
@@ -265,15 +308,18 @@ class PluginBenchmarkOutputVerifierTests(unittest.TestCase):
                 self.assertTrue(any("unsupported" in error for error in report["errors"]))
 
     def test_allows_explicitly_negated_execution_with_safe_boundary(self) -> None:
-        payload = json.loads(json.dumps(VALID_OUTPUTS["power-query-diagnosis"]))
-        payload["note"] = (
-            "Synthetic Excel refresh was not executed; synthetic input only; "
-            "no live runtime proof."
+        safe_notes = (
+            "Synthetic Excel refresh was not executed; synthetic input only; no live runtime proof.",
+            "Synthetic Excel refresh wasn't executed; synthetic input only; no live runtime proof.",
         )
+        for note in safe_notes:
+            with self.subTest(note=note):
+                payload = json.loads(json.dumps(VALID_OUTPUTS["power-query-diagnosis"]))
+                payload["note"] = note
 
-        result = run_verifier(payload)
+                result = run_verifier(payload)
 
-        self.assertEqual(0, result.returncode, result.stdout)
+                self.assertEqual(0, result.returncode, result.stdout)
 
     def test_recursively_rejects_claim_hidden_in_object_key(self) -> None:
         payload = json.loads(json.dumps(VALID_OUTPUTS["power-query-diagnosis"]))
@@ -305,11 +351,14 @@ class PluginBenchmarkOutputVerifierTests(unittest.TestCase):
 
     def test_checked_in_config_calls_semantic_verifier(self) -> None:
         config = json.loads(BENCHMARK_CONFIG.read_text(encoding="utf-8-sig"))
+        baseline_manifest_sha256 = hashlib.sha256(
+            (ROOT / DAX_BASELINE_MANIFEST).read_bytes()
+        ).hexdigest()
         self.assertEqual(
             [
                 "python tools/verify_plugin_benchmark_output.py --input benchmark-output.json "
                 f"--source-sha256 {SOURCE_SHA256} "
-                f"--dax-allowlist-sha256 {DAX_ALLOWLIST_SHA256}"
+                f"--dax-baseline-manifest-sha256 {baseline_manifest_sha256}"
             ],
             config["verifiers"]["commands"],
         )
@@ -318,8 +367,8 @@ class PluginBenchmarkOutputVerifierTests(unittest.TestCase):
             hashlib.sha256((ROOT / SOURCE_ARTIFACT).read_bytes()).hexdigest(),
         )
         self.assertEqual(
-            DAX_ALLOWLIST_SHA256,
-            hashlib.sha256((ROOT / DAX_CHANGE_ALLOWLIST).read_bytes()).hexdigest(),
+            baseline_manifest_sha256,
+            hashlib.sha256((ROOT / DAX_BASELINE_MANIFEST).read_bytes()).hexdigest(),
         )
         self.assertEqual(set(VALID_OUTPUTS), {item["id"] for item in config["scenarios"]})
         self.assertTrue((ROOT / SOURCE_ARTIFACT).is_file())
