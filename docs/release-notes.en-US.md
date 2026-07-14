@@ -1,8 +1,8 @@
 # Release Notes
 
-## v0.2.1 (Unreleased Release Candidate) - Trigger Efficiency And Measured Discovery Cost
+## v0.2.1 - Trigger Efficiency And Measured Discovery Cost
 
-Current stable release: v0.2.0. Candidate focus: prepare a draft pull request that reduces plugin discovery cost and sharpens skill routing without changing the 12 published skill IDs or adding Excel functionality.
+Current stable release: v0.2.1. This release reduces plugin discovery cost and sharpens skill routing without changing the 12 published skill IDs or adding Excel functionality.
 
 ### Changed
 

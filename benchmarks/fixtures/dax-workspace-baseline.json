@@ -956,11 +956,11 @@
     },
     {
       "path": "README.md",
-      "sha256": "bf6a750177cf45474a2c3eee0d6dfd0903e69fcbb45230e95432c46ea61c70cc"
+      "sha256": "9d6194b87e169bcf5aefd1ebe32bc9c5361e1a70600b0d0273492cfb6208dfa1"
     },
     {
       "path": "README.zh-CN.md",
-      "sha256": "6b09795dbb96e2d1ae3f93d0100b5ca5543d3bc418d40a9111c20e7f2282fc8f"
+      "sha256": "e8651d51dea46656b0a608639c109308bc6eed36c023d3cb120934bb07b47748"
     },
     {
       "path": "SECURITY.md",
@@ -1016,7 +1016,7 @@
     },
     {
       "path": "docs/current-status.md",
-      "sha256": "e848f787051657634c5cde3d1846543aef30c07d700037fbf7af41a1ce8cb4b0"
+      "sha256": "030ecc917560a8c95f4fdd21885cf7a47090b00ad8cdcb6adf8b0dc4a35ca51c"
     },
     {
       "path": "docs/distribution-checklist.md",
@@ -1048,11 +1048,11 @@
     },
     {
       "path": "docs/intro.html",
-      "sha256": "0d3e8b84d6008875ed501ae8ce8f0beed29ff72a748c6158e7f4ea214a15864b"
+      "sha256": "5adfcfd068db4208805dcac81615dcefa5c81dd30ea6963b90553ca14a5e0483"
     },
     {
       "path": "docs/intro.zh-CN.html",
-      "sha256": "4c0f2ef8d267948738487673df19879a88a8716965772c5e94ff66f12788e3a4"
+      "sha256": "aabca1775c8b86d9eecc7e89107a83191db8d7e3017246428b357980a394ed56"
     },
     {
       "path": "docs/maintenance-goals.en-US.md",
@@ -1108,7 +1108,7 @@
     },
     {
       "path": "docs/release-notes.en-US.md",
-      "sha256": "39afc963c3acb2c055f03c1d43dd51c275c2545b73156227c36ce08ab89e915a"
+      "sha256": "d8a610724bc6a1e2ac6d2f218d72470101d2373d64923a3332e77d4a1074d539"
     },
     {
       "path": "docs/release-notes.md",
@@ -1116,7 +1116,7 @@
     },
     {
       "path": "docs/release-notes.zh-CN.md",
-      "sha256": "59480b5a09f7a7cdcb3395b103d8594fb0602787d4c4e89717634f480d26ff06"
+      "sha256": "5b7bfa072b38fecaae1917424028045b0b32bb9af86cb9274723702a2560c5c9"
     },
     {
       "path": "docs/repository-governance-goals.en-US.md",
@@ -1552,7 +1552,7 @@
     },
     {
       "path": "tests/test_task5_release_evidence.py",
-      "sha256": "ac06fa2e0fa2d39b66276db341375f2a14593b2c8558c56d6f32418c28bc0420"
+      "sha256": "c1ae4795a1bb9ba30982d236071dfbd06889bbc47de5815d771dab4d76a0d77e"
     },
     {
       "path": "tests/test_v021_release_integration.py",
@@ -1808,7 +1808,7 @@
     },
     {
       "path": "tools/validate_project_docs.py",
-      "sha256": "6d47610d9ee072cf2f5e621d2304caa6b783da42ca7f292c11fd2d893fd9aea2"
+      "sha256": "5ac5ed22dd422334b766432f0244a897d522b314e6a0437fb27b583e09e79828"
     },
     {
       "path": "tools/validate_skill_trigger_benchmark.py",

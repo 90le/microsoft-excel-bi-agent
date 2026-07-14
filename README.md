@@ -17,9 +17,7 @@ It is built for the messy Excel work that generic coding agents usually mishandl
 
 Maintained by **Qiu Binbin (丘彬彬)**. WeChat: **binstudy**. Blog: **https://90le.cn**.
 
-Current stable release: **v0.2.0**.
-
-Unreleased release candidate: **v0.2.1** (`0.2.1+codex.20260714`), prepared for a draft pull request. The candidate shortens the three starter prompts, makes all 12 skill descriptions trigger-only, and adds a 36-case trigger corpus plus three real plugin-eval benchmark scenarios. The 12 published skill IDs and Excel feature scope are unchanged.
+Current stable release: **v0.2.1** (`0.2.1+codex.20260714`). It shortens the three starter prompts, makes all 12 skill descriptions trigger-only, and adds a 36-case trigger corpus plus three real plugin-eval benchmark scenarios. The 12 published skill IDs and Excel feature scope are unchanged.
 
 ## Use It When
 
