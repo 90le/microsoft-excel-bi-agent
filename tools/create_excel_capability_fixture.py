@@ -106,10 +106,15 @@ def create_fixture(out_dir: Path) -> dict[str, Any]:
         "createdAt": now_iso(),
         "cases": paths,
         "expected": {
-            "allSupported": {"status": "pass", "passCount": 11},
-            "coreBlocked": {"workbookAutomation": "blocked"},
-            "partialEvidence": {"workbookAutomation": "unknown"},
-            "malformedContract": {"status": "fail"},
+            "allSupported": {
+                "status": "pass",
+                "passCount": 11,
+                "workbookAutomation": "ready",
+                "adomdEndpointQuery": "requires-user-input",
+            },
+            "coreBlocked": {"status": "pass", "workbookAutomation": "blocked"},
+            "partialEvidence": {"status": "pass", "workbookAutomation": "unknown"},
+            "malformedContract": {"status": "fail", "minimumErrorCount": 1},
         },
         "boundaries": ["Fixtures prove report behavior only, not local Office readiness."],
     }

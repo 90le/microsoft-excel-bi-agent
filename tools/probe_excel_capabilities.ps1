@@ -12,6 +12,19 @@ $ErrorActionPreference = "Stop"
 $ScriptRoot = Split-Path -Parent $PSCommandPath
 $ProviderProbeScript = Join-Path $ScriptRoot "probe_excel_bi_providers.ps1"
 
+if (-not ("ExcelCapabilityNativeMethods" -as [type])) {
+    Add-Type -TypeDefinition @"
+using System;
+using System.Runtime.InteropServices;
+
+public static class ExcelCapabilityNativeMethods
+{
+    [DllImport("user32.dll")]
+    public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint processId);
+}
+"@
+}
+
 function Release-ComObject {
     param([object]$ComObject)
     if ($null -ne $ComObject -and [Runtime.InteropServices.Marshal]::IsComObject($ComObject)) {
@@ -19,27 +32,64 @@ function Release-ComObject {
     }
 }
 
-function Get-ExcelProcessIds {
-    return @(Get-Process EXCEL -ErrorAction SilentlyContinue | ForEach-Object { [int]$_.Id })
+function Get-OwnedExcelProcessId {
+    param([object]$ExcelApplication)
+    if ($null -eq $ExcelApplication) { return 0 }
+    try {
+        $processId = [uint32]0
+        $hWnd = [IntPtr]([int64]$ExcelApplication.Hwnd)
+        [void][ExcelCapabilityNativeMethods]::GetWindowThreadProcessId($hWnd, [ref]$processId)
+        return [int]$processId
+    } catch {
+        return 0
+    }
 }
 
-function Stop-NewExcelProcesses {
-    param([int[]]$ExistingIds)
-    $existing = @{}
-    foreach ($processId in @($ExistingIds)) { $existing[$processId] = $true }
-    foreach ($process in @(Get-Process EXCEL -ErrorAction SilentlyContinue)) {
-        if (-not $existing.ContainsKey([int]$process.Id)) {
-            try {
-                if (-not $process.HasExited) {
-                    $process.CloseMainWindow() | Out-Null
-                    $process.WaitForExit(1500) | Out-Null
+function Close-OwnedExcelApplication {
+    param(
+        [object]$ExcelApplication,
+        [int]$OwnedProcessId
+    )
+    $cleanupErrors = @()
+    if ($null -eq $ExcelApplication) { return @($cleanupErrors) }
+
+    $quitFailed = $false
+    $quitError = ""
+    try {
+        $ExcelApplication.Quit()
+    } catch {
+        $quitFailed = $true
+        $quitError = $_.Exception.Message
+    }
+
+    Release-ComObject $ExcelApplication
+    [GC]::Collect()
+    [GC]::WaitForPendingFinalizers()
+
+    if ($quitFailed) {
+        if ($OwnedProcessId -le 0) {
+            $cleanupErrors += "Excel COM Quit failed and the owned Excel PID was unavailable: $quitError"
+        } else {
+            $ownedProcess = Get-Process -Id $OwnedProcessId -ErrorAction SilentlyContinue
+            if ($null -ne $ownedProcess) {
+                try {
+                    Stop-Process -Id $OwnedProcessId -Force -ErrorAction Stop
+                    Wait-Process -Id $OwnedProcessId -Timeout 5 -ErrorAction SilentlyContinue
+                    $cleanupErrors += "Excel COM Quit failed for owned PID $OwnedProcessId; fallback termination was required: $quitError"
+                } catch {
+                    $cleanupErrors += "Excel COM Quit and fallback termination failed for owned PID $OwnedProcessId`: $quitError | $($_.Exception.Message)"
                 }
-            } catch {}
-            try {
-                if (-not $process.HasExited) { Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue }
-            } catch {}
+            } else {
+                $cleanupErrors += "Excel COM Quit raised an error for owned PID $OwnedProcessId, but the process had already exited: $quitError"
+            }
+        }
+    } elseif ($OwnedProcessId -gt 0) {
+        Wait-Process -Id $OwnedProcessId -Timeout 5 -ErrorAction SilentlyContinue
+        if ($null -ne (Get-Process -Id $OwnedProcessId -ErrorAction SilentlyContinue)) {
+            $cleanupErrors += "Owned Excel PID $OwnedProcessId remained after a successful COM Quit; no process was force-terminated."
         }
     }
+    return @($cleanupErrors)
 }
 
 function Get-ErrorCategory {
@@ -96,7 +146,6 @@ function Test-ExcelRegistration {
     return [bool](@($paths | Where-Object { Test-Path -LiteralPath $_ }).Count -gt 0)
 }
 
-$existingExcelIds = Get-ExcelProcessIds
 $tempRoot = Join-Path ([IO.Path]::GetTempPath()) ("excel_capability_probe_" + [Guid]::NewGuid().ToString("N"))
 $providerJson = Join-Path $tempRoot "provider_probe.json"
 $smokeWorkbook = Join-Path $tempRoot "provider_ado_smoke.xlsx"
@@ -133,7 +182,6 @@ try {
     } finally {
         [GC]::Collect()
         [GC]::WaitForPendingFinalizers()
-        Stop-NewExcelProcesses -ExistingIds $existingExcelIds
     }
 
     $excelRegistered = Test-ExcelRegistration
@@ -219,8 +267,13 @@ try {
         $workbook = $null
         $worksheet = $null
         $model = $null
+        $ownedExcelProcessId = 0
         try {
             $excel = New-Object -ComObject Excel.Application
+            $ownedExcelProcessId = Get-OwnedExcelProcessId -ExcelApplication $excel
+            if ($ownedExcelProcessId -le 0) {
+                $errors += "Could not resolve the owned Excel PID from the COM application Hwnd."
+            }
             $excel.Visible = $false
             $excel.DisplayAlerts = $false
             $workbook = $excel.Workbooks.Add()
@@ -286,23 +339,27 @@ try {
                 }
             }
         } finally {
-            if ($null -ne $workbook) { try { $workbook.Close($false) } catch {} }
+            if ($null -ne $workbook) {
+                try { $workbook.Close($false) } catch { $errors += "Owned workbook close failed: $($_.Exception.Message)" }
+            }
             Release-ComObject $model
             Release-ComObject $worksheet
             Release-ComObject $workbook
-            if ($null -ne $excel) { try { $excel.Quit() } catch {} }
-            Release-ComObject $excel
-            [GC]::Collect()
-            [GC]::WaitForPendingFinalizers()
-            Stop-NewExcelProcesses -ExistingIds $existingExcelIds
+            foreach ($cleanupError in @(Close-OwnedExcelApplication -ExcelApplication $excel -OwnedProcessId $ownedExcelProcessId)) {
+                $errors += $cleanupError
+            }
+            $excel = $null
         }
     }
 } catch {
     $errors += $_.Exception.Message
 } finally {
-    Stop-NewExcelProcesses -ExistingIds $existingExcelIds
     if (Test-Path -LiteralPath $tempRoot) {
-        Remove-Item -LiteralPath $tempRoot -Recurse -Force -ErrorAction SilentlyContinue
+        try {
+            Remove-Item -LiteralPath $tempRoot -Recurse -Force -ErrorAction Stop
+        } catch {
+            $errors += "Temporary probe artifact cleanup failed: $($_.Exception.Message)"
+        }
     }
 }
 

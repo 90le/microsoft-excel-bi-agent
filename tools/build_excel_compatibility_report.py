@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -15,6 +16,9 @@ PASS = "pass"
 FAIL = "fail"
 VALID_CAPABILITY_STATUSES = {PASS, FAIL, "skip", "error"}
 VALID_EVIDENCE_LEVELS = {"registration", "activation", "smoke", "not-tested"}
+RFC3339_RE = re.compile(
+    r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$"
+)
 
 CAPABILITY_IDS = (
     "excel.com.activation",
@@ -44,6 +48,27 @@ OPERATION_REQUIREMENTS = {
     "adomd-endpoint-query": ["msolap.registration", "adomd.com.activation"],
     "rendered-pdf-evidence": ["excel.com.activation", "excel.workbook.roundtrip", "excel.pdf-export"],
 }
+
+TOP_LEVEL_FIELDS = {
+    "schemaVersion",
+    "kind",
+    "generatedAt",
+    "probe",
+    "environment",
+    "capabilities",
+    "boundaries",
+    "errors",
+}
+PROBE_FIELDS = {"profile", "platform", "syntheticFixture"}
+ENVIRONMENT_FIELDS = {
+    "osVersion",
+    "is64BitOperatingSystem",
+    "is64BitProcess",
+    "powershellVersion",
+    "excelVersion",
+    "excelBuild",
+}
+CAPABILITY_FIELDS = {"status", "evidenceLevel", "detail", "errorCategory", "error"}
 
 
 def now_iso() -> str:
@@ -86,43 +111,139 @@ def normalize_capability(capability_id: str, value: Any, errors: list[str]) -> d
     if evidence_level not in VALID_EVIDENCE_LEVELS:
         errors.append(f"capabilities.{capability_id}.evidenceLevel is invalid: {evidence_level!r}")
         evidence_level = "not-tested"
+    detail = str(value.get("detail", "") or "")
+    if not detail:
+        detail = "Capability detail is unavailable."
     return {
         "status": status,
         "evidenceLevel": evidence_level,
-        "detail": str(value.get("detail", "") or ""),
+        "detail": detail,
         "errorCategory": str(value.get("errorCategory", "") or ""),
         "error": str(value.get("error", "") or ""),
     }
 
 
+def validate_exact_fields(
+    value: dict[str, Any],
+    *,
+    path: str,
+    required: set[str],
+    unknown_label: str,
+) -> list[str]:
+    errors: list[str] = []
+    for field in sorted(required - set(value)):
+        errors.append(f"{path}.{field} is required" if path else f"{field} is required")
+    for field in sorted(set(value) - required):
+        errors.append(f"unknown {unknown_label} field: {field}")
+    return errors
+
+
+def is_rfc3339(value: Any) -> bool:
+    if not isinstance(value, str) or not RFC3339_RE.fullmatch(value):
+        return False
+    normalized = value[:-1] + "+00:00" if value.endswith("Z") else value
+    try:
+        parsed = datetime.fromisoformat(normalized)
+    except ValueError:
+        return False
+    return parsed.tzinfo is not None
+
+
 def validate_probe_contract(probe: Any) -> list[str]:
     if not isinstance(probe, dict):
         return ["probe JSON root must be an object"]
-    errors: list[str] = []
+    errors = validate_exact_fields(
+        probe,
+        path="",
+        required=TOP_LEVEL_FIELDS,
+        unknown_label="top-level",
+    )
     if probe.get("schemaVersion") != "1.0":
         errors.append("schemaVersion must be '1.0'")
     if probe.get("kind") != "excel-capability-probe":
         errors.append("kind must be 'excel-capability-probe'")
-    if not isinstance(probe.get("generatedAt"), str) or not probe.get("generatedAt"):
-        errors.append("generatedAt must be a non-empty string")
+    if not is_rfc3339(probe.get("generatedAt")):
+        errors.append("generatedAt must be RFC3339 with an explicit timezone")
+
     probe_meta = probe.get("probe")
     if not isinstance(probe_meta, dict):
         errors.append("probe must be an object")
     else:
+        errors.extend(
+            validate_exact_fields(
+                probe_meta,
+                path="probe",
+                required=PROBE_FIELDS,
+                unknown_label="probe",
+            )
+        )
         if probe_meta.get("profile") not in {"inventory", "runtime"}:
             errors.append("probe.profile must be 'inventory' or 'runtime'")
         if probe_meta.get("platform") != "windows":
             errors.append("probe.platform must be 'windows'")
-        if not isinstance(probe_meta.get("syntheticFixture"), bool):
+        if type(probe_meta.get("syntheticFixture")) is not bool:
             errors.append("probe.syntheticFixture must be a boolean")
-    if not isinstance(probe.get("environment"), dict):
+
+    environment = probe.get("environment")
+    if not isinstance(environment, dict):
         errors.append("environment must be an object")
-    if not isinstance(probe.get("capabilities"), dict):
+    else:
+        errors.extend(
+            validate_exact_fields(
+                environment,
+                path="environment",
+                required=ENVIRONMENT_FIELDS,
+                unknown_label="environment",
+            )
+        )
+        for field in ["osVersion", "powershellVersion", "excelVersion", "excelBuild"]:
+            if field in environment and not isinstance(environment[field], str):
+                errors.append(f"environment.{field} must be a string")
+        for field in ["is64BitOperatingSystem", "is64BitProcess"]:
+            if field in environment and type(environment[field]) is not bool:
+                errors.append(f"environment.{field} must be a boolean")
+
+    raw_capabilities = probe.get("capabilities")
+    if not isinstance(raw_capabilities, dict):
         errors.append("capabilities must be an object")
-    if not isinstance(probe.get("boundaries"), list):
+    else:
+        for capability_id in sorted(set(raw_capabilities) - set(CAPABILITY_IDS)):
+            errors.append(f"unknown capability ID: {capability_id}")
+        for capability_id, row in raw_capabilities.items():
+            if capability_id not in CAPABILITY_IDS:
+                continue
+            if not isinstance(row, dict):
+                errors.append(f"capabilities.{capability_id} must be an object")
+                continue
+            for field in sorted(CAPABILITY_FIELDS - set(row)):
+                errors.append(f"capabilities.{capability_id}.{field} is required")
+            for field in sorted(set(row) - CAPABILITY_FIELDS):
+                errors.append(f"unknown capability field: {capability_id}.{field}")
+            for field in sorted(CAPABILITY_FIELDS & set(row)):
+                if not isinstance(row[field], str):
+                    errors.append(f"capabilities.{capability_id}.{field} must be a string")
+            if row.get("status") not in VALID_CAPABILITY_STATUSES:
+                errors.append(f"capabilities.{capability_id}.status is invalid: {row.get('status')!r}")
+            if row.get("evidenceLevel") not in VALID_EVIDENCE_LEVELS:
+                errors.append(
+                    f"capabilities.{capability_id}.evidenceLevel is invalid: {row.get('evidenceLevel')!r}"
+                )
+            if isinstance(row.get("detail"), str) and not row["detail"]:
+                errors.append(f"capabilities.{capability_id}.detail must not be empty")
+
+    boundaries = probe.get("boundaries")
+    if not isinstance(boundaries, list):
         errors.append("boundaries must be a list")
-    if not isinstance(probe.get("errors"), list):
+    elif not boundaries:
+        errors.append("boundaries must not be empty")
+    elif not all(isinstance(item, str) and item for item in boundaries):
+        errors.append("boundaries items must be non-empty strings")
+
+    probe_errors = probe.get("errors")
+    if not isinstance(probe_errors, list):
         errors.append("errors must be a list")
+    elif not all(isinstance(item, str) and item for item in probe_errors):
+        errors.append("errors items must be non-empty strings")
     return errors
 
 
@@ -175,6 +296,9 @@ def build_report(
         for operation_id, operation_required in OPERATION_REQUIREMENTS.items()
     }
     probe_meta = probe_dict.get("probe", {}) if isinstance(probe_dict.get("probe"), dict) else {}
+    source_profile = str(probe_meta.get("profile", "") or "")
+    if source_profile not in {"inventory", "runtime"}:
+        source_profile = ""
     source_errors = probe_dict.get("errors", []) if isinstance(probe_dict.get("errors"), list) else []
 
     return {
@@ -185,7 +309,7 @@ def build_report(
         "source": {
             "probeJson": "",
             "probeSchemaVersion": str(probe_dict.get("schemaVersion", "") or ""),
-            "profile": str(probe_meta.get("profile", "") or ""),
+            "profile": source_profile,
         },
         "environment": probe_dict.get("environment", {}) if isinstance(probe_dict.get("environment"), dict) else {},
         "summary": {
