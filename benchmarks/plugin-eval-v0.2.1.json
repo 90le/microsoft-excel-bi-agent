@@ -21,7 +21,7 @@
   },
   "verifiers": {
     "commands": [
-      "python tools/verify_plugin_benchmark_output.py --input benchmark-output.json --source-sha256 1610e349e03bcb5e7bfab93c84f25c5add842fd35b01884d319c365a3138373b --dax-baseline-manifest-sha256 1b2e92b423e5f669571f8df9c80db4cc91457b11c80269b71d6cbf1c4f1e7b2b"
+      "python tools/verify_plugin_benchmark_output.py --input benchmark-output.json --source-sha256 1610e349e03bcb5e7bfab93c84f25c5add842fd35b01884d319c365a3138373b --dax-baseline-manifest-sha256 90362885da13670f43c93f4bde4f0121eb79578c2fc0009b62094653dfb6d8f2"
     ]
   },
   "notes": [

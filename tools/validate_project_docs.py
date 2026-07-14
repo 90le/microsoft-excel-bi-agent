@@ -438,8 +438,8 @@ def validate(project_root: Path) -> dict[str, Any]:
         ("README.md", readme_en, "Current stable release: **v0.2.0**", "Unreleased release candidate: **v0.2.1**"),
         ("README.zh-CN.md", readme_zh, "当前稳定版：**v0.2.0**", "未发布候选：**v0.2.1**"),
         ("docs/current-status.md", current_status, "## Current Stable Release", "## Unreleased Release Candidate"),
-        ("docs/release-notes.en-US.md", release_notes_en, "v0.2.0", "Unreleased Release Candidate"),
-        ("docs/release-notes.zh-CN.md", release_notes_zh, "v0.2.0", "未发布候选"),
+        ("docs/release-notes.en-US.md", release_notes_en, "Current stable release: v0.2.0.", "Unreleased Release Candidate"),
+        ("docs/release-notes.zh-CN.md", release_notes_zh, "当前稳定版：v0.2.0。", "未发布候选"),
     ]
     for path, text, stable_marker, candidate_marker in release_state_contracts:
         if stable_marker not in text:

@@ -121,8 +121,10 @@ class Task5ReleaseEvidenceTests(unittest.TestCase):
         self.assertIn("Unreleased Release Candidate", current_status)
         self.assertIn(VERSION, current_status)
         self.assertIn("Unreleased Release Candidate", release_en)
+        self.assertIn("Current stable release: v0.2.0.", release_en)
         self.assertIn(VERSION, release_en)
         self.assertIn("未发布候选", release_zh)
+        self.assertIn("当前稳定版：v0.2.0。", release_zh)
         self.assertIn(VERSION, release_zh)
 
         readme_en = (PROJECT_ROOT / "README.md").read_text(encoding="utf-8")

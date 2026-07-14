@@ -1108,7 +1108,7 @@
     },
     {
       "path": "docs/release-notes.en-US.md",
-      "sha256": "b7028ae45a6ee5b6865525eb3428173062993dba54232eadb112bdfbfc8c20c1"
+      "sha256": "39afc963c3acb2c055f03c1d43dd51c275c2545b73156227c36ce08ab89e915a"
     },
     {
       "path": "docs/release-notes.md",
@@ -1116,7 +1116,7 @@
     },
     {
       "path": "docs/release-notes.zh-CN.md",
-      "sha256": "c9ab5932a7bc7cb6ad01eba0e886791901c93961122f96fc23472912a4710a1a"
+      "sha256": "59480b5a09f7a7cdcb3395b103d8594fb0602787d4c4e89717634f480d26ff06"
     },
     {
       "path": "docs/repository-governance-goals.en-US.md",
@@ -1552,7 +1552,7 @@
     },
     {
       "path": "tests/test_task5_release_evidence.py",
-      "sha256": "bcb7cc30552523e5f7d13e75fc7d80ac0dbc3a83f64ed2e49337c7875b186636"
+      "sha256": "ac06fa2e0fa2d39b66276db341375f2a14593b2c8558c56d6f32418c28bc0420"
     },
     {
       "path": "tests/test_v021_release_integration.py",
@@ -1808,7 +1808,7 @@
     },
     {
       "path": "tools/validate_project_docs.py",
-      "sha256": "65dad7bd9a15d9e945678eec6d5148009b7a85616a2e5d9c2726af1b9b473a9a"
+      "sha256": "6d47610d9ee072cf2f5e621d2304caa6b783da42ca7f292c11fd2d893fd9aea2"
     },
     {
       "path": "tools/validate_skill_trigger_benchmark.py",
