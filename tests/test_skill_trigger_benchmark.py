@@ -28,6 +28,27 @@ CANONICAL_SKILLS = (
     "power-query-m-engineering",
 )
 
+EXPECTED_PROMPTS = [
+    "Inspect this Excel task, route it to the right skill, and propose a risk-ranked plan.",
+    "Diagnose this Excel BI issue and separate structural evidence from live runtime proof.",
+    "Prepare or audit a client-ready Excel deliverable and verify the result.",
+]
+
+EXPECTED_DESCRIPTIONS = {
+    "excel-ado-sql-data-access": "Use when Excel work needs ADO, ADODB, OLEDB, ADOMD, SQL, connection strings, parameters, recordsets, or queries against workbooks, CSV, Access, or Data Model sources.",
+    "excel-bi-router": "Use when an Excel BI request is broad, mixed, or unclear and must be routed among workbook, VBA, Power Query, DAX, MDX/CUBE, ADO/SQL, reporting, QA, delivery, or environment skills.",
+    "excel-deliverable-publisher": "Use when preparing or auditing client-ready .xlsx/.xlsm copies that must remove external links, queries, Data Model, VBA, hidden process sheets, or other non-client artifacts without altering the source.",
+    "excel-report-builder": "Use when creating or modifying Excel report sheets, dashboards, tables, charts, pivots, controls, formulas, or polished client-facing layouts.",
+    "excel-testing-fixtures": "Use when creating customer-data-free Excel fixtures, regression cases, smoke workbooks, sample queries, or forward-test inputs for workbook automation and validation.",
+    "excel-vba-workbook-engineering": "Use when creating, modifying, or debugging .xlsx/.xlsm/.xlsb/.xls workbooks, VBA modules, macros, buttons, formulas, links, Power Query, or Excel COM/OpenXML automation.",
+    "excel-workbook-qa-auditor": "Use when auditing an Excel workbook's formulas, controls, hidden sheets, protection, links, Power Query, Data Model, CUBE formulas, VBA buttons, visual quality, or delivery readiness.",
+    "mdx-cubevalue-extraction": "Use when Excel work involves CUBEVALUE, CUBEMEMBER, CUBESET, MDX measures, dimensions, hierarchies, members, ThisWorkbookDataModel, or report-cell extraction.",
+    "office-environment-diagnostics": "Use when checking whether a platform, Office version, machine, or recipient supports Excel COM, VBA, Power Query, Data Model, PDF export, ACE/OLEDB, MSOLAP, ADOMD, offline, Mac, Windows, Linux, or web execution.",
+    "power-bi-semantic-model": "Use when reasoning about Power BI PBIX, TMDL, XMLA, Tabular models, calculation groups, DAX portability, or boundaries between Power BI semantic models and Excel Power Pivot.",
+    "power-pivot-dax-modeling": "Use when Excel Power Pivot or Data Model work involves DAX measures, calculated columns, relationships, CALCULATE, iterators, filter/row context, time intelligence, or model validation.",
+    "power-query-m-engineering": "Use when creating, debugging, or optimizing Power Query M in Excel or Power BI, including Excel.Workbook, Csv.Document, folders, joins, grouping, expansion, types, dependencies, refresh errors, or performance.",
+}
+
 
 def load_module(path: Path, name: str):
     spec = importlib.util.spec_from_file_location(name, path)
@@ -92,6 +113,69 @@ def run_validator(project: Path, *, require_pass: bool) -> subprocess.CompletedP
 
 
 class SkillTriggerBenchmarkTests(unittest.TestCase):
+    def assert_canonical_description(self, skill_id: str) -> None:
+        skill_path = ROOT / ".agents" / "skills" / skill_id / "SKILL.md"
+        description = benchmark._read_frontmatter(skill_path)["description"]
+        self.assertEqual(EXPECTED_DESCRIPTIONS[skill_id], description)
+
+    def test_manifest_prompts_match_expected_values(self) -> None:
+        manifest = json.loads(
+            (ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8-sig")
+        )
+        prompts = manifest["interface"]["defaultPrompt"]
+
+        self.assertEqual(EXPECTED_PROMPTS, prompts)
+        self.assertEqual(3, len(prompts))
+        self.assertTrue(all(len(prompt) <= 110 for prompt in prompts))
+
+    def test_canonical_description_contract(self) -> None:
+        descriptions = []
+        for skill_id in CANONICAL_SKILLS:
+            skill_path = ROOT / ".agents" / "skills" / skill_id / "SKILL.md"
+            description = benchmark._read_frontmatter(skill_path)["description"]
+            descriptions.append(description)
+            with self.subTest(skill_id=skill_id):
+                self.assertTrue(description.startswith("Use when "))
+                self.assertLessEqual(len(description), 300)
+
+        self.assertLessEqual(sum(map(len, descriptions)), 2300)
+
+    def test_canonical_description_excel_ado_sql_data_access(self) -> None:
+        self.assert_canonical_description("excel-ado-sql-data-access")
+
+    def test_canonical_description_excel_bi_router(self) -> None:
+        self.assert_canonical_description("excel-bi-router")
+
+    def test_canonical_description_excel_deliverable_publisher(self) -> None:
+        self.assert_canonical_description("excel-deliverable-publisher")
+
+    def test_canonical_description_excel_report_builder(self) -> None:
+        self.assert_canonical_description("excel-report-builder")
+
+    def test_canonical_description_excel_testing_fixtures(self) -> None:
+        self.assert_canonical_description("excel-testing-fixtures")
+
+    def test_canonical_description_excel_vba_workbook_engineering(self) -> None:
+        self.assert_canonical_description("excel-vba-workbook-engineering")
+
+    def test_canonical_description_excel_workbook_qa_auditor(self) -> None:
+        self.assert_canonical_description("excel-workbook-qa-auditor")
+
+    def test_canonical_description_mdx_cubevalue_extraction(self) -> None:
+        self.assert_canonical_description("mdx-cubevalue-extraction")
+
+    def test_canonical_description_office_environment_diagnostics(self) -> None:
+        self.assert_canonical_description("office-environment-diagnostics")
+
+    def test_canonical_description_power_bi_semantic_model(self) -> None:
+        self.assert_canonical_description("power-bi-semantic-model")
+
+    def test_canonical_description_power_pivot_dax_modeling(self) -> None:
+        self.assert_canonical_description("power-pivot-dax-modeling")
+
+    def test_canonical_description_power_query_m_engineering(self) -> None:
+        self.assert_canonical_description("power-query-m-engineering")
+
     def test_trigger_corpus_covers_every_skill(self) -> None:
         report = validate_trigger_cases(ROOT, CASES)
         self.assertEqual("pass", report["status"])
