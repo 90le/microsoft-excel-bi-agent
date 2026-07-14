@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -17,6 +18,15 @@ from typing import Any
 REPORT_KIND = "excel-plugin-benchmark-output-verification"
 REPORT_SCHEMA_VERSION = "1.0"
 SOURCE_ARTIFACT = Path("benchmarks/fixtures/excel-bi-benchmark-source.json")
+DAX_CHANGE_ALLOWLIST = Path(
+    "benchmarks/fixtures/dax-workspace-change-allowlist.json"
+)
+DEFAULT_SOURCE_SHA256 = (
+    "1610e349e03bcb5e7bfab93c84f25c5add842fd35b01884d319c365a3138373b"
+)
+DEFAULT_DAX_ALLOWLIST_SHA256 = (
+    "3372305a7de1948289a972cda845fb1ee0b9d335ad1b7d5dd65025d8458dee7f"
+)
 
 EXPECTED_SKILLS: dict[str, object] = {
     "power-query-diagnosis": "power-query-m-engineering",
@@ -49,6 +59,15 @@ SYNTHETIC_NO_LIVE_PROOF = re.compile(
     r"\bsynthetic\b.*\bno\s+live(?:\s+\w+){0,2}\s+runtime\s+proof\b",
     re.IGNORECASE | re.DOTALL,
 )
+EXECUTION_SUCCESS_CLAIM = re.compile(
+    r"\b(?:excel|power\s+query|power\s+pivot|refresh|runtime|live|automation)\b"
+    r".{0,200}?\b(?P<verb>executed|ran|completed|succeeded|successfully|passed)\b",
+    re.IGNORECASE | re.DOTALL,
+)
+NEGATED_EXECUTION = re.compile(
+    r"\b(?:no|not|never)\b(?:\W+\w+){0,3}\W*$", re.IGNORECASE
+)
+SHA256_PATTERN = re.compile(r"[0-9a-f]{64}", re.IGNORECASE)
 
 
 def _is_non_empty_string(value: object) -> bool:
@@ -118,36 +137,129 @@ def _find_git_executable() -> str | None:
     return None
 
 
-def _source_artifact_errors(workspace: Path) -> list[str]:
-    artifact_path = workspace / SOURCE_ARTIFACT
+def _sha256(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def _fixed_file_errors(
+    path: Path, expected_sha256: str, *, label: str
+) -> tuple[bytes | None, list[str]]:
+    if not SHA256_PATTERN.fullmatch(expected_sha256):
+        return None, [f"fixed {label} SHA-256 is invalid"]
     try:
-        current_bytes = artifact_path.read_bytes()
+        current_bytes = path.read_bytes()
     except OSError as exc:
-        return [f"source artifact is unavailable: {exc}"]
+        return None, [f"{label} is unavailable: {exc}"]
+    actual_sha256 = _sha256(current_bytes)
+    if actual_sha256 != expected_sha256.lower():
+        return None, [
+            f"{label} SHA-256 differs from the fixed benchmark baseline"
+        ]
+    return current_bytes, []
+
+
+def _source_artifact_errors(
+    workspace: Path, expected_sha256: str
+) -> list[str]:
+    artifact_path = workspace / SOURCE_ARTIFACT
+    _, errors = _fixed_file_errors(
+        artifact_path,
+        expected_sha256,
+        label="source artifact",
+    )
+    return errors
+
+
+def _load_dax_allowlist(
+    workspace: Path, expected_sha256: str
+) -> tuple[dict[str, Any] | None, list[str]]:
+    content, errors = _fixed_file_errors(
+        workspace / DAX_CHANGE_ALLOWLIST,
+        expected_sha256,
+        label="DAX workspace change allowlist",
+    )
+    if errors or content is None:
+        return None, errors
+    try:
+        allowlist = json.loads(content.decode("utf-8-sig"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        return None, [f"DAX workspace change allowlist is invalid: {exc}"]
+    if not isinstance(allowlist, dict):
+        return None, ["DAX workspace change allowlist must be an object"]
+    if allowlist.get("scenarioId") != "dax-versus-environment":
+        return None, ["DAX workspace change allowlist scenarioId is invalid"]
+    for field in ("allowedChangedPaths", "allowedChangedPrefixes"):
+        value = allowlist.get(field)
+        if not isinstance(value, list) or not all(
+            isinstance(item, str) and item for item in value
+        ):
+            return None, [f"DAX workspace change allowlist {field} is invalid"]
+    return allowlist, []
+
+
+def _status_paths(output: str) -> list[str]:
+    paths: list[str] = []
+    for line in output.splitlines():
+        if len(line) < 4:
+            continue
+        value = line[3:].replace("\\", "/")
+        if " -> " in value:
+            paths.extend(part.strip('"') for part in value.split(" -> ", 1))
+        else:
+            paths.append(value.strip('"'))
+    return paths
+
+
+def _dax_workspace_change_errors(
+    workspace: Path, expected_allowlist_sha256: str
+) -> list[str]:
+    allowlist, errors = _load_dax_allowlist(
+        workspace, expected_allowlist_sha256
+    )
+    if errors or allowlist is None:
+        return errors
 
     git_executable = _find_git_executable()
     if not git_executable:
-        return ["git baseline is unavailable for the source artifact"]
+        return ["git is unavailable for DAX workspace change verification"]
     try:
         completed = subprocess.run(
             [
                 git_executable,
                 "-C",
                 str(workspace),
-                "show",
-                f"HEAD:{SOURCE_ARTIFACT.as_posix()}",
+                "status",
+                "--porcelain=v1",
+                "--untracked-files=all",
+                "--",
             ],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            text=True,
+            capture_output=True,
             check=False,
         )
     except OSError as exc:
-        return [f"git baseline is unavailable for the source artifact: {exc}"]
+        return [f"DAX workspace change verification is unavailable: {exc}"]
     if completed.returncode != 0:
-        return ["git baseline is unavailable for the source artifact"]
-    if current_bytes != completed.stdout:
-        return ["source artifact bytes differ from the git HEAD baseline"]
-    return []
+        return ["DAX workspace change verification failed closed"]
+
+    allowed_paths = set(allowlist["allowedChangedPaths"])
+    allowed_prefixes = tuple(allowlist["allowedChangedPrefixes"])
+    return [
+        f"DAX workspace change is not allowed: {path}"
+        for path in _status_paths(completed.stdout)
+        if path not in allowed_paths and not path.startswith(allowed_prefixes)
+    ]
+
+
+def _has_unsupported_claim(value: str) -> bool:
+    if any(pattern.search(value) for pattern in UNSUPPORTED_CLAIM_PATTERNS):
+        return True
+    for match in EXECUTION_SUCCESS_CLAIM.finditer(value):
+        before_verb = value[match.start() : match.start("verb")]
+        if NEGATED_EXECUTION.search(before_verb):
+            continue
+        return True
+    return False
 
 
 def verify_benchmark_output(
@@ -201,7 +313,7 @@ def verify_benchmark_output(
         )
 
     for string_path, value in _iter_output_strings(payload):
-        if any(pattern.search(value) for pattern in UNSUPPORTED_CLAIM_PATTERNS):
+        if _has_unsupported_claim(value):
             errors.append(f"unsupported live/real-success language at {string_path}")
 
     if expected_scenario_id == "power-query-diagnosis":
@@ -222,31 +334,56 @@ def verify_benchmark_output(
     return _finish(report)
 
 
-def verify_file(path: Path, *, workspace: Path) -> dict[str, Any]:
+def verify_file(
+    path: Path,
+    *,
+    workspace: Path,
+    source_sha256: str,
+    dax_allowlist_sha256: str,
+) -> dict[str, Any]:
     expected_scenario_id = _infer_expected_scenario(workspace)
     try:
         payload = json.loads(path.read_text(encoding="utf-8-sig"))
     except (OSError, json.JSONDecodeError) as exc:
         report = _new_report(expected_scenario_id=expected_scenario_id)
         report["errors"].append(f"cannot read benchmark output: {exc}")
-        report["errors"].extend(_source_artifact_errors(workspace))
+        report["errors"].extend(
+            _source_artifact_errors(workspace, source_sha256)
+        )
         return _finish(report)
     report = verify_benchmark_output(
         payload, expected_scenario_id=expected_scenario_id
     )
-    report["errors"].extend(_source_artifact_errors(workspace))
+    report["errors"].extend(
+        _source_artifact_errors(workspace, source_sha256)
+    )
+    if expected_scenario_id == "dax-versus-environment":
+        report["errors"].extend(
+            _dax_workspace_change_errors(workspace, dax_allowlist_sha256)
+        )
     return _finish(report)
 
 
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", type=Path, required=True)
+    parser.add_argument(
+        "--source-sha256", default=DEFAULT_SOURCE_SHA256
+    )
+    parser.add_argument(
+        "--dax-allowlist-sha256", default=DEFAULT_DAX_ALLOWLIST_SHA256
+    )
     return parser.parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> int:
     args = _parse_args(argv)
-    report = verify_file(args.input, workspace=Path.cwd())
+    report = verify_file(
+        args.input,
+        workspace=Path.cwd(),
+        source_sha256=args.source_sha256,
+        dax_allowlist_sha256=args.dax_allowlist_sha256,
+    )
     sys.stdout.write(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
     return 0 if report["status"] == "pass" else 1
 

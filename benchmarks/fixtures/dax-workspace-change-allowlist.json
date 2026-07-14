@@ -1,0 +1,12 @@
+{
+  "kind": "excel-bi-dax-workspace-change-allowlist",
+  "schemaVersion": "1.0",
+  "scenarioId": "dax-versus-environment",
+  "allowedChangedPaths": [
+    "benchmark-output.json"
+  ],
+  "allowedChangedPrefixes": [
+    ".agents/plugins/",
+    "plugins/"
+  ]
+}
