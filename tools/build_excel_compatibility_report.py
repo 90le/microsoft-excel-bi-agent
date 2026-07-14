@@ -300,6 +300,10 @@ def build_report(
     if source_profile not in {"inventory", "runtime"}:
         source_profile = ""
     source_errors = probe_dict.get("errors", []) if isinstance(probe_dict.get("errors"), list) else []
+    if source_errors:
+        errors.append(
+            f"incomplete probe evidence: probe reported {len(source_errors)} execution or cleanup error(s)"
+        )
 
     return {
         "schemaVersion": "1.0",

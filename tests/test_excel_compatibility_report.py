@@ -131,6 +131,39 @@ class ExcelCompatibilityReportTests(unittest.TestCase):
         self.assertEqual(report["status"], "fail")
         self.assertTrue(any("unknown required capability" in error for error in report["errors"]))
 
+    def test_probe_errors_make_report_incomplete_and_require_pass_exit_one(self) -> None:
+        probe = valid_probe()
+        cleanup_error = "Owned Excel PID 4321 remained after a successful COM Quit; no process was force-terminated."
+        probe["errors"] = [cleanup_error]
+
+        report = self.report_module.build_report(probe, required_capabilities=[])
+
+        self.assertEqual(report["status"], "fail")
+        self.assertEqual(report["probeErrors"], [cleanup_error])
+        self.assertTrue(any("incomplete probe evidence" in error for error in report["errors"]))
+
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_dir = Path(tmp)
+            probe_json = tmp_dir / "probe-with-cleanup-error.json"
+            report_json = tmp_dir / "report.json"
+            probe_json.write_text(json.dumps(probe), encoding="utf-8")
+            completed = subprocess.run(
+                [
+                    sys.executable,
+                    str(REPORT_SCRIPT),
+                    "--probe-json",
+                    str(probe_json),
+                    "--out-json",
+                    str(report_json),
+                    "--require-pass",
+                ],
+                cwd=str(PROJECT_ROOT),
+                text=True,
+                capture_output=True,
+            )
+            self.assertEqual(completed.returncode, 1)
+            self.assertEqual(json.loads(report_json.read_text(encoding="utf-8"))["status"], "fail")
+
     def test_invalid_capability_status_fails_contract_validation(self) -> None:
         probe = valid_probe()
         capabilities = probe["capabilities"]
