@@ -60,6 +60,16 @@ class Task3CompatibilityIntegrationTests(unittest.TestCase):
         self.assertEqual(report["skill"], "power-pivot-dax-modeling")
         self.assertEqual(report["layer"], "Power Pivot DAX")
 
+    def test_short_dax_compatibility_routes_to_dax_specialist(self) -> None:
+        report = router.build_report("Is this DAX compatible with Excel?")
+        self.assertEqual(report["skill"], "power-pivot-dax-modeling")
+        self.assertEqual(report["layer"], "Power Pivot DAX")
+
+    def test_short_power_query_linux_question_routes_to_environment_diagnostics(self) -> None:
+        report = router.build_report("Can Power Query run on Linux?")
+        self.assertEqual(report["skill"], "office-environment-diagnostics")
+        self.assertEqual(report["layer"], "Office environment")
+
     def test_captured_probe_builds_compatibility_report_without_live_probe(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             captured = Path(tmp) / "captured capabilities.json"

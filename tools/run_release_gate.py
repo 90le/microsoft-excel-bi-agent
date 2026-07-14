@@ -835,6 +835,18 @@ def excel_bi_router_fixture_check(project_root: Path) -> CheckResult:
             "layer": "Power Pivot DAX",
         },
         {
+            "id": "dax-short-compatibility",
+            "text": "Is this DAX compatible with Excel?",
+            "skill": "power-pivot-dax-modeling",
+            "layer": "Power Pivot DAX",
+        },
+        {
+            "id": "power-query-linux-short",
+            "text": "Can Power Query run on Linux?",
+            "skill": "office-environment-diagnostics",
+            "layer": "Office environment",
+        },
+        {
             "id": "mdx-cube",
             "text": "CUBEVALUE formulas and CUBEMEMBER helper cells need MDX dependency mapping for [Measures].[Revenue].",
             "skill": "mdx-cubevalue-extraction",
