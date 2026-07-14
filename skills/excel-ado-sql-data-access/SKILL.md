@@ -1,6 +1,6 @@
 ---
 name: excel-ado-sql-data-access
-description: Create, debug, and validate Excel VBA data access through ADO, OLEDB, ADODB, ADOMD, and SQL, including querying workbook tables, external Excel/CSV/Access files, Power Pivot/Data Model where available, connection strings, parameters, and recordset handling.
+description: Use when Excel work needs ADO, ADODB, OLEDB, ADOMD, SQL, connection strings, parameters, recordsets, or queries against workbooks, CSV, Access, or Data Model sources.
 ---
 
 # Excel ADO SQL Data Access

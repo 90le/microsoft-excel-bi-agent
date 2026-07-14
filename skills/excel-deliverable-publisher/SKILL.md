@@ -1,6 +1,6 @@
 ---
 name: excel-deliverable-publisher
-description: Prepare clean client-ready Microsoft Excel deliverables from working workbooks. Use when Codex must create or verify `.xlsx`/`.xlsm` delivery copies by freezing formulas to values, removing external workbook links, Power Query connections, Power Pivot/Data Model dependencies, config sheets, hidden process sheets, VBA where requested, or other non-client artifacts without damaging the source workbook.
+description: Use when preparing or auditing client-ready .xlsx/.xlsm copies that must remove external links, queries, Data Model, VBA, hidden process sheets, or other non-client artifacts without altering the source.
 ---
 
 # Excel Deliverable Publisher

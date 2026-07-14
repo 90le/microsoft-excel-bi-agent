@@ -12,7 +12,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 RELEASE_GATE = PROJECT_ROOT / "tools" / "run_release_gate.py"
 CASE_RUNNER = PROJECT_ROOT / "tools" / "run_case_regression.py"
 DOC_VALIDATOR = PROJECT_ROOT / "tools" / "validate_project_docs.py"
-VERSION = "0.2.0+codex.20260714"
+VERSION = "0.2.1+codex.20260714"
 
 
 def load_module(path: Path, name: str):
@@ -116,12 +116,12 @@ class Task5ReleaseEvidenceTests(unittest.TestCase):
         release_en = (PROJECT_ROOT / "docs" / "release-notes.en-US.md").read_text(encoding="utf-8")
         release_zh = (PROJECT_ROOT / "docs" / "release-notes.zh-CN.md").read_text(encoding="utf-8")
         for text in [current_status, release_en, release_zh]:
-            self.assertIn("v0.2.0", text)
+            self.assertIn("v0.2.1", text)
             self.assertIn(VERSION, text)
 
         for path in [PROJECT_ROOT / "README.md", PROJECT_ROOT / "README.zh-CN.md"]:
             readme = path.read_text(encoding="utf-8").lower()
-            self.assertIn("v0.2.0", readme)
+            self.assertIn("v0.2.1", readme)
             self.assertIn("docs/compatibility.md", readme)
             self.assertIn("runtime", readme)
 

@@ -6,21 +6,21 @@ Use `docs/maintenance-goals.en-US.md` or `docs/maintenance-goals.zh-CN.md` for t
 ## Current Release
 
 ```text
-v0.2.0
+v0.2.1
 ```
 
 Package cachebuster version:
 
 ```text
-0.2.0+codex.20260714
+0.2.1+codex.20260714
 ```
 
 ## Current Capability Shape
 
 - 12 canonical skills.
-- 82 cataloged package tools/scripts, including capability probes/reports, compact runtime packaging, task profiles, the real/sanitized case regression runner, visual QA fixture tools, and Excel COM render-evidence export.
-- 14 cataloged workflows.
-- 58 release-gate check functions.
+- 84 cataloged package tools/scripts, including capability probes/reports, compact runtime packaging, task profiles, the real/sanitized case regression runner, trigger benchmark validation, visual QA fixture tools, and Excel COM render-evidence export.
+- 16 cataloged workflows.
+- 59 release-gate check functions.
 - Core Excel BI skills, six upper-layer scenario skills, and maintenance task profiles are complete.
 - The real/sanitized case regression library V1 is complete for `0.1.0+codex.20260622033808`.
 - The workbook-backed sanitized Visual QA case V1 is complete for `0.1.0+codex.20260622045441`.
@@ -29,6 +29,7 @@ Package cachebuster version:
 - Public growth goals, maintainer attribution, social metadata, and reusable marketing copy are complete for `v0.1.4`.
 - GitHub community-health files, safe issue/PR intake, security reporting, and governance validation are complete for `v0.1.5`.
 - Capability-first compatibility evidence, four synthetic probe/report contracts, seven sanitized regression cases, compact runtime packaging, exact three-prompt manifest validation, synchronized project mirrors, and an optional Windows live capability probe are complete for `v0.2.0`.
+- Three shorter starter prompts, 12 trigger-only skill descriptions, the 36-case trigger corpus, three real plugin-eval benchmark scenarios, and synchronized project mirrors are complete for `v0.2.1`; the 12 skill IDs and Excel feature scope remain unchanged. These scenarios use synthetic/generated inputs and do not prove real task success; observed usage is separate evidence.
 
 ## v0.2.0 Evidence Model
 
@@ -36,6 +37,10 @@ Package cachebuster version:
 - Runtime capability evidence belongs to one recorded machine, Office build, bitness, policy, and provider set; it supports medium confidence for operations, not workbook correctness.
 - Workbook behavior evidence is required for high confidence and applies only to the tested workbook path and authoring, automation, consumer, or recipient target.
 - Excel 2007/2010/2013/2016/2019, Office LTSC, Microsoft 365, macOS, Excel for web, Linux, offline, 32-bit/64-bit, WPS, and LibreOffice targets retain explicit boundaries in `docs/compatibility.md`.
+
+## v0.2.1 Efficiency Evidence
+
+The staged static plugin-eval comparison measured `trigger_cost_tokens` at 682 versus the v0.2.0 baseline of 1,161, a 41.26% decrease, and `invoke_cost_tokens` at 14,886 versus 15,365, a decrease of 479. The 36-case corpus and generated/synthetic scenario responses validate routing and benchmark mechanics only and do not prove real task success; observed usage is separate evidence.
 
 ## Daily Entry Points
 
@@ -51,6 +56,9 @@ Package cachebuster version:
 | Review release notes | `docs/release-notes.en-US.md` or `docs/release-notes.zh-CN.md` |
 | Check platform/version/recipient compatibility | `docs/compatibility.md`, then `tools/run_task_profile.py --profile env-diagnostics` |
 | Build the compact Codex runtime package | `tools/build_runtime_package.py --project-root . --out-dir <temp-dir> --require-pass` |
+| Validate trigger metadata and the 36-case corpus | `tools/validate_skill_trigger_benchmark.py --project-root . --cases-json fixtures/skill-trigger-benchmark.json --require-pass` |
+| Stage and compare plugin-eval reports | `docs/task-recipes.md`, then `benchmarks/plugin-eval-v0.2.1.json` |
+| Benchmark evidence boundary | Synthetic/generated responses do not prove real task success; observed usage is separate evidence. |
 | Choose a skill or workflow | `excel-bi-router` or `tools/run_task_profile.py` |
 | Audit a workbook | `tools/run_task_profile.py --profile audit` |
 | Publish a pure deliverable | `tools/run_task_profile.py --profile publish` |
@@ -68,6 +76,7 @@ Package cachebuster version:
 - The rendered Visual QA evidence chain proves only that desktop Excel COM opened a sanitized workbook and exported visible `Report*` sheets to PDF on that Windows machine.
 - It does not prove that a private workbook calculates correctly.
 - Customer workbook reports, generated PDFs, machine-specific evidence, screenshots, credentials, and local paths must stay outside the plugin package.
+- Trigger-cost estimates and generated benchmark responses are not workbook-behavior evidence; observed usage and representative workbook execution must be recorded separately.
 
 ## Maintenance Rule
 

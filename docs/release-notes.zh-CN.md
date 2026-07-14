@@ -1,5 +1,49 @@
 # 发布说明
 
+## v0.2.1 - 触发效率与发现成本实测
+
+发布重点：在不改变 12 个已发布技能 ID、不增加 Excel 功能的前提下，降低插件发现成本并提高技能路由精度。
+
+### 变更
+
+- 将 3 条 manifest starter prompts 缩短至每条不超过 110 个字符。
+- 将全部 12 个 canonical skill descriptions 改为精简的 `Use when ...` 触发条件；技能正文、路由行为、ID 与 Excel 功能范围不变。
+- 新增不含客户数据的 36 条触发语料，其中 24 条 positive、12 条 confusable-negative；同时新增 3 个真实 plugin-eval 基准场景：`power-query-diagnosis`、`dax-versus-environment`、`delivery-boundary`。其输入与生成响应均为合成材料，不证明真实任务成功；observed usage（观测用量）是独立证据。
+- 将 trigger validator 接入 structural release gate 与 capability catalog。
+- 从 `.agents/skills/` 同步生成 `skills/`、`.claude/skills/` 和 `.opencode/skills/` 镜像。
+- 插件 manifest 版本升至 `0.2.1+codex.20260714`。
+
+### 实测对比
+
+对新 staged runtime 的静态 plugin-eval 分析实测：`trigger_cost_tokens` 从 v0.2.0 的 1,161 降至 682，减少 41.26%；`invoke_cost_tokens` 从 15,365 降至 14,886（-479）。这些数字属于合成/生成的静态估算，不证明真实任务成功；observed usage（观测用量）是独立证据。
+
+### 复现静态对比
+
+```powershell
+$pluginEval = '<path-to-plugin-eval.js>'
+$runtime = Join-Path $env:TEMP 'excel-bi-v021-runtime'
+$before = Join-Path $env:TEMP 'excel-bi-v020-plugin-eval.json'
+$after = Join-Path $env:TEMP 'excel-bi-v021-plugin-eval.json'
+$compare = Join-Path $env:TEMP 'excel-bi-v020-v021-compare.md'
+python tools/build_runtime_package.py --project-root . --out-dir $runtime --require-pass
+node $pluginEval analyze $runtime --format json --output $after
+node $pluginEval compare $before $after --format markdown --output $compare
+```
+
+baseline、staged runtime、analysis JSON、comparison report、benchmark result 与 observed-usage logs 均应保存在系统临时目录。trigger validator 与三场景基准命令见 `docs/task-recipes.md`。
+
+### 校验
+
+```bash
+python -m unittest discover -s tests -v
+python tools/validate-skills.py .
+python tools/run_release_gate.py --project-root . --profile structural
+```
+
+### 边界
+
+36 条触发语料和 3 个基准场景使用脱敏合成制品。生成的场景响应不证明真实任务成功，静态 token 估算也不是 observed usage。真实工作簿成功必须另行取得 runtime 观测与代表性 workbook-behavior evidence。
+
 ## v0.2.0 - 能力感知的 Excel 兼容性与精简运行时包
 
 发布重点：在旧版、桌面、离线、Mac/Web、Microsoft 365 和接收方环境之间建立基于证据的兼容性结论，同时缩小 Codex 安装运行时载荷。

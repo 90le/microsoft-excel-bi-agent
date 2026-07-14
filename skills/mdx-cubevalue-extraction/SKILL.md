@@ -1,6 +1,6 @@
 ---
 name: mdx-cubevalue-extraction
-description: Create, debug, and explain Excel CUBE formulas and MDX references against Power Pivot or ThisWorkbookDataModel, including CUBEVALUE, CUBEMEMBER, CUBESET, measures, dimensions, hierarchies, members, period markers, and report-cell extraction patterns.
+description: Use when Excel work involves CUBEVALUE, CUBEMEMBER, CUBESET, MDX measures, dimensions, hierarchies, members, ThisWorkbookDataModel, or report-cell extraction.
 ---
 
 # MDX CUBEVALUE Extraction

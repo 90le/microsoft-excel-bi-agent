@@ -1285,7 +1285,7 @@ def runtime_package_fixture_check(project_root: Path) -> CheckResult:
 
 def plugin_manifest_release_check(project_root: Path) -> CheckResult:
     name = "Plugin release manifest and starter prompts"
-    expected_version = "0.2.0+codex.20260714"
+    expected_version = "0.2.1+codex.20260714"
     try:
         plugin = read_plugin_json(project_root)
     except (OSError, json.JSONDecodeError) as exc:
@@ -1313,7 +1313,7 @@ def plugin_manifest_release_check(project_root: Path) -> CheckResult:
     return CheckResult(
         name=name,
         status=PASS if not failures else FAIL,
-        detail="v0.2.0 cachebuster and exactly three inspect/diagnose/prepare starter prompts verified"
+        detail="v0.2.1 cachebuster and exactly three inspect/diagnose/prepare starter prompts verified"
         if not failures
         else "; ".join(failures),
         metadata={"version": plugin.get("version"), "promptCount": len(prompts)},

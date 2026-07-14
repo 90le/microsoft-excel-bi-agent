@@ -10,6 +10,46 @@ Installation and prompt/agent mirror sync are intentionally not repeated here. U
 
 Start with `excel-bi-router` when the task spans more than one Excel layer.
 
+## Trigger Efficiency Benchmark
+
+Validate the 36-case trigger contract before staging or benchmarking. The corpus is synthetic/generated and does not prove real task success; observed usage is separate evidence.
+
+```powershell
+python tools\validate_skill_trigger_benchmark.py `
+  --project-root . `
+  --cases-json fixtures\skill-trigger-benchmark.json `
+  --require-pass
+```
+
+Build a fresh runtime package and compare its static plugin-eval report with the Task 1 v0.2.0 baseline. Set `$pluginEval` to the locally available `plugin-eval.js`; keep every generated path under `%TEMP%`:
+
+```powershell
+$pluginEval = '<path-to-plugin-eval.js>'
+$runtime = Join-Path $env:TEMP 'excel-bi-v021-runtime'
+$before = Join-Path $env:TEMP 'excel-bi-v020-plugin-eval.json'
+$after = Join-Path $env:TEMP 'excel-bi-v021-plugin-eval.json'
+$compare = Join-Path $env:TEMP 'excel-bi-v020-v021-compare.md'
+python tools\build_runtime_package.py --project-root . --out-dir $runtime --require-pass
+node $pluginEval analyze $runtime --format json --output $after
+node $pluginEval compare $before $after --format markdown --output $compare
+```
+
+For v0.2.1, the static plugin-eval comparison measured `trigger_cost_tokens` at 682 versus 1,161 (41.26% lower) and `invoke_cost_tokens` at 14,886 versus 15,365 (-479). This is synthetic/generated static analysis and does not prove real task success; observed usage is separate evidence.
+
+The checked-in config defines three real plugin-eval scenarios over sanitized synthetic artifacts: `power-query-diagnosis`, `dax-versus-environment`, and `delivery-boundary`. Run them only when Codex benchmark execution is intended, and keep result/usage files in `%TEMP%`:
+
+```powershell
+$result = Join-Path $env:TEMP 'excel-bi-v021-benchmark-result.json'
+$usage = Join-Path $env:TEMP 'excel-bi-v021-benchmark-usage.jsonl'
+node $pluginEval benchmark . `
+  --config benchmarks\plugin-eval-v0.2.1.json `
+  --result-out $result `
+  --usage-out $usage `
+  --format json
+```
+
+Synthetic inputs and generated responses validate benchmark mechanics only and do not prove real task success; observed usage is separate evidence. The 12 skill IDs and Excel feature scope remain unchanged.
+
 ## Fast Profiles
 
 Use `tools/run_task_profile.py` when the request matches a common workflow and the agent needs a repeatable command plan before running specialist scripts:

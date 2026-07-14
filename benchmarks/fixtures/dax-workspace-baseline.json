@@ -20,7 +20,7 @@
   "files": [
     {
       "path": ".agents/skills/excel-ado-sql-data-access/SKILL.md",
-      "sha256": "7c6304295e3c3b7aa714cda9e0735e2c97a64d3a15146fb351bb2792b81fdc16"
+      "sha256": "08fd37548c541de09c9c9cdd918194924f251bf34d361f3f6e6d1a426ba83b3f"
     },
     {
       "path": ".agents/skills/excel-ado-sql-data-access/agents/openai.yaml",
@@ -48,7 +48,7 @@
     },
     {
       "path": ".agents/skills/excel-bi-router/SKILL.md",
-      "sha256": "89c0bf178573fb70e429e9c3780c7102b8351df07838196ef836495b8684976f"
+      "sha256": "43c3a2817ea2ed9969250a99916aa8e7e5d5d70a966489bbecf03b4673483510"
     },
     {
       "path": ".agents/skills/excel-bi-router/agents/openai.yaml",
@@ -60,7 +60,7 @@
     },
     {
       "path": ".agents/skills/excel-deliverable-publisher/SKILL.md",
-      "sha256": "b157e45b416b7e2ff02b5a4c49e31b8608c7bd543a318250d6775a894292667f"
+      "sha256": "68f03fe7ee3bc5e60a7004b3bd06a9b97c313151e5ab61261bd992e1d428d21f"
     },
     {
       "path": ".agents/skills/excel-deliverable-publisher/agents/openai.yaml",
@@ -72,7 +72,7 @@
     },
     {
       "path": ".agents/skills/excel-report-builder/SKILL.md",
-      "sha256": "6c73050ef1a665f4f5e41c3524a635c6caf41b58309bc0ebcfa6dfcc1372fb5a"
+      "sha256": "4c733fa04eed4c643c8de510ff106984f217dd580cc84b7289e82d1c9d2b1cb5"
     },
     {
       "path": ".agents/skills/excel-report-builder/agents/openai.yaml",
@@ -84,7 +84,7 @@
     },
     {
       "path": ".agents/skills/excel-testing-fixtures/SKILL.md",
-      "sha256": "d01af52bc4e0db30f7bd7191b659c54ba4026c81e669bfbe2a13d1e4932103a8"
+      "sha256": "44e1897bb8f6cfdaafdab33a15c49b0c7d5227c43a929e6cab9ed7ae90fb3745"
     },
     {
       "path": ".agents/skills/excel-testing-fixtures/agents/openai.yaml",
@@ -96,7 +96,7 @@
     },
     {
       "path": ".agents/skills/excel-vba-workbook-engineering/SKILL.md",
-      "sha256": "26db6df03b2acc898893a06bfe2b929e015420fe88a0065923639350a3be053f"
+      "sha256": "ea5105a124cc79855eb3c9b6d4972094ce027a4c8bc855aa4d07be093becb3fe"
     },
     {
       "path": ".agents/skills/excel-vba-workbook-engineering/agents/openai.yaml",
@@ -136,7 +136,7 @@
     },
     {
       "path": ".agents/skills/excel-workbook-qa-auditor/SKILL.md",
-      "sha256": "e386c7198ee6d035cf77ce10edbbd49b28bdc1b0309a2490193c360bed95e4c5"
+      "sha256": "0b004f1fe92a09fa4876cd640fd476c3ef108c0a62046292d523f7fda8a9c3f5"
     },
     {
       "path": ".agents/skills/excel-workbook-qa-auditor/agents/openai.yaml",
@@ -148,7 +148,7 @@
     },
     {
       "path": ".agents/skills/mdx-cubevalue-extraction/SKILL.md",
-      "sha256": "e2829799f381760f507b32930c5b0f68de7aca4e0921246dc334d41aa9015cc8"
+      "sha256": "5f994db0f594fc6401408a20f2fbda6022c4dca0028689246429e391b2b1d420"
     },
     {
       "path": ".agents/skills/mdx-cubevalue-extraction/agents/openai.yaml",
@@ -176,7 +176,7 @@
     },
     {
       "path": ".agents/skills/office-environment-diagnostics/SKILL.md",
-      "sha256": "7cd49bf3695c8edf772ed6e0a3d1fa6d594a461efc439902aa3d5aec34bd5c5f"
+      "sha256": "90f0c5c4ceb701169c43d2ffec7270c86ea3bf68c02799bba80412e50bf117b1"
     },
     {
       "path": ".agents/skills/office-environment-diagnostics/agents/openai.yaml",
@@ -188,7 +188,7 @@
     },
     {
       "path": ".agents/skills/power-bi-semantic-model/SKILL.md",
-      "sha256": "1b06faba6331146dd5310513be04f8758749b91a6153230fc9f37aff3271e006"
+      "sha256": "28aef2ea7e67b9e8db163f8646ad79ef4b4a9fb8e427de1c923ab0ef1a6d257d"
     },
     {
       "path": ".agents/skills/power-bi-semantic-model/agents/openai.yaml",
@@ -200,7 +200,7 @@
     },
     {
       "path": ".agents/skills/power-pivot-dax-modeling/SKILL.md",
-      "sha256": "928f41795502e9689b399ceb99b9e534d9651b01e3d46fb4bbdd8ed1db1be117"
+      "sha256": "ceb2d60855475766638598bb4db313cc0db07a8f27520152bd3621e6cbb6768c"
     },
     {
       "path": ".agents/skills/power-pivot-dax-modeling/agents/openai.yaml",
@@ -236,7 +236,7 @@
     },
     {
       "path": ".agents/skills/power-query-m-engineering/SKILL.md",
-      "sha256": "c836b76015a1a3a69ee2289f6c58b42a59fe36db7f83b69d358043f7fd8c7014"
+      "sha256": "f920afa31ab9c657a8e719873a8b3e30d7b8bbdb25eff876a49e50427ff4393a"
     },
     {
       "path": ".agents/skills/power-query-m-engineering/agents/openai.yaml",
@@ -316,7 +316,7 @@
     },
     {
       "path": ".claude/skills/excel-ado-sql-data-access/SKILL.md",
-      "sha256": "7c6304295e3c3b7aa714cda9e0735e2c97a64d3a15146fb351bb2792b81fdc16"
+      "sha256": "08fd37548c541de09c9c9cdd918194924f251bf34d361f3f6e6d1a426ba83b3f"
     },
     {
       "path": ".claude/skills/excel-ado-sql-data-access/agents/openai.yaml",
@@ -344,7 +344,7 @@
     },
     {
       "path": ".claude/skills/excel-bi-router/SKILL.md",
-      "sha256": "89c0bf178573fb70e429e9c3780c7102b8351df07838196ef836495b8684976f"
+      "sha256": "43c3a2817ea2ed9969250a99916aa8e7e5d5d70a966489bbecf03b4673483510"
     },
     {
       "path": ".claude/skills/excel-bi-router/agents/openai.yaml",
@@ -356,7 +356,7 @@
     },
     {
       "path": ".claude/skills/excel-deliverable-publisher/SKILL.md",
-      "sha256": "b157e45b416b7e2ff02b5a4c49e31b8608c7bd543a318250d6775a894292667f"
+      "sha256": "68f03fe7ee3bc5e60a7004b3bd06a9b97c313151e5ab61261bd992e1d428d21f"
     },
     {
       "path": ".claude/skills/excel-deliverable-publisher/agents/openai.yaml",
@@ -368,7 +368,7 @@
     },
     {
       "path": ".claude/skills/excel-report-builder/SKILL.md",
-      "sha256": "6c73050ef1a665f4f5e41c3524a635c6caf41b58309bc0ebcfa6dfcc1372fb5a"
+      "sha256": "4c733fa04eed4c643c8de510ff106984f217dd580cc84b7289e82d1c9d2b1cb5"
     },
     {
       "path": ".claude/skills/excel-report-builder/agents/openai.yaml",
@@ -380,7 +380,7 @@
     },
     {
       "path": ".claude/skills/excel-testing-fixtures/SKILL.md",
-      "sha256": "d01af52bc4e0db30f7bd7191b659c54ba4026c81e669bfbe2a13d1e4932103a8"
+      "sha256": "44e1897bb8f6cfdaafdab33a15c49b0c7d5227c43a929e6cab9ed7ae90fb3745"
     },
     {
       "path": ".claude/skills/excel-testing-fixtures/agents/openai.yaml",
@@ -392,7 +392,7 @@
     },
     {
       "path": ".claude/skills/excel-vba-workbook-engineering/SKILL.md",
-      "sha256": "26db6df03b2acc898893a06bfe2b929e015420fe88a0065923639350a3be053f"
+      "sha256": "ea5105a124cc79855eb3c9b6d4972094ce027a4c8bc855aa4d07be093becb3fe"
     },
     {
       "path": ".claude/skills/excel-vba-workbook-engineering/agents/openai.yaml",
@@ -432,7 +432,7 @@
     },
     {
       "path": ".claude/skills/excel-workbook-qa-auditor/SKILL.md",
-      "sha256": "e386c7198ee6d035cf77ce10edbbd49b28bdc1b0309a2490193c360bed95e4c5"
+      "sha256": "0b004f1fe92a09fa4876cd640fd476c3ef108c0a62046292d523f7fda8a9c3f5"
     },
     {
       "path": ".claude/skills/excel-workbook-qa-auditor/agents/openai.yaml",
@@ -444,7 +444,7 @@
     },
     {
       "path": ".claude/skills/mdx-cubevalue-extraction/SKILL.md",
-      "sha256": "e2829799f381760f507b32930c5b0f68de7aca4e0921246dc334d41aa9015cc8"
+      "sha256": "5f994db0f594fc6401408a20f2fbda6022c4dca0028689246429e391b2b1d420"
     },
     {
       "path": ".claude/skills/mdx-cubevalue-extraction/agents/openai.yaml",
@@ -472,7 +472,7 @@
     },
     {
       "path": ".claude/skills/office-environment-diagnostics/SKILL.md",
-      "sha256": "7cd49bf3695c8edf772ed6e0a3d1fa6d594a461efc439902aa3d5aec34bd5c5f"
+      "sha256": "90f0c5c4ceb701169c43d2ffec7270c86ea3bf68c02799bba80412e50bf117b1"
     },
     {
       "path": ".claude/skills/office-environment-diagnostics/agents/openai.yaml",
@@ -484,7 +484,7 @@
     },
     {
       "path": ".claude/skills/power-bi-semantic-model/SKILL.md",
-      "sha256": "1b06faba6331146dd5310513be04f8758749b91a6153230fc9f37aff3271e006"
+      "sha256": "28aef2ea7e67b9e8db163f8646ad79ef4b4a9fb8e427de1c923ab0ef1a6d257d"
     },
     {
       "path": ".claude/skills/power-bi-semantic-model/agents/openai.yaml",
@@ -496,7 +496,7 @@
     },
     {
       "path": ".claude/skills/power-pivot-dax-modeling/SKILL.md",
-      "sha256": "928f41795502e9689b399ceb99b9e534d9651b01e3d46fb4bbdd8ed1db1be117"
+      "sha256": "ceb2d60855475766638598bb4db313cc0db07a8f27520152bd3621e6cbb6768c"
     },
     {
       "path": ".claude/skills/power-pivot-dax-modeling/agents/openai.yaml",
@@ -532,7 +532,7 @@
     },
     {
       "path": ".claude/skills/power-query-m-engineering/SKILL.md",
-      "sha256": "c836b76015a1a3a69ee2289f6c58b42a59fe36db7f83b69d358043f7fd8c7014"
+      "sha256": "f920afa31ab9c657a8e719873a8b3e30d7b8bbdb25eff876a49e50427ff4393a"
     },
     {
       "path": ".claude/skills/power-query-m-engineering/agents/openai.yaml",
@@ -612,7 +612,7 @@
     },
     {
       "path": ".codex-plugin/plugin.json",
-      "sha256": "2b1dcac4ca65a7e6d9fdc21c93bb8a0e565e27253b6113e752401c2d37f89cb6"
+      "sha256": "af277667f992b03ebab496e917fa1a9ad45dc86707dabd854dad70448629a415"
     },
     {
       "path": ".gitattributes",
@@ -648,7 +648,7 @@
     },
     {
       "path": ".opencode/skills/excel-ado-sql-data-access/SKILL.md",
-      "sha256": "7c6304295e3c3b7aa714cda9e0735e2c97a64d3a15146fb351bb2792b81fdc16"
+      "sha256": "08fd37548c541de09c9c9cdd918194924f251bf34d361f3f6e6d1a426ba83b3f"
     },
     {
       "path": ".opencode/skills/excel-ado-sql-data-access/agents/openai.yaml",
@@ -676,7 +676,7 @@
     },
     {
       "path": ".opencode/skills/excel-bi-router/SKILL.md",
-      "sha256": "89c0bf178573fb70e429e9c3780c7102b8351df07838196ef836495b8684976f"
+      "sha256": "43c3a2817ea2ed9969250a99916aa8e7e5d5d70a966489bbecf03b4673483510"
     },
     {
       "path": ".opencode/skills/excel-bi-router/agents/openai.yaml",
@@ -688,7 +688,7 @@
     },
     {
       "path": ".opencode/skills/excel-deliverable-publisher/SKILL.md",
-      "sha256": "b157e45b416b7e2ff02b5a4c49e31b8608c7bd543a318250d6775a894292667f"
+      "sha256": "68f03fe7ee3bc5e60a7004b3bd06a9b97c313151e5ab61261bd992e1d428d21f"
     },
     {
       "path": ".opencode/skills/excel-deliverable-publisher/agents/openai.yaml",
@@ -700,7 +700,7 @@
     },
     {
       "path": ".opencode/skills/excel-report-builder/SKILL.md",
-      "sha256": "6c73050ef1a665f4f5e41c3524a635c6caf41b58309bc0ebcfa6dfcc1372fb5a"
+      "sha256": "4c733fa04eed4c643c8de510ff106984f217dd580cc84b7289e82d1c9d2b1cb5"
     },
     {
       "path": ".opencode/skills/excel-report-builder/agents/openai.yaml",
@@ -712,7 +712,7 @@
     },
     {
       "path": ".opencode/skills/excel-testing-fixtures/SKILL.md",
-      "sha256": "d01af52bc4e0db30f7bd7191b659c54ba4026c81e669bfbe2a13d1e4932103a8"
+      "sha256": "44e1897bb8f6cfdaafdab33a15c49b0c7d5227c43a929e6cab9ed7ae90fb3745"
     },
     {
       "path": ".opencode/skills/excel-testing-fixtures/agents/openai.yaml",
@@ -724,7 +724,7 @@
     },
     {
       "path": ".opencode/skills/excel-vba-workbook-engineering/SKILL.md",
-      "sha256": "26db6df03b2acc898893a06bfe2b929e015420fe88a0065923639350a3be053f"
+      "sha256": "ea5105a124cc79855eb3c9b6d4972094ce027a4c8bc855aa4d07be093becb3fe"
     },
     {
       "path": ".opencode/skills/excel-vba-workbook-engineering/agents/openai.yaml",
@@ -764,7 +764,7 @@
     },
     {
       "path": ".opencode/skills/excel-workbook-qa-auditor/SKILL.md",
-      "sha256": "e386c7198ee6d035cf77ce10edbbd49b28bdc1b0309a2490193c360bed95e4c5"
+      "sha256": "0b004f1fe92a09fa4876cd640fd476c3ef108c0a62046292d523f7fda8a9c3f5"
     },
     {
       "path": ".opencode/skills/excel-workbook-qa-auditor/agents/openai.yaml",
@@ -776,7 +776,7 @@
     },
     {
       "path": ".opencode/skills/mdx-cubevalue-extraction/SKILL.md",
-      "sha256": "e2829799f381760f507b32930c5b0f68de7aca4e0921246dc334d41aa9015cc8"
+      "sha256": "5f994db0f594fc6401408a20f2fbda6022c4dca0028689246429e391b2b1d420"
     },
     {
       "path": ".opencode/skills/mdx-cubevalue-extraction/agents/openai.yaml",
@@ -804,7 +804,7 @@
     },
     {
       "path": ".opencode/skills/office-environment-diagnostics/SKILL.md",
-      "sha256": "7cd49bf3695c8edf772ed6e0a3d1fa6d594a461efc439902aa3d5aec34bd5c5f"
+      "sha256": "90f0c5c4ceb701169c43d2ffec7270c86ea3bf68c02799bba80412e50bf117b1"
     },
     {
       "path": ".opencode/skills/office-environment-diagnostics/agents/openai.yaml",
@@ -816,7 +816,7 @@
     },
     {
       "path": ".opencode/skills/power-bi-semantic-model/SKILL.md",
-      "sha256": "1b06faba6331146dd5310513be04f8758749b91a6153230fc9f37aff3271e006"
+      "sha256": "28aef2ea7e67b9e8db163f8646ad79ef4b4a9fb8e427de1c923ab0ef1a6d257d"
     },
     {
       "path": ".opencode/skills/power-bi-semantic-model/agents/openai.yaml",
@@ -828,7 +828,7 @@
     },
     {
       "path": ".opencode/skills/power-pivot-dax-modeling/SKILL.md",
-      "sha256": "928f41795502e9689b399ceb99b9e534d9651b01e3d46fb4bbdd8ed1db1be117"
+      "sha256": "ceb2d60855475766638598bb4db313cc0db07a8f27520152bd3621e6cbb6768c"
     },
     {
       "path": ".opencode/skills/power-pivot-dax-modeling/agents/openai.yaml",
@@ -864,7 +864,7 @@
     },
     {
       "path": ".opencode/skills/power-query-m-engineering/SKILL.md",
-      "sha256": "c836b76015a1a3a69ee2289f6c58b42a59fe36db7f83b69d358043f7fd8c7014"
+      "sha256": "f920afa31ab9c657a8e719873a8b3e30d7b8bbdb25eff876a49e50427ff4393a"
     },
     {
       "path": ".opencode/skills/power-query-m-engineering/agents/openai.yaml",
@@ -956,11 +956,11 @@
     },
     {
       "path": "README.md",
-      "sha256": "032d4ee1221708fe0cc32b76ed2173d57b91f958ff9a0da0fa1fdc62693badfa"
+      "sha256": "52bf318e53b05250eacda5a73ae4b1a71224b00dabb153ce56c5b2f9a021b349"
     },
     {
       "path": "README.zh-CN.md",
-      "sha256": "f2135e02443bc51a60318216f6f5ef8ba0f708d8a3edcd3e88d2044962da79a7"
+      "sha256": "675bd070c403aa26781bea2dd3d88dccb2dd51579427fdee749f5ba405795483"
     },
     {
       "path": "SECURITY.md",
@@ -1016,7 +1016,7 @@
     },
     {
       "path": "docs/current-status.md",
-      "sha256": "1bc64e3c86db9cb86120f8300983c98b8a32cf240101d111d9c1a4ddfaef154c"
+      "sha256": "fbaf10953d463164a311a16e5a88fad6f781f04bd08ec085e75426973a70fbd6"
     },
     {
       "path": "docs/distribution-checklist.md",
@@ -1048,11 +1048,11 @@
     },
     {
       "path": "docs/intro.html",
-      "sha256": "93658ee008a111edd4867574ad886881c3a0e93b28f8587f1620b42447aac5e8"
+      "sha256": "baf3afba5aa1ca3c9bff0f2fd919dc46a8a32a47be3eac07936ebe33bf887368"
     },
     {
       "path": "docs/intro.zh-CN.html",
-      "sha256": "07dc97fd47cb4e7ec22dfd0612ce005a1e15c1d7f482649a28bbb2c756aeb989"
+      "sha256": "410e1329219fab373eaf208d055876841a34c07e52e79bb8ea1ee1ef04789912"
     },
     {
       "path": "docs/maintenance-goals.en-US.md",
@@ -1108,7 +1108,7 @@
     },
     {
       "path": "docs/release-notes.en-US.md",
-      "sha256": "c18ab1911daa605dba33542b3ef1170cadd28e8e0e1fd2dfb3d0dbfb5a7a2a92"
+      "sha256": "7a823e262d1e87afc377e7f438ebe2b09a6e56f1b1eac25721c3141186f2c3ef"
     },
     {
       "path": "docs/release-notes.md",
@@ -1116,7 +1116,7 @@
     },
     {
       "path": "docs/release-notes.zh-CN.md",
-      "sha256": "6e2c4f2ee6aa1b1bc506398916aa0ae1c418ee220ba74d8111b756d634089304"
+      "sha256": "3cd792c763549a2fbdfd07f548fc479020ea978d76417b1063c91bb5b97393c1"
     },
     {
       "path": "docs/repository-governance-goals.en-US.md",
@@ -1152,7 +1152,7 @@
     },
     {
       "path": "docs/task-recipes.md",
-      "sha256": "a31b2347575338c6943a99a5186bec4d5a2bdcf538196399aa6ace3138a849c5"
+      "sha256": "578b6daed07489d93c1c01b4c570f514531b3214152ef584e63b0bc86f45d15f"
     },
     {
       "path": "docs/terms-of-service.md",
@@ -1232,7 +1232,7 @@
     },
     {
       "path": "skills/excel-ado-sql-data-access/SKILL.md",
-      "sha256": "7c6304295e3c3b7aa714cda9e0735e2c97a64d3a15146fb351bb2792b81fdc16"
+      "sha256": "08fd37548c541de09c9c9cdd918194924f251bf34d361f3f6e6d1a426ba83b3f"
     },
     {
       "path": "skills/excel-ado-sql-data-access/agents/openai.yaml",
@@ -1260,7 +1260,7 @@
     },
     {
       "path": "skills/excel-bi-router/SKILL.md",
-      "sha256": "89c0bf178573fb70e429e9c3780c7102b8351df07838196ef836495b8684976f"
+      "sha256": "43c3a2817ea2ed9969250a99916aa8e7e5d5d70a966489bbecf03b4673483510"
     },
     {
       "path": "skills/excel-bi-router/agents/openai.yaml",
@@ -1272,7 +1272,7 @@
     },
     {
       "path": "skills/excel-deliverable-publisher/SKILL.md",
-      "sha256": "b157e45b416b7e2ff02b5a4c49e31b8608c7bd543a318250d6775a894292667f"
+      "sha256": "68f03fe7ee3bc5e60a7004b3bd06a9b97c313151e5ab61261bd992e1d428d21f"
     },
     {
       "path": "skills/excel-deliverable-publisher/agents/openai.yaml",
@@ -1284,7 +1284,7 @@
     },
     {
       "path": "skills/excel-report-builder/SKILL.md",
-      "sha256": "6c73050ef1a665f4f5e41c3524a635c6caf41b58309bc0ebcfa6dfcc1372fb5a"
+      "sha256": "4c733fa04eed4c643c8de510ff106984f217dd580cc84b7289e82d1c9d2b1cb5"
     },
     {
       "path": "skills/excel-report-builder/agents/openai.yaml",
@@ -1296,7 +1296,7 @@
     },
     {
       "path": "skills/excel-testing-fixtures/SKILL.md",
-      "sha256": "d01af52bc4e0db30f7bd7191b659c54ba4026c81e669bfbe2a13d1e4932103a8"
+      "sha256": "44e1897bb8f6cfdaafdab33a15c49b0c7d5227c43a929e6cab9ed7ae90fb3745"
     },
     {
       "path": "skills/excel-testing-fixtures/agents/openai.yaml",
@@ -1308,7 +1308,7 @@
     },
     {
       "path": "skills/excel-vba-workbook-engineering/SKILL.md",
-      "sha256": "26db6df03b2acc898893a06bfe2b929e015420fe88a0065923639350a3be053f"
+      "sha256": "ea5105a124cc79855eb3c9b6d4972094ce027a4c8bc855aa4d07be093becb3fe"
     },
     {
       "path": "skills/excel-vba-workbook-engineering/agents/openai.yaml",
@@ -1348,7 +1348,7 @@
     },
     {
       "path": "skills/excel-workbook-qa-auditor/SKILL.md",
-      "sha256": "e386c7198ee6d035cf77ce10edbbd49b28bdc1b0309a2490193c360bed95e4c5"
+      "sha256": "0b004f1fe92a09fa4876cd640fd476c3ef108c0a62046292d523f7fda8a9c3f5"
     },
     {
       "path": "skills/excel-workbook-qa-auditor/agents/openai.yaml",
@@ -1360,7 +1360,7 @@
     },
     {
       "path": "skills/mdx-cubevalue-extraction/SKILL.md",
-      "sha256": "e2829799f381760f507b32930c5b0f68de7aca4e0921246dc334d41aa9015cc8"
+      "sha256": "5f994db0f594fc6401408a20f2fbda6022c4dca0028689246429e391b2b1d420"
     },
     {
       "path": "skills/mdx-cubevalue-extraction/agents/openai.yaml",
@@ -1388,7 +1388,7 @@
     },
     {
       "path": "skills/office-environment-diagnostics/SKILL.md",
-      "sha256": "7cd49bf3695c8edf772ed6e0a3d1fa6d594a461efc439902aa3d5aec34bd5c5f"
+      "sha256": "90f0c5c4ceb701169c43d2ffec7270c86ea3bf68c02799bba80412e50bf117b1"
     },
     {
       "path": "skills/office-environment-diagnostics/agents/openai.yaml",
@@ -1400,7 +1400,7 @@
     },
     {
       "path": "skills/power-bi-semantic-model/SKILL.md",
-      "sha256": "1b06faba6331146dd5310513be04f8758749b91a6153230fc9f37aff3271e006"
+      "sha256": "28aef2ea7e67b9e8db163f8646ad79ef4b4a9fb8e427de1c923ab0ef1a6d257d"
     },
     {
       "path": "skills/power-bi-semantic-model/agents/openai.yaml",
@@ -1412,7 +1412,7 @@
     },
     {
       "path": "skills/power-pivot-dax-modeling/SKILL.md",
-      "sha256": "928f41795502e9689b399ceb99b9e534d9651b01e3d46fb4bbdd8ed1db1be117"
+      "sha256": "ceb2d60855475766638598bb4db313cc0db07a8f27520152bd3621e6cbb6768c"
     },
     {
       "path": "skills/power-pivot-dax-modeling/agents/openai.yaml",
@@ -1448,7 +1448,7 @@
     },
     {
       "path": "skills/power-query-m-engineering/SKILL.md",
-      "sha256": "c836b76015a1a3a69ee2289f6c58b42a59fe36db7f83b69d358043f7fd8c7014"
+      "sha256": "f920afa31ab9c657a8e719873a8b3e30d7b8bbdb25eff876a49e50427ff4393a"
     },
     {
       "path": "skills/power-query-m-engineering/agents/openai.yaml",
@@ -1544,7 +1544,7 @@
     },
     {
       "path": "tests/test_skill_trigger_benchmark.py",
-      "sha256": "f68464c50ef20a06cac8201d338647fe68245042416301a256995db36441d0e3"
+      "sha256": "a876b67a653590d18b81b63f2f083ee03364abc73944130eb8ae27a40e3b81b5"
     },
     {
       "path": "tests/test_task3_compatibility_integration.py",
@@ -1552,7 +1552,11 @@
     },
     {
       "path": "tests/test_task5_release_evidence.py",
-      "sha256": "2375629ca22ef3d4d07f14a481df738974a910af6e57abc100210744639c3270"
+      "sha256": "0f9349a1d6104aa6d55eea77d61a1accfcbbb8676e87009ef1a0ca37402c429e"
+    },
+    {
+      "path": "tests/test_v021_release_integration.py",
+      "sha256": "64109c552e8e26d1dbe3c0b6eafe2cd256ad603b113fbe44fafcd4b69d922f80"
     },
     {
       "path": "tools/analyze_measure_rename_impact.py",
@@ -1568,7 +1572,7 @@
     },
     {
       "path": "tools/build_capability_catalog.py",
-      "sha256": "0e02361629fb568d1e11d9f438ba4bb187d4da3ada56576f13f1be3565cfed13"
+      "sha256": "9289ebe0a23f828a3f72a524409cb9acb05beb793ce9d0a90726aa8b634ac4fc"
     },
     {
       "path": "tools/build_completion_readiness_audit.py",
@@ -1760,7 +1764,7 @@
     },
     {
       "path": "tools/run_release_gate.py",
-      "sha256": "59329534ffef96c9e922e3c889007307b5fefe35a13bfd99f24bad8410dcff14"
+      "sha256": "67d27ee99e767b2a68623b13a5c2a2085e7f712f463b3d31ef889aaa4cbeed50"
     },
     {
       "path": "tools/run_release_gate.sh",
@@ -1804,7 +1808,7 @@
     },
     {
       "path": "tools/validate_project_docs.py",
-      "sha256": "5e07ad4bcfb5f6e6b9da928c5f363248c57ec72282919673c5c097f269ffb74e"
+      "sha256": "bff86e6bbb7782a950acbfd92023d3409e84c5fbe7e7b052a156953c11c5edf2"
     },
     {
       "path": "tools/validate_skill_trigger_benchmark.py",

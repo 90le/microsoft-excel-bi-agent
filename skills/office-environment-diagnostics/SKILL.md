@@ -1,6 +1,6 @@
 ---
 name: office-environment-diagnostics
-description: Use when an Excel task asks whether a platform, Office version, local machine, or recipient environment supports Excel COM, VBA project access, Power Query, Data Model, PDF export, ACE/OLEDB, MSOLAP, ADODB, ADOMD, offline operation, or Windows/Linux/macOS/web execution.
+description: Use when checking whether a platform, Office version, machine, or recipient supports Excel COM, VBA, Power Query, Data Model, PDF export, ACE/OLEDB, MSOLAP, ADOMD, offline, Mac, Windows, Linux, or web execution.
 ---
 
 # Office Environment Diagnostics

@@ -1,5 +1,49 @@
 # Release Notes
 
+## v0.2.1 - Trigger Efficiency And Measured Discovery Cost
+
+Release focus: reduce plugin discovery cost and sharpen skill routing without changing the 12 published skill IDs or adding Excel functionality.
+
+### Changed
+
+- Shortened the three manifest starter prompts to at most 110 characters.
+- Replaced all 12 canonical skill descriptions with compact `Use when ...` trigger conditions; skill bodies, routing behavior, IDs, and Excel feature scope are unchanged.
+- Added a 36-case customer-data-free trigger corpus with 24 positive and 12 confusable-negative cases, plus three real plugin-eval benchmark scenarios: `power-query-diagnosis`, `dax-versus-environment`, and `delivery-boundary`. Their inputs and generated responses are synthetic and do not prove real task success; observed usage is separate evidence.
+- Added the trigger validator to the structural release gate and capability catalog.
+- Synchronized generated `skills/`, `.claude/skills/`, and `.opencode/skills/` mirrors from `.agents/skills/`.
+- Bumped the plugin manifest to `0.2.1+codex.20260714`.
+
+### Measured Comparison
+
+Static plugin-eval analysis of a newly staged runtime measured `trigger_cost_tokens` at 682 versus 1,161 for v0.2.0, a 41.26% decrease, while `invoke_cost_tokens` decreased from 15,365 to 14,886 (-479). These are synthetic/generated static estimates and do not prove real task success; observed usage is separate evidence.
+
+### Reproduce The Static Comparison
+
+```powershell
+$pluginEval = '<path-to-plugin-eval.js>'
+$runtime = Join-Path $env:TEMP 'excel-bi-v021-runtime'
+$before = Join-Path $env:TEMP 'excel-bi-v020-plugin-eval.json'
+$after = Join-Path $env:TEMP 'excel-bi-v021-plugin-eval.json'
+$compare = Join-Path $env:TEMP 'excel-bi-v020-v021-compare.md'
+python tools/build_runtime_package.py --project-root . --out-dir $runtime --require-pass
+node $pluginEval analyze $runtime --format json --output $after
+node $pluginEval compare $before $after --format markdown --output $compare
+```
+
+Keep the baseline, staged runtime, analysis JSON, comparison report, benchmark results, and observed-usage logs under the system temporary directory. See `docs/task-recipes.md` for the trigger validator and the three-scenario benchmark command.
+
+### Validation
+
+```bash
+python -m unittest discover -s tests -v
+python tools/validate-skills.py .
+python tools/run_release_gate.py --project-root . --profile structural
+```
+
+### Boundary
+
+The trigger corpus and three benchmark scenarios use sanitized synthetic artifacts. Generated scenario responses do not prove real task success, and static token estimates are not observed usage. Real workbook success requires separately observed runtime and representative workbook-behavior evidence.
+
 ## v0.2.0 - Capability-Aware Excel Compatibility And Compact Runtime
 
 Release focus: make compatibility claims evidence-based across legacy, desktop, offline, Mac/web, Microsoft 365, and recipient environments while reducing the installed Codex runtime payload.
