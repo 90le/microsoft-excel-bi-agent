@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/microsoft-excel-bi-agent/schemas/excel-compatibility-report.schema.json",
+  "title": "Excel Compatibility Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "kind",
+    "status",
+    "generatedAt",
+    "source",
+    "environment",
+    "summary",
+    "capabilities",
+    "operations",
+    "requirements",
+    "boundaries",
+    "probeErrors",
+    "errors"
+  ],
+  "properties": {
+    "schemaVersion": {"const": "1.0"},
+    "kind": {"const": "excel-compatibility-report"},
+    "status": {"enum": ["pass", "fail"]},
+    "generatedAt": {"type": "string", "format": "date-time"},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["probeJson", "probeSchemaVersion", "profile"],
+      "properties": {
+        "probeJson": {"type": "string"},
+        "probeSchemaVersion": {"type": "string"},
+        "profile": {"type": "string"}
+      }
+    },
+    "environment": {"type": "object"},
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["passCount", "failCount", "skipCount", "errorCount", "requiredCount", "unmetRequiredCount"],
+      "properties": {
+        "passCount": {"type": "integer", "minimum": 0},
+        "failCount": {"type": "integer", "minimum": 0},
+        "skipCount": {"type": "integer", "minimum": 0},
+        "errorCount": {"type": "integer", "minimum": 0},
+        "requiredCount": {"type": "integer", "minimum": 0},
+        "unmetRequiredCount": {"type": "integer", "minimum": 0}
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": {"$ref": "#/$defs/capability"}
+    },
+    "operations": {
+      "type": "object",
+      "additionalProperties": {"$ref": "#/$defs/operation"}
+    },
+    "requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requested", "unmet"],
+      "properties": {
+        "requested": {"type": "array", "items": {"type": "string"}},
+        "unmet": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "boundaries": {"type": "array", "items": {"type": "string"}},
+    "probeErrors": {"type": "array", "items": {"type": "string"}},
+    "errors": {"type": "array", "items": {"type": "string"}}
+  },
+  "$defs": {
+    "capability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "evidenceLevel", "detail", "errorCategory", "error"],
+      "properties": {
+        "status": {"enum": ["pass", "fail", "skip", "error"]},
+        "evidenceLevel": {"enum": ["registration", "activation", "smoke", "not-tested"]},
+        "detail": {"type": "string"},
+        "errorCategory": {"type": "string"},
+        "error": {"type": "string"}
+      }
+    },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["readiness", "requires", "missing"],
+      "properties": {
+        "readiness": {"enum": ["ready", "blocked", "unknown", "requires-user-input"]},
+        "requires": {"type": "array", "items": {"type": "string"}},
+        "missing": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}
