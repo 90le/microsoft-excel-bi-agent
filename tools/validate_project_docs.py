@@ -345,8 +345,8 @@ def validate(project_root: Path) -> dict[str, Any]:
             errors.append(f"release notes do not document public check: {command}")
 
     for path, text in [("docs/release-notes.en-US.md", release_notes_en), ("docs/release-notes.zh-CN.md", release_notes_zh)]:
-        if "v0.1.5" not in text or "0.1.5+codex.20260623175347" not in text:
-            errors.append(f"{path} does not document the v0.1.5 release and plugin version")
+        if "v0.2.0" not in text or "0.2.0+codex.20260714" not in text:
+            errors.append(f"{path} does not document the v0.2.0 release and plugin version")
 
     for command in PUBLIC_CHECK_COMMANDS:
         if command not in distribution_doc.replace("\\", "/"):

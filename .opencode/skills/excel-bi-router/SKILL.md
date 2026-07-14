@@ -1,6 +1,6 @@
 ---
 name: excel-bi-router
-description: Route Microsoft Excel BI tasks to the correct specialized skill for Excel workbooks, VBA, Power Query M, Power Pivot DAX, MDX/CUBE formulas, ADO/SQL data access, deliverable publishing, workbook QA, Office environment diagnostics, Excel report building, Power BI semantic model review, or sanitized testing fixtures. Use when a user asks broad or mixed Excel automation questions, mentions multiple technologies, or the correct Excel BI layer is unclear.
+description: Use when a Microsoft Excel BI request is broad or mixed, spans multiple technologies, asks about platform or version compatibility, or has an unclear workbook, VBA, Power Query, DAX, MDX/CUBE, ADO/SQL, delivery, QA, environment, report, semantic-model, or fixture layer.
 ---
 
 # Excel BI Router
@@ -13,14 +13,14 @@ Use this skill first for ambiguous or mixed Excel BI work. Identify the actual l
 
 | User signal | Use skill |
 |---|---|
-| `.xlsx`, `.xlsm`, buttons, macros, sheet formatting, hidden sheets, Excel COM | `excel-vba-workbook-engineering` |
+| `.xlsx`, `.xlsm`, buttons, macros, sheet formatting, hidden sheets, or implementation against an already-confirmed Excel runtime | `excel-vba-workbook-engineering` |
 | Power Query, M, query editor, refresh error, `Table.*`, `Excel.Workbook`, folder combine | `power-query-m-engineering` |
 | Power Pivot, Data Model, relationships, DAX, measure, `CALCULATE`, filter context | `power-pivot-dax-modeling` |
 | `CUBEVALUE`, `CUBEMEMBER`, `ThisWorkbookDataModel`, MDX member, cube formula | `mdx-cubevalue-extraction` |
 | ADO, OLEDB, ADOMD, SQL in VBA, connection string, query workbook table/model | `excel-ado-sql-data-access` |
 | Publish, clean copy, pure `.xlsx`, values-only, remove formulas/links/queries/model, delete config sheets | `excel-deliverable-publisher` |
 | QA, audit, review, delivery readiness, workbook risks, formula quality, hidden/process sheets | `excel-workbook-qa-auditor` |
-| Office environment, Excel COM, ACE/OLEDB, MSOLAP, ADOMD, bitness, provider drift, Trust Center | `office-environment-diagnostics` |
+| Compatibility, supported platform/version, Windows/Linux/macOS/web, Excel COM availability, Office environment, bitness, provider drift, or Trust Center | `office-environment-diagnostics` |
 | Report workbook, dashboard, layout, chart, pivot, client-facing sheet, polished output | `excel-report-builder` |
 | Power BI, PBIX, semantic model, TMDL, XMLA, Fabric, calculation groups, DAX portability | `power-bi-semantic-model` |
 | Fixture, smoke test, regression, sanitized workbook, sample workbook, forward-test prompts | `excel-testing-fixtures` |
@@ -28,6 +28,18 @@ Use this skill first for ambiguous or mixed Excel BI work. Identify the actual l
 ## Scripted Routing
 
 Use `scripts/route_excel_bi_task.py --text "<task>" [--out-json <path>] [--out-md <path>]` when the first step should be machine-readable or reviewed by another agent. The script emits the selected layer, skill, matched keywords, validation boundary, and recommended package scripts. Treat it as a first-pass routing aid, not as proof of workbook behavior.
+
+## Compatibility First
+
+Route platform, Office-version, offline, Excel COM, Linux, macOS, or web compatibility questions to `office-environment-diagnostics` before choosing an implementation skill. Keep the execution environment—the machine running the agent and probe—separate from the target environment where the workbook must be authored, automated, consumed, or delivered.
+
+Use three evidence levels:
+
+- **Structural evidence**: package, OpenXML, formulas, and source inspection without claiming Excel runtime behavior.
+- **Runtime capability evidence**: local Office, COM, provider, and generated-fixture smoke results.
+- **Workbook behavior evidence**: task-specific refresh, calculation, macro, model, endpoint, or rendered-output proof from the target workbook and host.
+
+DAX or Power Pivot compatibility remains a `power-pivot-dax-modeling` task when the question concerns formula/function support rather than host availability.
 
 ## Mixed Task Order
 

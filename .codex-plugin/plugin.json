@@ -1,6 +1,6 @@
 {
   "name": "microsoft-excel-bi-agent-pack",
-  "version": "0.1.5+codex.20260623175347",
+  "version": "0.2.0+codex.20260714",
   "description": "Cross-agent skills, task profiles, references, regression cases, and scripts for Microsoft Excel BI workbooks, VBA, Power Query M, Power Pivot DAX, MDX/CUBE formulas, ADO/SQL automation, deliverable publishing, workbook QA, Office diagnostics, report building, semantic model review, and sanitized fixtures.",
   "author": {
     "name": "Qiu Binbin (丘彬彬)"
@@ -45,7 +45,7 @@
     "defaultPrompt": [
       "Inspect this Excel workbook, route it to the right Excel BI skill, and give me a risk-ranked edit and validation plan.",
       "Diagnose this VBA, Power Query, DAX, MDX/CUBE, or ADO/SQL issue and separate structural evidence from Windows Excel runtime proof.",
-      "Create or audit a client-ready Excel deliverable, preserve the source, and verify formulas, links, queries, Data Model, hidden sheets, and visual QA."
+      "Publish or audit a client-ready Excel deliverable, preserve the source, and verify formulas, links, queries, Data Model, hidden sheets, and visual QA."
     ]
   }
 }

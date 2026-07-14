@@ -17,6 +17,8 @@ It is built for the messy Excel work that generic coding agents usually mishandl
 
 Maintained by **Qiu Binbin (丘彬彬)**. WeChat: **binstudy**. Blog: **https://90le.cn**.
 
+Current release: **v0.2.0** (`0.2.0+codex.20260714`). This release adds capability-first compatibility evidence and a compact allowlisted Codex runtime package.
+
 ## Use It When
 
 - An AI agent needs to inspect or modify a real workbook with formulas, VBA, Power Query, Data Model, CUBE formulas, links, or hidden process sheets.
@@ -105,6 +107,16 @@ Full runtime validation requires Windows desktop Excel:
 ```powershell
 python tools\run_release_gate.py --project-root .
 ```
+
+Build the compact runtime package without development docs or duplicated agent mirrors:
+
+```powershell
+python tools\build_runtime_package.py --project-root . --out-dir "$env:TEMP\excel-bi-runtime" --zip "$env:TEMP\excel-bi-runtime.zip" --require-pass
+```
+
+## Compatibility Evidence
+
+Compatibility is target-specific. Name the authoring, automation, consumer, and recipient environments, then report one of three levels: **structural evidence**, **runtime capability evidence**, or **workbook behavior evidence**. Windows desktop Excel can provide COM and provider capability probes; macOS, Excel for web, Linux, offline, legacy Office, and third-party spreadsheet targets require their own host-specific evidence. See [Compatibility boundaries](docs/compatibility.md) for the version, bitness, confidence, and target matrix.
 
 ## Included Skills
 

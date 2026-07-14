@@ -773,10 +773,10 @@ def real_sanitized_case_regression_check(project_root: Path) -> CheckResult:
         failures: list[str] = []
         if report.get("status") != PASS:
             failures.append(f"status={report.get('status')}")
-        if int(report.get("caseCount", 0) or 0) < 6:
+        if int(report.get("caseCount", 0) or 0) < 7:
             failures.append(f"caseCount={report.get('caseCount')}")
         covered_layers = set(report.get("coveredLayers") or [])
-        expected_layers = {"power-query", "dax", "cube-mdx", "vba", "deliverable", "visual-qa"}
+        expected_layers = {"power-query", "dax", "cube-mdx", "vba", "deliverable", "environment", "visual-qa"}
         missing_layers = sorted(expected_layers - covered_layers)
         if missing_layers:
             failures.append(f"missingLayers={','.join(missing_layers)}")
@@ -784,7 +784,7 @@ def real_sanitized_case_regression_check(project_root: Path) -> CheckResult:
         return CheckResult(
             name=name,
             status=PASS if not failures else FAIL,
-            detail="6 sanitized regression case specs cover Power Query, DAX, CUBE/MDX, VBA, deliverable, and visual QA layers"
+            detail="7 sanitized regression case specs cover Power Query, DAX, CUBE/MDX, VBA, deliverable, environment, and visual QA layers"
             if not failures
             else "; ".join(failures),
             stdout=result.stdout,
@@ -1029,6 +1029,311 @@ def task_profile_compatibility_fixture_check(project_root: Path) -> CheckResult:
             else "; ".join(failures),
             stdout="\n".join(item for item in outputs if item),
             metadata={"capturedCommands": captured_names, "liveCommands": live_names},
+        )
+
+
+def excel_compatibility_fixture_report_check(project_root: Path) -> CheckResult:
+    name = "Excel compatibility fixture/report smoke"
+    fixture_script = project_root / "tools" / "create_excel_capability_fixture.py"
+    report_script = project_root / "tools" / "build_excel_compatibility_report.py"
+    missing = [str(path) for path in [fixture_script, report_script] if not path.is_file()]
+    if missing:
+        return CheckResult(name=name, status=FAIL, detail=f"script not found: {', '.join(missing)}")
+
+    with tempfile.TemporaryDirectory(prefix="excel_compatibility_gate_") as tmp:
+        tmp_dir = Path(tmp)
+        fixture_dir = tmp_dir / "fixtures"
+        manifest_json = tmp_dir / "fixture-manifest.json"
+        fixture_result = run_command(
+            [
+                sys.executable,
+                str(fixture_script),
+                "--out-dir",
+                str(fixture_dir),
+                "--out-json",
+                str(manifest_json),
+            ],
+            project_root,
+            f"{name}: generate fixtures",
+        )
+        if fixture_result.status != PASS:
+            fixture_result.name = name
+            return fixture_result
+
+        try:
+            manifest = json.loads(manifest_json.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            return CheckResult(name=name, status=FAIL, detail=f"cannot read fixture manifest: {exc}")
+
+        cases = manifest.get("cases", {})
+        expected = manifest.get("expected", {})
+        if not isinstance(cases, dict) or not isinstance(expected, dict):
+            return CheckResult(name=name, status=FAIL, detail="fixture manifest cases/expected must be objects")
+
+        expected_case_ids = {"allSupported", "coreBlocked", "partialEvidence", "malformedContract"}
+        failures: list[str] = []
+        reports: dict[str, dict[str, object]] = {}
+        if set(cases) != expected_case_ids:
+            failures.append(f"fixture cases={sorted(cases)}")
+
+        for case_id in sorted(expected_case_ids & set(cases)):
+            report_json = tmp_dir / f"{case_id}-report.json"
+            report_md = tmp_dir / f"{case_id}-report.md"
+            expected_status = str(expected.get(case_id, {}).get("status", ""))
+            result = run_command(
+                [
+                    sys.executable,
+                    str(report_script),
+                    "--probe-json",
+                    str(cases[case_id]),
+                    "--out-json",
+                    str(report_json),
+                    "--out-md",
+                    str(report_md),
+                    "--require-pass",
+                ],
+                project_root,
+                f"{name}: {case_id}",
+                ok_codes={0} if expected_status == PASS else {1},
+            )
+            if result.status != PASS:
+                failures.append(f"{case_id} command: {result.detail}")
+                continue
+            try:
+                report = json.loads(report_json.read_text(encoding="utf-8"))
+                markdown = report_md.read_text(encoding="utf-8")
+            except (OSError, json.JSONDecodeError) as exc:
+                failures.append(f"{case_id} output: {exc}")
+                continue
+            reports[case_id] = report
+            if report.get("kind") != "excel-compatibility-report":
+                failures.append(f"{case_id} kind={report.get('kind')}")
+            if report.get("status") != expected_status:
+                failures.append(f"{case_id} status={report.get('status')} expected={expected_status}")
+            if "# Excel Compatibility Report" not in markdown or "## Boundaries" not in markdown:
+                failures.append(f"{case_id} Markdown contract missing")
+
+        supported = reports.get("allSupported", {})
+        blocked = reports.get("coreBlocked", {})
+        partial = reports.get("partialEvidence", {})
+        malformed = reports.get("malformedContract", {})
+        if supported.get("summary", {}).get("passCount") != 11:
+            failures.append("allSupported passCount is not 11")
+        if supported.get("operations", {}).get("workbook-automation", {}).get("readiness") != "ready":
+            failures.append("allSupported workbook automation is not ready")
+        if blocked.get("operations", {}).get("workbook-automation", {}).get("readiness") != "blocked":
+            failures.append("coreBlocked workbook automation is not blocked")
+        if partial.get("operations", {}).get("workbook-automation", {}).get("readiness") != "unknown":
+            failures.append("partialEvidence workbook automation is not unknown")
+        if not malformed.get("errors"):
+            failures.append("malformedContract did not report contract errors")
+
+        return CheckResult(
+            name=name,
+            status=PASS if not failures else FAIL,
+            detail="four synthetic probes produced the expected compatibility reports and readiness states"
+            if not failures
+            else "; ".join(failures),
+            metadata={
+                "fixtureCount": len(cases),
+                "reportCount": len(reports),
+                "caseStatuses": {case_id: report.get("status") for case_id, report in reports.items()},
+            },
+        )
+
+
+def runtime_package_fixture_check(project_root: Path) -> CheckResult:
+    name = "Compact runtime package smoke"
+    script = project_root / "tools" / "build_runtime_package.py"
+    if not script.is_file():
+        return CheckResult(name=name, status=FAIL, detail=f"script not found: {script}")
+
+    with tempfile.TemporaryDirectory(prefix="excel_runtime_package_gate_") as tmp:
+        tmp_dir = Path(tmp)
+        out_dir = tmp_dir / "runtime"
+        zip_path = tmp_dir / "runtime.zip"
+        result = run_command(
+            [
+                sys.executable,
+                str(script),
+                "--project-root",
+                str(project_root),
+                "--out-dir",
+                str(out_dir),
+                "--zip",
+                str(zip_path),
+                "--require-pass",
+            ],
+            project_root,
+            name,
+        )
+        if result.status != PASS:
+            return result
+        try:
+            manifest = json.loads((out_dir / "runtime-package-manifest.json").read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            return CheckResult(name=name, status=FAIL, detail=f"cannot read runtime manifest: {exc}")
+
+        paths = [str(item.get("path", "")) for item in manifest.get("files", []) if isinstance(item, dict)]
+        failures: list[str] = []
+        required = {
+            ".codex-plugin/plugin.json",
+            "LICENSE",
+            "README.md",
+            "fixtures/real-sanitized-cases/manifest.json",
+            "fixtures/real-sanitized-cases/cases/excel-capability-routing.json",
+        }
+        missing = sorted(required - set(paths))
+        if missing:
+            failures.append(f"missing runtime paths={missing}")
+        forbidden_prefixes = (".agents/", ".claude/", ".opencode/", ".git/", "docs/", "prompts/")
+        forbidden = [path for path in paths if path.startswith(forbidden_prefixes)]
+        if forbidden:
+            failures.append(f"forbidden runtime paths={forbidden[:5]}")
+        if manifest.get("status") != PASS:
+            failures.append(f"manifest status={manifest.get('status')}")
+        if not zip_path.is_file():
+            failures.append("runtime zip missing")
+        if int(manifest.get("totalBytes") or 0) >= int(manifest.get("sourceBytes") or 0):
+            failures.append("runtime package did not reduce source size")
+
+        return CheckResult(
+            name=name,
+            status=PASS if not failures else FAIL,
+            detail="allowlisted runtime package, manifest hashes, compatibility fixture, and deterministic zip verified"
+            if not failures
+            else "; ".join(failures),
+            stdout=result.stdout,
+            stderr=result.stderr,
+            metadata={
+                "fileCount": manifest.get("fileCount"),
+                "totalBytes": manifest.get("totalBytes"),
+                "sourceBytes": manifest.get("sourceBytes"),
+                "reductionPercent": manifest.get("reductionPercent"),
+                "mirrorStatus": manifest.get("skillMirror", {}).get("status"),
+                "paths": paths,
+            },
+        )
+
+
+def plugin_manifest_release_check(project_root: Path) -> CheckResult:
+    name = "Plugin release manifest and starter prompts"
+    expected_version = "0.2.0+codex.20260714"
+    try:
+        plugin = read_plugin_json(project_root)
+    except (OSError, json.JSONDecodeError) as exc:
+        return CheckResult(name=name, status=FAIL, detail=f"cannot read plugin manifest: {exc}")
+
+    interface = plugin.get("interface", {})
+    prompts = interface.get("defaultPrompt", []) if isinstance(interface, dict) else []
+    failures: list[str] = []
+    if plugin.get("version") != expected_version:
+        failures.append(f"version={plugin.get('version')} expected={expected_version}")
+    if not isinstance(prompts, list) or len(prompts) != 3 or not all(isinstance(item, str) and item.strip() for item in prompts):
+        failures.append("defaultPrompt must contain exactly three non-empty strings")
+        prompts = prompts if isinstance(prompts, list) else []
+    normalized = [str(item).casefold() for item in prompts]
+    contracts = [
+        ("inspect/route", ("inspect", "route")),
+        ("diagnose/evidence", ("diagnose", "evidence")),
+        ("publish/verify", ("publish", "verif")),
+    ]
+    for index, (label, terms) in enumerate(contracts):
+        text = normalized[index] if index < len(normalized) else ""
+        if not all(term in text for term in terms):
+            failures.append(f"starter prompt {index + 1} does not cover {label}")
+
+    return CheckResult(
+        name=name,
+        status=PASS if not failures else FAIL,
+        detail="v0.2.0 cachebuster and exactly three inspect/diagnose/publish starter prompts verified"
+        if not failures
+        else "; ".join(failures),
+        metadata={"version": plugin.get("version"), "promptCount": len(prompts)},
+    )
+
+
+def excel_capability_live_probe_check(project_root: Path, ps_exe: str | None) -> CheckResult:
+    name = "Windows Excel capability live probe"
+    if platform.system().lower() != "windows":
+        return CheckResult(name=name, status=SKIP, detail="not Windows")
+    if not ps_exe:
+        return CheckResult(name=name, status=SKIP, detail="PowerShell not found")
+    probe_script = project_root / "tools" / "probe_excel_capabilities.ps1"
+    report_script = project_root / "tools" / "build_excel_compatibility_report.py"
+    missing = [str(path) for path in [probe_script, report_script] if not path.is_file()]
+    if missing:
+        return CheckResult(name=name, status=FAIL, detail=f"script not found: {', '.join(missing)}")
+
+    with tempfile.TemporaryDirectory(prefix="excel_capability_live_gate_") as tmp:
+        tmp_dir = Path(tmp)
+        probe_json = tmp_dir / "probe.json"
+        report_json = tmp_dir / "report.json"
+        report_md = tmp_dir / "report.md"
+        probe_result = run_command(
+            [
+                ps_exe,
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-File",
+                str(probe_script),
+                "-OutJson",
+                str(probe_json),
+                "-Profile",
+                "runtime",
+            ],
+            project_root,
+            f"{name}: probe",
+        )
+        if probe_result.status != PASS:
+            probe_result.name = name
+            return probe_result
+        report_result = run_command(
+            [
+                sys.executable,
+                str(report_script),
+                "--probe-json",
+                str(probe_json),
+                "--out-json",
+                str(report_json),
+                "--out-md",
+                str(report_md),
+                "--require-pass",
+            ],
+            project_root,
+            f"{name}: report",
+        )
+        if report_result.status != PASS:
+            report_result.name = name
+            return report_result
+        try:
+            probe = json.loads(probe_json.read_text(encoding="utf-8-sig"))
+            report = json.loads(report_json.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            return CheckResult(name=name, status=FAIL, detail=f"cannot read live capability evidence: {exc}")
+
+        capabilities = report.get("capabilities", {})
+        excel_activation = capabilities.get("excel.com.activation", {}) if isinstance(capabilities, dict) else {}
+        status = PASS if excel_activation.get("status") == PASS else SKIP
+        detail = (
+            "live runtime probe contract passed and Excel COM capability evidence was captured"
+            if status == PASS
+            else "live probe contract passed; Excel COM is unavailable or blocked on this machine"
+        )
+        return CheckResult(
+            name=name,
+            status=status,
+            detail=detail,
+            stdout="\n".join(item for item in [probe_result.stdout, report_result.stdout] if item),
+            stderr="\n".join(item for item in [probe_result.stderr, report_result.stderr] if item),
+            metadata={
+                "profile": probe.get("probe", {}).get("profile"),
+                "syntheticFixture": probe.get("probe", {}).get("syntheticFixture"),
+                "environment": report.get("environment", {}),
+                "summary": report.get("summary", {}),
+                "excelComStatus": excel_activation.get("status"),
+            },
         )
 
 
@@ -6511,6 +6816,9 @@ def main() -> int:
     checks.append(powershell_parse_check(project_root, ps_exe))
     checks.append(bash_syntax_check(project_root, bash_exe))
     checks.append(portable_structural_wrapper_fixture_check(project_root, bash_exe))
+    checks.append(plugin_manifest_release_check(project_root))
+    checks.append(excel_compatibility_fixture_report_check(project_root))
+    checks.append(runtime_package_fixture_check(project_root))
     checks.append(run_command([sys.executable, str(project_root / "tools" / "validate_project_docs.py"), "--project-root", str(project_root)], project_root, "project documentation consistency validation"))
     checks.append(run_command([sys.executable, str(project_root / "tools" / "validate_github_community_health.py"), "--project-root", str(project_root)], project_root, "GitHub community health validation"))
     checks.append(run_command([sys.executable, str(project_root / "tools" / "validate_task_recipes.py"), "--project-root", str(project_root)], project_root, "task recipe documentation validation"))
@@ -6564,6 +6872,7 @@ def main() -> int:
     checks.append(pycache_check(project_root))
 
     if args.profile == "full":
+        checks.append(excel_capability_live_probe_check(project_root, ps_exe))
         checks.append(power_query_live_refresh_fixture_check(project_root, ps_exe))
         checks.append(excel_workbook_com_inventory_fixture_check(project_root, ps_exe))
         checks.append(visual_qa_render_evidence_fixture_check(project_root, ps_exe))

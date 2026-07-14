@@ -1,0 +1,33 @@
+{
+  "id": "excel-capability-routing",
+  "title": "Capability-first routing across Excel target environments",
+  "layer": "environment",
+  "evidenceMode": "sanitized-spec",
+  "originSignal": "A request asks whether Excel automation, Power Query, VBA, or a workbook can run on a named platform, Office version, bitness, offline host, or recipient machine.",
+  "riskPattern": "Routing directly to implementation can mistake structural evidence for runtime support, transfer evidence between different machines, or send DAX formula compatibility questions to general environment diagnostics.",
+  "regressionChecks": [
+    "Route platform, host, runtime, support, and availability questions to office-environment-diagnostics before implementation.",
+    "Require a capability probe or captured capability evidence before making platform-specific automation claims.",
+    "Keep DAX and Power Pivot formula or function compatibility with power-pivot-dax-modeling when no platform-host runtime question is present.",
+    "Record structural evidence, runtime capability evidence, and workbook behavior evidence as separate levels.",
+    "Keep the execution environment separate from the authoring, automation, consumer, and recipient target environments."
+  ],
+  "packageTools": [
+    ".agents/skills/excel-bi-router/scripts/route_excel_bi_task.py",
+    "tools/probe_excel_capabilities.ps1",
+    "tools/build_excel_compatibility_report.py",
+    "tools/create_excel_capability_fixture.py"
+  ],
+  "expectedEvidence": [
+    "Router output selects office-environment-diagnostics for an explicit platform/runtime question.",
+    "Router output preserves power-pivot-dax-modeling for DAX formula/function compatibility.",
+    "Compatibility report identifies capability status, evidence level, operation readiness, target environment, and unmet explicit requirements.",
+    "Structural evidence is never presented as runtime capability evidence or workbook behavior evidence."
+  ],
+  "boundaries": [
+    "This sanitized specification contains no private workbook and does not prove that Excel is installed or usable on any machine.",
+    "A synthetic capability probe proves report behavior only; Windows runtime capability evidence requires a live local probe.",
+    "A successful local probe does not prove recipient readiness or workbook business correctness."
+  ],
+  "nextLiveWorkbookRequirement": "Capture a runtime capability probe on the intended Windows automation machine, then validate a sanitized representative workbook in every distinct recipient target environment that matters."
+}

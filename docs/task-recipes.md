@@ -765,11 +765,49 @@ python tools\run_case_regression.py `
 Expected evidence:
 
 - the manifest under `fixtures/real-sanitized-cases/manifest.json` is readable.
-- six seed cases cover Power Query, DAX, CUBE/MDX, VBA, clean deliverable publishing, and visual QA.
+- seven seed cases cover Power Query, DAX, CUBE/MDX, VBA, clean deliverable publishing, visual QA, and environment/capability routing.
 - every case has required fields, evidence mode, package-tool references, expected evidence, boundaries, and a next live-workbook requirement.
 - no forbidden local/customer markers are present.
 - the visual QA case is fixture-backed through `tools/create_visual_qa_fixture.py` and `tools/build_visual_qa_report.py`.
 - this validates case definitions and package-tool references only; it does not prove any private workbook is correct.
+
+## Recipe 16: Establish Excel Compatibility Before Implementation
+
+Use `office-environment-diagnostics` when the question is whether an operation can run on a platform, host, Office version, bitness, offline machine, or recipient environment. DAX/Power Pivot formula and function compatibility remains with `power-pivot-dax-modeling` unless the request is explicitly about platform/host runtime availability.
+
+First record the authoring target, automation target, consumer target, and recipient target. Do not assume the agent's current machine represents any of them.
+
+Generate a Windows capability probe and report:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\probe_excel_capabilities.ps1 `
+  -OutJson "$env:TEMP\excel-capabilities.json" `
+  -Profile runtime
+python tools\build_excel_compatibility_report.py `
+  --probe-json "$env:TEMP\excel-capabilities.json" `
+  --out-json "$env:TEMP\excel-compatibility.json" `
+  --out-md "$env:TEMP\excel-compatibility.md" `
+  --require-capability excel.com.activation `
+  --require-pass
+```
+
+When the agent is not on the target Windows machine, use a captured probe without running local COM:
+
+```powershell
+python tools\run_task_profile.py `
+  --profile env-diagnostics `
+  --probe-json "C:\evidence\recipient-capabilities.json" `
+  --require-capability excel.com.activation `
+  --out-dir "$env:TEMP\excel_env_plan" `
+  --execute
+```
+
+Expected evidence:
+
+- structural evidence identifies package, source, formula, and workbook-shape compatibility with `low` confidence;
+- runtime capability evidence records the exact Windows/Office build, 32-bit or 64-bit process/provider context, policy, and operation readiness with `medium` confidence;
+- workbook behavior evidence exercises the representative workbook in the intended host and supports `high` confidence only for that recorded target;
+- macOS, Excel for web, Linux, offline, WPS, LibreOffice, Excel 2007/2010/2013/2016/2019, Office LTSC, and Microsoft 365 targets retain explicit unknown/blocked boundaries until target-specific evidence exists.
 
 ## Delivery Rule
 
