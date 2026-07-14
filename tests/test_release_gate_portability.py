@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import os
+import subprocess
 import sys
 import unittest
 from pathlib import Path
@@ -40,6 +41,32 @@ class ReleaseGatePortabilityTests(unittest.TestCase):
         self.assertEqual(release_gate.PASS, result.status)
         self.assertEqual(message, result.stdout)
         self.assertIsInstance(result.stderr, str)
+
+    def test_run_command_handles_undecodable_bytes_and_none_streams(self) -> None:
+        stream_cases = [
+            (b"\xffinvalid stdout", None),
+            (None, b"\xffinvalid stderr"),
+            (None, None),
+        ]
+
+        for stdout, stderr in stream_cases:
+            with self.subTest(stdout=stdout, stderr=stderr), patch.object(
+                release_gate.subprocess,
+                "run",
+                return_value=subprocess.CompletedProcess(
+                    args=["localized-command"],
+                    returncode=0,
+                    stdout=stdout,
+                    stderr=stderr,
+                ),
+            ):
+                result = release_gate.run_command(
+                    ["localized-command"], PROJECT_ROOT, "localized output"
+                )
+
+            self.assertEqual(release_gate.PASS, result.status)
+            self.assertIsInstance(result.stdout, str)
+            self.assertIsInstance(result.stderr, str)
 
     def test_find_bash_rejects_system32_wsl_launcher(self) -> None:
         system_bash = os.path.normcase(r"C:\Windows\System32\bash.exe")
@@ -90,6 +117,8 @@ class ReleaseGatePortabilityTests(unittest.TestCase):
 
         self.assertIn("runs-on: windows-latest", workflow)
         self.assertIn("中文 空格路径", workflow)
+        self.assertIn('PYTHONUTF8: "1"', workflow)
+        self.assertIn("PYTHONIOENCODING: utf-8", workflow)
         self.assertIn("run_release_gate.py --project-root . --profile structural", workflow)
 
 
