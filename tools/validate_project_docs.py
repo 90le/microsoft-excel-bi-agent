@@ -139,6 +139,24 @@ PRIVATE_LEDGER_LINKS = (
     "docs/completion-evidence.md",
 )
 
+BENCHMARK_CLAIM_RE = re.compile(
+    r"(?:plugin-eval|trigger_cost_tokens|36[ -]case|benchmark\s+(?:output|result|score|scenario)|"
+    r"36\s*个?.{0,8}基准|基准(?:输出|结果|得分|场景))",
+    re.IGNORECASE,
+)
+SYNTHETIC_TERMS = ("synthetic", "generated", "合成", "生成")
+OBSERVED_TERMS = ("observed", "measured", "live usage", "实测", "观测")
+NO_REAL_TASK_PROOF_TERMS = (
+    "does not prove real task success",
+    "do not prove real task success",
+    "cannot count as real task-success evidence",
+    "not real task-success evidence",
+    "does not establish real task success",
+    "不证明真实任务成功",
+    "不能作为真实任务成功证据",
+    "不代表真实任务成功",
+)
+
 
 def read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8")
@@ -160,6 +178,26 @@ def check_required_links(label: str, text: str, links: list[str], errors: list[s
     for link in links:
         if link not in text:
             errors.append(f"{label} does not link {link}")
+
+
+def benchmark_evidence_boundary_errors(texts: dict[str, str]) -> list[str]:
+    """Require benchmark claims to separate synthetic mechanics from observed proof."""
+
+    errors: list[str] = []
+    for path, text in texts.items():
+        if not BENCHMARK_CLAIM_RE.search(text):
+            continue
+        lowered = text.casefold()
+        missing: list[str] = []
+        if not any(term in lowered for term in SYNTHETIC_TERMS):
+            missing.append("synthetic/generated evidence")
+        if not any(term in lowered for term in NO_REAL_TASK_PROOF_TERMS):
+            missing.append("synthetic output does not prove real task success")
+        if not any(term in lowered for term in OBSERVED_TERMS):
+            missing.append("separate observed/measured evidence")
+        if missing:
+            errors.append(f"{path} benchmark claim is missing boundary language: {', '.join(missing)}")
+    return errors
 
 
 def validate(project_root: Path) -> dict[str, Any]:
@@ -191,6 +229,8 @@ def validate(project_root: Path) -> dict[str, Any]:
         markers = has_mojibake(text)
         if markers:
             errors.append(f"{path} contains possible Chinese mojibake markers: {', '.join(markers)}")
+
+    errors.extend(benchmark_evidence_boundary_errors(texts))
 
     readme_en = texts.get("README.md", "")
     readme_zh = texts.get("README.zh-CN.md", "")

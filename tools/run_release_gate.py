@@ -1236,7 +1236,7 @@ def plugin_manifest_release_check(project_root: Path) -> CheckResult:
     contracts = [
         ("inspect/route", ("inspect", "route")),
         ("diagnose/evidence", ("diagnose", "evidence")),
-        ("publish/verify", ("publish", "verif")),
+        ("prepare/verify", ("prepare", "verif")),
     ]
     for index, (label, terms) in enumerate(contracts):
         text = normalized[index] if index < len(normalized) else ""
@@ -1246,10 +1246,174 @@ def plugin_manifest_release_check(project_root: Path) -> CheckResult:
     return CheckResult(
         name=name,
         status=PASS if not failures else FAIL,
-        detail="v0.2.0 cachebuster and exactly three inspect/diagnose/publish starter prompts verified"
+        detail="v0.2.0 cachebuster and exactly three inspect/diagnose/prepare starter prompts verified"
         if not failures
         else "; ".join(failures),
         metadata={"version": plugin.get("version"), "promptCount": len(prompts)},
+    )
+
+
+def skill_trigger_efficiency_benchmark_check(project_root: Path) -> CheckResult:
+    """Validate the static trigger corpus and real plugin-eval scenario contract."""
+
+    name = "Skill trigger efficiency benchmark"
+    validator = project_root / "tools" / "validate_skill_trigger_benchmark.py"
+    cases_json = project_root / "fixtures" / "skill-trigger-benchmark.json"
+    benchmark_json = project_root / "benchmarks" / "plugin-eval-v0.2.1.json"
+    command = [
+        sys.executable,
+        str(validator),
+        "--project-root",
+        str(project_root),
+        "--cases-json",
+        str(cases_json),
+        "--require-pass",
+    ]
+    result = run_command(command, project_root, name)
+    failures: list[str] = []
+    report: dict[str, object] = {}
+    if result.status != PASS:
+        failures.append(f"trigger validator {result.detail}")
+    try:
+        parsed_report = json.loads(result.stdout)
+        if not isinstance(parsed_report, dict):
+            raise ValueError("report root is not an object")
+        report = parsed_report
+    except (json.JSONDecodeError, ValueError) as exc:
+        failures.append(f"cannot parse trigger validator JSON: {exc}")
+
+    summary = report.get("summary", {}) if isinstance(report, dict) else {}
+    if not isinstance(summary, dict):
+        failures.append("trigger validator summary is not an object")
+        summary = {}
+    expected_summary = {
+        "skillCount": 12,
+        "caseCount": 36,
+        "positiveCount": 24,
+        "confusableNegativeCount": 12,
+    }
+    if report.get("kind") != "excel-skill-trigger-benchmark-report":
+        failures.append(f"validator kind={report.get('kind')!r}")
+    if report.get("schemaVersion") != "1.0":
+        failures.append(f"validator schemaVersion={report.get('schemaVersion')!r}")
+    if report.get("status") != PASS:
+        failures.append(f"validator status={report.get('status')!r}")
+    for field_name, expected in expected_summary.items():
+        if summary.get(field_name) != expected:
+            failures.append(f"{field_name}={summary.get(field_name)!r} expected={expected}")
+
+    config: dict[str, object] = {}
+    try:
+        parsed_config = json.loads(benchmark_json.read_text(encoding="utf-8-sig"))
+        if not isinstance(parsed_config, dict):
+            raise ValueError("benchmark config root is not an object")
+        config = parsed_config
+    except (OSError, json.JSONDecodeError, ValueError) as exc:
+        failures.append(f"cannot read benchmark config: {exc}")
+
+    if config.get("schemaVersion") != 2:
+        failures.append(f"benchmark schemaVersion={config.get('schemaVersion')!r}")
+    workspace = config.get("workspace", {})
+    if not isinstance(workspace, dict):
+        failures.append("benchmark workspace is not an object")
+        workspace = {}
+    source_path = workspace.get("sourcePath")
+    source_is_absolute = (
+        not isinstance(source_path, str)
+        or not source_path.strip()
+        or Path(source_path).is_absolute()
+        or bool(re.match(r"^[A-Za-z]:[\\/]", source_path))
+        or source_path.startswith(("/", "\\"))
+    )
+    if source_is_absolute:
+        failures.append("benchmark workspace.sourcePath must be relative")
+    if workspace.get("setupMode") != "copy":
+        failures.append(f"benchmark workspace.setupMode={workspace.get('setupMode')!r}")
+    if workspace.get("preserve") != "on-failure":
+        failures.append(f"benchmark workspace.preserve={workspace.get('preserve')!r}")
+    provisioning = config.get("targetProvisioning", {})
+    if not isinstance(provisioning, dict) or provisioning.get("mode") != "workspace-plugin-marketplace":
+        failures.append("benchmark targetProvisioning.mode must be workspace-plugin-marketplace")
+
+    scenarios = config.get("scenarios", [])
+    if not isinstance(scenarios, list):
+        failures.append("benchmark scenarios must be an array")
+        scenarios = []
+    expected_scenario_ids = {
+        "power-query-diagnosis",
+        "dax-versus-environment",
+        "delivery-boundary",
+    }
+    scenario_ids = {
+        str(item.get("id", ""))
+        for item in scenarios
+        if isinstance(item, dict)
+    }
+    if len(scenarios) != 3 or scenario_ids != expected_scenario_ids:
+        failures.append(
+            "benchmark must contain exactly three non-generic scenarios: "
+            + ", ".join(sorted(expected_scenario_ids))
+        )
+    for index, scenario in enumerate(scenarios):
+        if not isinstance(scenario, dict):
+            failures.append(f"benchmark scenario[{index}] must be an object")
+            continue
+        for field_name in ["id", "title", "purpose", "userInput"]:
+            value = scenario.get(field_name)
+            if not isinstance(value, str) or not value.strip():
+                failures.append(f"benchmark scenario[{index}].{field_name} must be non-empty")
+        checklist = scenario.get("successChecklist")
+        if not isinstance(checklist, list) or not checklist or not all(
+            isinstance(item, str) and item.strip() for item in checklist
+        ):
+            failures.append(f"benchmark scenario[{index}].successChecklist must be non-empty")
+        scenario_text = json.dumps(scenario, ensure_ascii=False).casefold()
+        if "synthetic" not in scenario_text or "no live runtime proof" not in scenario_text:
+            failures.append(
+                f"benchmark scenario[{index}] must state the synthetic/no-live-runtime boundary"
+            )
+
+    config_text = json.dumps(config, ensure_ascii=False).casefold()
+    if "do not establish real workbook task success" not in config_text:
+        failures.append("benchmark notes must reject synthetic output as real task-success evidence")
+
+    prompts: list[object] = []
+    try:
+        manifest = read_plugin_json(project_root)
+        interface = manifest.get("interface", {})
+        if isinstance(interface, dict):
+            candidate_prompts = interface.get("defaultPrompt", [])
+            if isinstance(candidate_prompts, list):
+                prompts = candidate_prompts
+    except (OSError, json.JSONDecodeError) as exc:
+        failures.append(f"cannot read plugin prompts: {exc}")
+    if len(prompts) != 3 or not all(
+        isinstance(prompt, str) and prompt.strip() and len(prompt) <= 110 for prompt in prompts
+    ):
+        failures.append("plugin must expose exactly three non-empty prompts of at most 110 characters")
+    prompt_lengths = [len(prompt) for prompt in prompts if isinstance(prompt, str)]
+
+    return CheckResult(
+        name=name,
+        status=PASS if not failures else FAIL,
+        detail=(
+            "12 skills / 36 cases / 3 real benchmark scenarios; structural validation only"
+            if not failures
+            else "; ".join(failures)
+        ),
+        command=command,
+        stdout=result.stdout,
+        stderr=result.stderr,
+        metadata={
+            "skillCount": summary.get("skillCount"),
+            "caseCount": summary.get("caseCount"),
+            "realBenchmarkScenarioCount": len(scenarios),
+            "scenarioIds": sorted(scenario_ids),
+            "workspaceSourcePath": source_path,
+            "promptCount": len(prompts),
+            "maxPromptChars": max(prompt_lengths, default=0),
+            "structuralOnly": True,
+        },
     )
 
 
@@ -1401,6 +1565,7 @@ def capability_catalog_fixture_check(project_root: Path) -> CheckResult:
             "build_excel_compatibility_report.py",
             "create_excel_capability_fixture.py",
             "run_release_gate.py",
+            "validate_skill_trigger_benchmark.py",
             "deploy-local-plugin.py",
         ]:
             if required_tool not in tools:
@@ -1417,6 +1582,7 @@ def capability_catalog_fixture_check(project_root: Path) -> CheckResult:
             "power-bi-semantic-model-review",
             "sanitized-fixture-regression",
             "cross-agent-release",
+            "skill-trigger-benchmark",
         ]:
             if required_workflow not in workflows:
                 failures.append(f"missing workflow={required_workflow}")
@@ -6817,6 +6983,7 @@ def main() -> int:
     checks.append(bash_syntax_check(project_root, bash_exe))
     checks.append(portable_structural_wrapper_fixture_check(project_root, bash_exe))
     checks.append(plugin_manifest_release_check(project_root))
+    checks.append(skill_trigger_efficiency_benchmark_check(project_root))
     checks.append(excel_compatibility_fixture_report_check(project_root))
     checks.append(runtime_package_fixture_check(project_root))
     checks.append(run_command([sys.executable, str(project_root / "tools" / "validate_project_docs.py"), "--project-root", str(project_root)], project_root, "project documentation consistency validation"))

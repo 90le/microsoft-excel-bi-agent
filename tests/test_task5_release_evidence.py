@@ -142,6 +142,24 @@ class Task5ReleaseEvidenceTests(unittest.TestCase):
         report = doc_validator.validate(PROJECT_ROOT)
         self.assertEqual(report["status"], "pass", report["errors"])
 
+    def test_benchmark_claims_require_synthetic_and_observed_evidence_boundary(self) -> None:
+        unsafe = {
+            "docs/release-notes.en-US.md": (
+                "The 36-case trigger benchmark and three plugin-eval scenarios prove real task success. "
+                "Observed usage confirms the result."
+            )
+        }
+        safe = {
+            "docs/release-notes.en-US.md": (
+                "The 36-case trigger benchmark uses synthetic inputs. Synthetic benchmark output "
+                "validates mechanics only and does not prove real task success; observed usage is "
+                "separate evidence."
+            )
+        }
+
+        self.assertTrue(doc_validator.benchmark_evidence_boundary_errors(unsafe))
+        self.assertEqual([], doc_validator.benchmark_evidence_boundary_errors(safe))
+
 
 if __name__ == "__main__":
     unittest.main()

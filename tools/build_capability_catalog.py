@@ -57,9 +57,21 @@ REQUIRED_TOOLS = {
     "run_case_regression.py",
     "create_visual_qa_fixture.py",
     "deploy-local-plugin.py",
+    "validate_skill_trigger_benchmark.py",
 }
 
 WORKFLOWS = [
+    {
+        "id": "skill-trigger-benchmark",
+        "title": "Skill trigger efficiency benchmark workflow",
+        "skills": ["excel-bi-router", "excel-testing-fixtures"],
+        "tools": [
+            "validate_skill_trigger_benchmark.py",
+            "verify_plugin_benchmark_output.py",
+            "run_release_gate.py",
+        ],
+        "boundary": "The trigger corpus and synthetic benchmark output validate selection and verifier mechanics; they do not prove real task success, which requires separate observed evidence.",
+    },
     {
         "id": "excel-compatibility",
         "title": "Excel platform and runtime capability compatibility workflow",
