@@ -1,0 +1,28 @@
+{
+  "id": "deliverable-external-dependency-readiness",
+  "title": "Deliverable readiness with synthetic external dependency boundaries",
+  "layer": "deliverable",
+  "evidenceMode": "sanitized-spec",
+  "originSignal": "A copied deliverable must be assessed for external links, connections, formulas, and unresolved dependencies before release.",
+  "riskPattern": "A workbook can look self-contained while package relationships or formula references still require unavailable external sources.",
+  "regressionChecks": [
+    "Build an external dependency report for a synthetic copied deliverable.",
+    "Generate a non-destructive cleanup and verification plan before release.",
+    "Classify readiness separately from proof that a recipient can open and use the final workbook."
+  ],
+  "packageTools": [
+    "tools/build_external_dependency_report.py",
+    "tools/build_pure_deliverable_cleanup_plan.py",
+    "tools/build_pure_deliverable_verification_report.py"
+  ],
+  "expectedEvidence": [
+    "Dependency report records links, connections, package parts, and formula-reference risks.",
+    "Cleanup plan identifies safe copied-workbook actions.",
+    "Verification plan lists readiness assertions and unresolved dependency exceptions."
+  ],
+  "boundaries": [
+    "This library stores only synthetic dependency shapes and no customer deliverables or external artifacts.",
+    "Structural readiness does not prove recipient permissions, source availability, or workbook behavior."
+  ],
+  "nextLiveWorkbookRequirement": "Open a sanitized copied deliverable in each relevant recipient environment and capture dependency and behavior evidence."
+}

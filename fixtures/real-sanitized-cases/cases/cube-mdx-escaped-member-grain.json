@@ -1,0 +1,28 @@
+{
+  "id": "cube-mdx-escaped-member-grain",
+  "title": "CUBE MDX escaped-member references and measure-grain boundary",
+  "layer": "cube-mdx",
+  "evidenceMode": "sanitized-spec",
+  "originSignal": "A CUBE formula contains escaped member text and returns an unexpected value at a different aggregation grain.",
+  "riskPattern": "Escaped MDX parsing can obscure member references while numerator and denominator filters operate at incompatible grains.",
+  "regressionChecks": [
+    "Extract escaped MDX member and measure references from synthetic CUBE formulas.",
+    "Trace helper-cell and direct references separately.",
+    "Record the intended measure grain and distinguish it from formula parsing evidence."
+  ],
+  "packageTools": [
+    "tools/mdx_references.py",
+    "tools/build_cube_dependency_report.py",
+    "tools/analyze_measure_rename_impact.py"
+  ],
+  "expectedEvidence": [
+    "MDX reference extraction records escaped members and parsing diagnostics.",
+    "CUBE dependency report identifies formula, measure, and helper-cell relationships.",
+    "Synthetic notes state the grain question that needs live model evaluation."
+  ],
+  "boundaries": [
+    "Formula-text inspection cannot evaluate CUBEVALUE or validate Data Model aggregation behavior.",
+    "Only a sanitized live workbook in the target Excel host can prove member resolution and measure grain."
+  ],
+  "nextLiveWorkbookRequirement": "Evaluate a sanitized workbook containing escaped members, helper cells, and contrasting grains in Excel desktop."
+}

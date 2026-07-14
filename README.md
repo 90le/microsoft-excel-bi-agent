@@ -17,7 +17,7 @@ It is built for the messy Excel work that generic coding agents usually mishandl
 
 Maintained by **Qiu Binbin (丘彬彬)**. WeChat: **binstudy**. Blog: **https://90le.cn**.
 
-Current stable release: **v0.2.1** (`0.2.1+codex.20260714`). It shortens the three starter prompts, makes all 12 skill descriptions trigger-only, and adds a 36-case trigger corpus plus three real plugin-eval benchmark scenarios. The 12 published skill IDs and Excel feature scope are unchanged.
+Current stable release: **v0.2.2** (`0.2.2+codex.20260714`). It adds 12 deterministic sanitized regression cases and an opt-in, local-only observed-usage validator and summarizer. The 12 published skill IDs and Excel feature scope are unchanged.
 
 ## Use It When
 
@@ -143,6 +143,7 @@ Compatibility is target-specific. Name the authoring, automation, consumer, and 
 - [Chinese project overview](docs/project.zh-CN.md)
 - [Install and sync guide](docs/install-and-sync.md)
 - [Task recipes](docs/task-recipes.md)
+- [Local observed-usage evidence](docs/observed-usage.md)
 - [Maintenance goals and risk backlog](docs/maintenance-goals.en-US.md)
 - [Public growth goals](docs/growth-goals.en-US.md)
 - [Repository governance goals](docs/repository-governance-goals.en-US.md)

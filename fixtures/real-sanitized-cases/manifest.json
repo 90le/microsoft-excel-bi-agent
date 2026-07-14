@@ -43,6 +43,26 @@
     {
       "id": "excel-capability-routing",
       "specPath": "cases/excel-capability-routing.json"
+    },
+    {
+      "id": "pq-refresh-lineage-boundary",
+      "specPath": "cases/pq-refresh-lineage-boundary.json"
+    },
+    {
+      "id": "dax-measure-rename-impact",
+      "specPath": "cases/dax-measure-rename-impact.json"
+    },
+    {
+      "id": "cube-mdx-escaped-member-grain",
+      "specPath": "cases/cube-mdx-escaped-member-grain.json"
+    },
+    {
+      "id": "vba-onaction-scope-mismatch",
+      "specPath": "cases/vba-onaction-scope-mismatch.json"
+    },
+    {
+      "id": "deliverable-external-dependency-readiness",
+      "specPath": "cases/deliverable-external-dependency-readiness.json"
     }
   ]
 }

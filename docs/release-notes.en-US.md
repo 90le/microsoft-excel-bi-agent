@@ -1,5 +1,21 @@
 # Release Notes
 
+## v0.2.2 - Local Evidence Workflow And Sanitized Regression Coverage
+
+Current stable release: v0.2.2. This release improves evidence quality without collecting customer data or changing the 12 published skill IDs.
+
+### Changed
+
+- Expanded the deterministic real/sanitized regression library from seven to twelve cases, covering Power Query lineage, DAX rename impact, escaped MDX members, VBA control scope, and external dependency readiness.
+- Added an opt-in local JSONL observed-usage validator and aggregate-only summarizer.
+- Rejects paths, credentials, and customer artifact names in JSON keys and values; diagnostic paths redact sensitive key segments.
+- Added structural release-gate and capability-catalog coverage. The gate never requires a usage log or Excel.
+- Bumped the plugin manifest to `0.2.2+codex.20260714`.
+
+### Boundary
+
+Observed usage is never collected, uploaded, or read from workbooks automatically. Synthetic regression cases validate deterministic contracts only; representative workbook-behavior proof remains a separate, local activity.
+
 ## v0.2.1 - Trigger Efficiency And Measured Discovery Cost
 
 Current stable release: v0.2.1. This release reduces plugin discovery cost and sharpens skill routing without changing the 12 published skill IDs or adding Excel functionality.

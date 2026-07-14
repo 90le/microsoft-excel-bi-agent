@@ -12,8 +12,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 RELEASE_GATE = PROJECT_ROOT / "tools" / "run_release_gate.py"
 CASE_RUNNER = PROJECT_ROOT / "tools" / "run_case_regression.py"
 DOC_VALIDATOR = PROJECT_ROOT / "tools" / "validate_project_docs.py"
-VERSION = "0.2.1+codex.20260714"
-STABLE_RELEASE = "0.2.1"
+VERSION = "0.2.2+codex.20260714"
+STABLE_RELEASE = "0.2.2"
 
 
 def load_module(path: Path, name: str):
@@ -58,6 +58,14 @@ class Task5ReleaseEvidenceTests(unittest.TestCase):
         manifest = json.loads((case_root / "manifest.json").read_text(encoding="utf-8"))
         refs = {item["id"]: item["specPath"] for item in manifest["cases"]}
         self.assertEqual(refs["excel-capability-routing"], "cases/excel-capability-routing.json")
+        for case_id in [
+            "pq-refresh-lineage-boundary",
+            "dax-measure-rename-impact",
+            "cube-mdx-escaped-member-grain",
+            "vba-onaction-scope-mismatch",
+            "deliverable-external-dependency-readiness",
+        ]:
+            self.assertIn(case_id, refs)
 
         report = case_runner.validate(PROJECT_ROOT, case_root)
         self.assertEqual(report["status"], "pass", report["errors"])
@@ -77,9 +85,9 @@ class Task5ReleaseEvidenceTests(unittest.TestCase):
 
         gate_result = release_gate.real_sanitized_case_regression_check(PROJECT_ROOT)
         self.assertEqual(gate_result.status, "pass", gate_result.detail)
-        self.assertEqual(gate_result.metadata["caseCount"], 7)
+        self.assertEqual(gate_result.metadata["caseCount"], 12)
         self.assertIn("environment", gate_result.metadata["coveredLayers"])
-        self.assertIn("7 sanitized", gate_result.detail)
+        self.assertIn("12 sanitized", gate_result.detail)
 
     def test_public_docs_define_release_and_compatibility_contract(self) -> None:
         compatibility = (PROJECT_ROOT / "docs" / "compatibility.md").read_text(encoding="utf-8").lower()
@@ -119,9 +127,9 @@ class Task5ReleaseEvidenceTests(unittest.TestCase):
         self.assertIn("Current Stable Release", current_status)
         self.assertIn(f"v{STABLE_RELEASE}", current_status)
         self.assertIn(VERSION, current_status)
-        self.assertIn("Current stable release: v0.2.1.", release_en)
+        self.assertIn("Current stable release: v0.2.2.", release_en)
         self.assertIn(VERSION, release_en)
-        self.assertIn("当前稳定版：v0.2.1。", release_zh)
+        self.assertIn("当前稳定版：v0.2.2。", release_zh)
         self.assertIn(VERSION, release_zh)
 
         readme_en = (PROJECT_ROOT / "README.md").read_text(encoding="utf-8")

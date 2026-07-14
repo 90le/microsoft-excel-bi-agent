@@ -230,6 +230,18 @@ def find_codex() -> str | None:
     return None
 
 
+def find_git() -> str | None:
+    candidates = [
+        shutil.which("git"),
+        r"C:\\Program Files\\Git\\cmd\\git.exe",
+        r"C:\\Program Files\\Git\\bin\\git.exe",
+    ]
+    for candidate in candidates:
+        if candidate and Path(candidate).is_file():
+            return candidate
+    return None
+
+
 def remove_pycache(root: Path) -> None:
     for path in root.rglob("__pycache__"):
         if path.is_dir():
@@ -480,6 +492,64 @@ def pycache_check(root: Path) -> CheckResult:
         status=PASS if not hits else FAIL,
         detail="no __pycache__ directories" if not hits else f"{len(hits)} directories found",
         metadata={"hits": hits},
+    )
+
+
+def observed_usage_evidence_structure_check(project_root: Path) -> CheckResult:
+    """Verify local observed-usage tooling without requiring any usage data."""
+    required_paths = [
+        "tools/validate_observed_usage.py",
+        "tools/summarize_observed_usage.py",
+        "docs/observed-usage.md",
+        "docs/real-case-regression.md",
+        ".gitignore",
+    ]
+    missing = [path for path in required_paths if not (project_root / path).is_file()]
+    if missing:
+        return CheckResult(
+            name="Observed usage evidence structure",
+            status=FAIL,
+            detail=f"missing required files: {', '.join(missing)}",
+        )
+
+    gitignore = (project_root / ".gitignore").read_text(encoding="utf-8")
+    required_ignores = {".local-observed-usage/", "observed-usage*.jsonl"}
+    missing_ignores = sorted(pattern for pattern in required_ignores if pattern not in gitignore)
+    if missing_ignores:
+        return CheckResult(
+            name="Observed usage evidence structure",
+            status=FAIL,
+            detail=f".gitignore is missing local usage exclusions: {', '.join(missing_ignores)}",
+        )
+
+    git = find_git()
+    if not (project_root / ".git").exists() or not git:
+        return CheckResult(
+            name="Observed usage evidence structure",
+            status=SKIP,
+            detail="required tools/docs/ignore rules exist; tracked-file scan unavailable outside a Git checkout",
+        )
+
+    tracked = run_command([git, "ls-files"], project_root, "Observed usage evidence structure")
+    if tracked.status != PASS:
+        return tracked
+    tracked_usage = [
+        path for path in tracked.stdout.splitlines()
+        if path.casefold().endswith(".jsonl") and "observed-usage" in path.casefold()
+    ]
+    if tracked_usage:
+        return CheckResult(
+            name="Observed usage evidence structure",
+            status=FAIL,
+            detail=f"tracked observed-usage JSONL data: {', '.join(tracked_usage)}",
+            command=tracked.command,
+            stdout=tracked.stdout,
+        )
+    return CheckResult(
+        name="Observed usage evidence structure",
+        status=PASS,
+        detail="tools/docs/ignore rules exist; no tracked observed-usage JSONL data",
+        command=tracked.command,
     )
 
 
@@ -840,7 +910,7 @@ def real_sanitized_case_regression_check(project_root: Path) -> CheckResult:
         failures: list[str] = []
         if report.get("status") != PASS:
             failures.append(f"status={report.get('status')}")
-        if int(report.get("caseCount", 0) or 0) < 7:
+        if int(report.get("caseCount", 0) or 0) < 12:
             failures.append(f"caseCount={report.get('caseCount')}")
         covered_layers = set(report.get("coveredLayers") or [])
         expected_layers = {"power-query", "dax", "cube-mdx", "vba", "deliverable", "environment", "visual-qa"}
@@ -851,7 +921,7 @@ def real_sanitized_case_regression_check(project_root: Path) -> CheckResult:
         return CheckResult(
             name=name,
             status=PASS if not failures else FAIL,
-            detail="7 sanitized regression case specs cover Power Query, DAX, CUBE/MDX, VBA, deliverable, environment, and visual QA layers"
+            detail="12 sanitized regression case specs cover Power Query, DAX, CUBE/MDX, VBA, deliverable, environment, and visual QA layers"
             if not failures
             else "; ".join(failures),
             stdout=result.stdout,
@@ -1285,7 +1355,7 @@ def runtime_package_fixture_check(project_root: Path) -> CheckResult:
 
 def plugin_manifest_release_check(project_root: Path) -> CheckResult:
     name = "Plugin release manifest and starter prompts"
-    expected_version = "0.2.1+codex.20260714"
+    expected_version = "0.2.2+codex.20260714"
     try:
         plugin = read_plugin_json(project_root)
     except (OSError, json.JSONDecodeError) as exc:
@@ -1313,7 +1383,7 @@ def plugin_manifest_release_check(project_root: Path) -> CheckResult:
     return CheckResult(
         name=name,
         status=PASS if not failures else FAIL,
-        detail="v0.2.1 cachebuster and exactly three inspect/diagnose/prepare starter prompts verified"
+        detail="v0.2.2 cachebuster and exactly three inspect/diagnose/prepare starter prompts verified"
         if not failures
         else "; ".join(failures),
         metadata={"version": plugin.get("version"), "promptCount": len(prompts)},
@@ -7091,6 +7161,7 @@ def main() -> int:
     checks.append(power_query_refresh_error_classifier_fixture_check(project_root))
     checks.append(power_query_refresh_performance_report_fixture_check(project_root))
     checks.append(provider_environment_baseline_fixture_check(project_root))
+    checks.append(observed_usage_evidence_structure_check(project_root))
     checks.append(scan_regex(project_root, PLACEHOLDER_RE, "placeholder marker scan"))
 
     markers = [] if args.no_default_sensitive_markers else list(DEFAULT_SENSITIVE_MARKERS)

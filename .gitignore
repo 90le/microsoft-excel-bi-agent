@@ -58,3 +58,5 @@ docs/completion-evidence.md
 .plugin-eval/runs/
 .plugin-eval/*.jsonl
 benchmark-usage*.jsonl
+observed-usage*.jsonl
+.local-observed-usage/

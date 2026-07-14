@@ -1,0 +1,28 @@
+{
+  "id": "pq-refresh-lineage-boundary",
+  "title": "Power Query refresh lineage boundaries for synthetic source transitions",
+  "layer": "power-query",
+  "evidenceMode": "sanitized-spec",
+  "originSignal": "A refresh plan changes a source, intermediate step, or output table and the lineage boundary is unclear.",
+  "riskPattern": "Static M review can miss a source transition that changes privacy, schema, join cardinality, or refresh readiness.",
+  "regressionChecks": [
+    "Build lineage evidence for synthetic source, transformation, and output steps.",
+    "Flag source transitions and dynamic schema steps that require a refresh-specific review.",
+    "Record row-count and column-shape expectations on each side of the boundary."
+  ],
+  "packageTools": [
+    "tools/build_power_query_lineage_report.py",
+    ".agents/skills/power-query-m-engineering/scripts/lint_power_query_m.py",
+    ".agents/skills/power-query-m-engineering/scripts/build_power_query_refresh_report.py"
+  ],
+  "expectedEvidence": [
+    "Lineage report identifies source, transformations, outputs, and source-risk findings.",
+    "M lint output records static refresh risks without claiming refresh success.",
+    "Synthetic case notes identify the boundary requiring live refresh evidence."
+  ],
+  "boundaries": [
+    "This deterministic synthetic specification contains no customer source paths or workbook artifacts.",
+    "Static lineage evidence does not prove credential handling, privacy behavior, or live refresh success."
+  ],
+  "nextLiveWorkbookRequirement": "Refresh a sanitized workbook against a task-local synthetic source folder and capture the target Excel runtime result."
+}
