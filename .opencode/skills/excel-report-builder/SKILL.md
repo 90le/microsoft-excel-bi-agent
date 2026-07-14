@@ -1,6 +1,6 @@
 ---
 name: excel-report-builder
-description: Build or modify polished Microsoft Excel report workbooks, dashboards, analysis sheets, tables, charts, pivots, controls, and client-facing layouts. Use when Codex must create usable Excel report surfaces, preserve workbook semantics, design readable sheets, or assemble outputs from formulas, Power Query, Data Model, and VBA sources.
+description: Use when creating or modifying Excel report sheets, dashboards, tables, charts, pivots, controls, formulas, or polished client-facing layouts.
 ---
 
 # Excel Report Builder

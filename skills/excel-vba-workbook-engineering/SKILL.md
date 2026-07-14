@@ -1,6 +1,6 @@
 ---
 name: excel-vba-workbook-engineering
-description: Create, modify, debug, and validate Microsoft Excel workbooks with formulas, formatting, macros, VBA modules, buttons, hidden sheets, links, Power Query, and Solver-like automation across PowerShell, Git Bash, Linux, and macOS contexts. Use when Codex needs to work with `.xlsx`, `.xlsm`, `.xlsb`, or `.xls` files; create macro-enabled workbook copies; export/import VBA; diagnose VBA compile/runtime errors; bind buttons to macros; preserve formulas and workbook structure; or verify Excel behavior through Excel COM, OpenXML inspection, or platform-appropriate fallbacks.
+description: Use when creating, modifying, or debugging .xlsx/.xlsm/.xlsb/.xls workbooks, VBA modules, macros, buttons, formulas, links, Power Query, or Excel COM/OpenXML automation.
 ---
 
 # Excel VBA Workbook Engineering

@@ -12,7 +12,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 RELEASE_GATE = PROJECT_ROOT / "tools" / "run_release_gate.py"
 CASE_RUNNER = PROJECT_ROOT / "tools" / "run_case_regression.py"
 DOC_VALIDATOR = PROJECT_ROOT / "tools" / "validate_project_docs.py"
-VERSION = "0.2.0+codex.20260714"
+VERSION = "0.2.1+codex.20260714"
+STABLE_RELEASE = "0.2.0"
 
 
 def load_module(path: Path, name: str):
@@ -115,32 +116,153 @@ class Task5ReleaseEvidenceTests(unittest.TestCase):
         current_status = (PROJECT_ROOT / "docs" / "current-status.md").read_text(encoding="utf-8")
         release_en = (PROJECT_ROOT / "docs" / "release-notes.en-US.md").read_text(encoding="utf-8")
         release_zh = (PROJECT_ROOT / "docs" / "release-notes.zh-CN.md").read_text(encoding="utf-8")
-        for text in [current_status, release_en, release_zh]:
-            self.assertIn("v0.2.0", text)
-            self.assertIn(VERSION, text)
+        self.assertIn("Current Stable Release", current_status)
+        self.assertIn(f"v{STABLE_RELEASE}", current_status)
+        self.assertIn("Unreleased Release Candidate", current_status)
+        self.assertIn(VERSION, current_status)
+        self.assertIn("Unreleased Release Candidate", release_en)
+        self.assertIn("Current stable release: v0.2.0.", release_en)
+        self.assertIn(VERSION, release_en)
+        self.assertIn("未发布候选", release_zh)
+        self.assertIn("当前稳定版：v0.2.0。", release_zh)
+        self.assertIn(VERSION, release_zh)
 
-        for path in [PROJECT_ROOT / "README.md", PROJECT_ROOT / "README.zh-CN.md"]:
-            readme = path.read_text(encoding="utf-8").lower()
-            self.assertIn("v0.2.0", readme)
+        readme_en = (PROJECT_ROOT / "README.md").read_text(encoding="utf-8")
+        readme_zh = (PROJECT_ROOT / "README.zh-CN.md").read_text(encoding="utf-8")
+        self.assertIn(f"Current stable release: **v{STABLE_RELEASE}**", readme_en)
+        self.assertIn("Unreleased release candidate: **v0.2.1**", readme_en)
+        self.assertIn(f"当前稳定版：**v{STABLE_RELEASE}**", readme_zh)
+        self.assertIn("未发布候选：**v0.2.1**", readme_zh)
+        for readme in [readme_en.lower(), readme_zh.lower()]:
             self.assertIn("docs/compatibility.md", readme)
             self.assertIn("runtime", readme)
 
-    def test_landing_pages_match_manifest_major_minor_release(self) -> None:
+    def test_landing_pages_keep_stable_release_link_and_label_manifest_candidate(self) -> None:
         manifest = json.loads((PROJECT_ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8"))
-        manifest_release = manifest["version"].split("+", 1)[0]
-        manifest_major_minor = tuple(manifest_release.split(".")[:2])
-
-        for path in [PROJECT_ROOT / "docs" / "intro.html", PROJECT_ROOT / "docs" / "intro.zh-CN.html"]:
+        candidate_release = manifest["version"].split("+", 1)[0]
+        pages = [
+            (PROJECT_ROOT / "docs" / "intro.html", "Unreleased release candidate"),
+            (PROJECT_ROOT / "docs" / "intro.zh-CN.html", "未发布候选"),
+        ]
+        for path, candidate_marker in pages:
             landing = path.read_text(encoding="utf-8")
-            match = re.search(r"/releases/tag/v(\d+\.\d+\.\d+)", landing)
-            self.assertIsNotNone(match, path)
-            landing_release = match.group(1)
-            self.assertEqual(tuple(landing_release.split(".")[:2]), manifest_major_minor)
-            self.assertEqual(landing_release, manifest_release)
+            release_links = re.findall(r"/releases/tag/v(\d+\.\d+\.\d+)", landing)
+            self.assertTrue(release_links, path)
+            self.assertEqual(STABLE_RELEASE, release_links[0])
+            self.assertNotIn(candidate_release, release_links)
+            self.assertIn(f"v{candidate_release}", landing)
+            self.assertIn(candidate_marker, landing)
             self.assertIn("./compatibility.md", landing)
 
         report = doc_validator.validate(PROJECT_ROOT)
         self.assertEqual(report["status"], "pass", report["errors"])
+
+    def test_benchmark_claims_require_synthetic_and_observed_evidence_boundary(self) -> None:
+        unsafe = {
+            "docs/release-notes.en-US.md": (
+                "The synthetic trigger benchmark proves real task success with a 98% success result."
+            )
+        }
+        safe = {
+            "docs/release-notes.en-US.md": (
+                "The 36-case trigger benchmark uses synthetic inputs. Synthetic benchmark output "
+                "validates mechanics only and does not prove real task success; observed usage is "
+                "separate evidence."
+            )
+        }
+
+        self.assertTrue(doc_validator.benchmark_evidence_boundary_errors(unsafe))
+        self.assertEqual([], doc_validator.benchmark_evidence_boundary_errors(safe))
+
+    def test_benchmark_output_format_reference_is_not_an_evidence_claim(self) -> None:
+        subject_only = {
+            "docs/task-recipes.md": "See the benchmark output format in benchmark-output.json."
+        }
+
+        self.assertEqual([], doc_validator.benchmark_evidence_boundary_errors(subject_only))
+
+    def test_benchmark_evidence_claim_is_detected_when_claim_precedes_subject(self) -> None:
+        unsafe = {
+            "docs/release-notes.en-US.md": "Evidence from the trigger benchmark is conclusive."
+        }
+
+        self.assertTrue(doc_validator.benchmark_evidence_boundary_errors(unsafe))
+
+    def test_benchmark_boundaries_do_not_leak_across_sections(self) -> None:
+        mixed = {
+            "docs/release-notes.en-US.md": (
+                "## Mechanics\n\nSynthetic benchmark output validates mechanics only and does not prove "
+                "real task success; observed usage is separate evidence.\n\n"
+                "## Results\n\nThe trigger benchmark proves real task success with a 98% success result."
+            )
+        }
+
+        self.assertTrue(doc_validator.benchmark_evidence_boundary_errors(mixed))
+
+    def test_benchmark_boundaries_do_not_leak_between_claim_blocks_in_one_section(self) -> None:
+        mixed = {
+            "docs/release-notes.en-US.md": (
+                "## Results\n\nSynthetic benchmark output validates mechanics only and does not prove "
+                "real task success; observed usage is separate evidence.\n\n"
+                "The trigger benchmark proves real task success with a 98% success result."
+            )
+        }
+
+        self.assertTrue(doc_validator.benchmark_evidence_boundary_errors(mixed))
+
+    def test_positive_real_success_assertion_is_rejected_even_with_same_block_disclaimer(self) -> None:
+        contradictory_claims = [
+            (
+                "The synthetic trigger benchmark proves real task success. Synthetic benchmark "
+                "output does not prove real task success; observed usage is separate evidence."
+            ),
+            (
+                "The trigger benchmark establishes actual task success. Synthetic output does not "
+                "prove real task success; observed usage is separate evidence."
+            ),
+            (
+                "The trigger benchmark demonstrates live workbook success. Synthetic output does not "
+                "prove real task success; observed usage is separate evidence."
+            ),
+            (
+                "The trigger benchmark confirms real workbook success. Synthetic output does not prove "
+                "real task success; observed usage is separate evidence."
+            ),
+            (
+                "The trigger benchmark validates actual workbook success. Synthetic output does not "
+                "prove real task success; observed usage is separate evidence."
+            ),
+            (
+                "The trigger benchmark shows real task success. Synthetic output does not prove real "
+                "task success; observed usage is separate evidence."
+            ),
+            (
+                "The trigger benchmark achieves actual task success. Synthetic output does not prove "
+                "real task success; observed usage is separate evidence."
+            ),
+        ]
+        for text in contradictory_claims:
+            with self.subTest(text=text):
+                self.assertTrue(
+                    doc_validator.benchmark_evidence_boundary_errors(
+                        {"docs/release-notes.en-US.md": text}
+                    )
+                )
+
+    def test_benchmark_schema_and_file_references_are_not_outcome_claims(self) -> None:
+        references = [
+            "The benchmark results schema includes score and evidence fields.",
+            "The plugin-eval result is stored in benchmark-result.json.",
+            "Use the benchmark score field when parsing the JSON format.",
+        ]
+        for text in references:
+            with self.subTest(text=text):
+                self.assertEqual(
+                    [],
+                    doc_validator.benchmark_evidence_boundary_errors(
+                        {"docs/task-recipes.md": text}
+                    ),
+                )
 
 
 if __name__ == "__main__":

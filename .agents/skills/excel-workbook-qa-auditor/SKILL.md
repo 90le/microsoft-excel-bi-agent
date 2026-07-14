@@ -1,6 +1,6 @@
 ---
 name: excel-workbook-qa-auditor
-description: Audit Microsoft Excel workbooks before delivery or refactoring. Use when Codex must review workbook quality, formulas, controls, hidden sheets, protection, external links, Power Query, Power Pivot/Data Model, CUBE formulas, VBA buttons, or delivery readiness and produce actionable QA findings instead of directly changing the workbook.
+description: Use when auditing an Excel workbook's formulas, controls, hidden sheets, protection, links, Power Query, Data Model, CUBE formulas, VBA buttons, visual quality, or delivery readiness.
 ---
 
 # Excel Workbook QA Auditor

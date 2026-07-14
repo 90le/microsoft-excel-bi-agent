@@ -1,6 +1,6 @@
 ---
 name: excel-testing-fixtures
-description: Create sanitized Microsoft Excel testing fixtures, regression cases, smoke-test workbooks, forward-test prompts, and validation artifacts without customer data. Use when Codex must reproduce workbook behavior, test Excel BI scripts, build safe example files, verify parsers, or create cross-agent evaluation inputs for Excel/VBA, Power Query, DAX, CUBE/MDX, ADO, or delivery cleanup workflows.
+description: Use when creating customer-data-free Excel fixtures, regression cases, smoke workbooks, sample queries, or forward-test inputs for workbook automation and validation.
 ---
 
 # Excel Testing Fixtures

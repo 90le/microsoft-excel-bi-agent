@@ -1,6 +1,6 @@
 ---
 name: power-pivot-dax-modeling
-description: Design, debug, and explain Power Pivot and Data Model DAX calculations in Excel, including measures, calculated columns, relationships, row context, filter context, CALCULATE, iterators, time intelligence, and model validation.
+description: Use when Excel Power Pivot or Data Model work involves DAX measures, calculated columns, relationships, CALCULATE, iterators, filter/row context, time intelligence, or model validation.
 ---
 
 # Power Pivot DAX Modeling

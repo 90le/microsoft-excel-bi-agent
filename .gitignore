@@ -53,3 +53,8 @@ docs/master-goal.md
 docs/goal-tracking.md
 docs/iteration-protocol.md
 docs/completion-evidence.md
+
+# Local plugin-eval runs and observed usage
+.plugin-eval/runs/
+.plugin-eval/*.jsonl
+benchmark-usage*.jsonl

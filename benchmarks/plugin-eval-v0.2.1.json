@@ -1,0 +1,68 @@
+{
+  "kind": "plugin-eval-benchmark",
+  "schemaVersion": 2,
+  "version": 2,
+  "targetKind": "plugin",
+  "targetName": "microsoft-excel-bi-agent-pack",
+  "runner": {
+    "type": "codex-cli",
+    "model": "gpt-5.4",
+    "sandbox": "workspace-write",
+    "approvalPolicy": "never",
+    "extraArgs": []
+  },
+  "workspace": {
+    "sourcePath": ".",
+    "setupMode": "copy",
+    "preserve": "on-failure"
+  },
+  "targetProvisioning": {
+    "mode": "workspace-plugin-marketplace"
+  },
+  "verifiers": {
+    "commands": [
+      "python tools/verify_plugin_benchmark_output.py --input benchmark-output.json --source-sha256 1610e349e03bcb5e7bfab93c84f25c5add842fd35b01884d319c365a3138373b --dax-baseline-manifest-sha256 90362885da13670f43c93f4bde4f0121eb79578c2fc0009b62094653dfb6d8f2"
+    ]
+  },
+  "notes": [
+    "These scenarios use synthetic or sanitized inputs and do not establish real workbook task success.",
+    "Each scenario runs in an isolated copied workspace and writes benchmark-output.json for mechanical verification.",
+    "The DAX workspace manifest excludes documented plugin-eval provisioning (.agents/plugins/marketplace.json and plugins/), Git/cache, local orchestration, and benchmark control-plane paths; it does not verify them as unchanged.",
+    "After legitimate repository changes, regenerate the DAX baseline with: python tools/verify_plugin_benchmark_output.py --write-baseline-manifest benchmarks/fixtures/dax-workspace-baseline.json, then update the verifier command with the emitted manifestSha256."
+  ],
+  "scenarios": [
+    {
+      "id": "power-query-diagnosis",
+      "title": "Power Query diagnosis",
+      "purpose": "Check that a synthetic M-query diagnosis selects the Power Query skill and records an evidence-qualified report.",
+      "userInput": "Inspect the synthetic M query in benchmarks/fixtures/excel-bi-benchmark-source.json without modifying that source artifact. Write benchmark-output.json with \"scenarioId\": \"power-query-diagnosis\", \"selectedSkill\": \"power-query-m-engineering\", \"findings\" as a non-empty string array, \"evidenceLimits\": [\"Synthetic input only; no live runtime proof.\"], \"boundary\": \"Synthetic benchmark only; no live runtime proof.\", and \"sourcePreserved\": true. Do not claim that Excel refresh was executed.",
+      "successChecklist": [
+        "The selected skill is power-query-m-engineering.",
+        "benchmark-output.json contains a concrete diagnosis and evidence limits.",
+        "The verifier parses the report as JSON."
+      ]
+    },
+    {
+      "id": "dax-versus-environment",
+      "title": "DAX versus environment boundary",
+      "purpose": "Distinguish formula compatibility from host and platform compatibility without editing unrelated files.",
+      "userInput": "Classify the two compatibility requests in benchmarks/fixtures/excel-bi-benchmark-source.json without modifying that source artifact. Write benchmark-output.json with \"scenarioId\": \"dax-versus-environment\", \"selectedSkill\": {\"daxCompatibility\": \"power-pivot-dax-modeling\", \"hostCompatibility\": \"office-environment-diagnostics\"}, \"rationales\" as an object with non-empty text for both keys, \"evidenceLimits\": [\"Synthetic input only; no live runtime proof.\"], \"boundary\": \"Synthetic benchmark only; no live runtime proof.\", and \"sourcePreserved\": true. Outside documented plugin-eval provisioning, Git/cache, local orchestration, and benchmark control-plane paths, the only allowed product workspace change is benchmark-output.json. Do not edit unrelated files or claim runtime validation.",
+      "successChecklist": [
+        "The DAX request selects power-pivot-dax-modeling.",
+        "The Linux COM request selects office-environment-diagnostics.",
+        "Outside documented plugin-eval provisioning, Git/cache, local orchestration, and benchmark control-plane paths, the only allowed product workspace change is benchmark-output.json."
+      ]
+    },
+    {
+      "id": "delivery-boundary",
+      "title": "Delivery boundary and source preservation",
+      "purpose": "Create an audit plan for a sanitized workbook case while preserving the supplied source artifact.",
+      "userInput": "Use benchmarks/fixtures/excel-bi-benchmark-source.json as the sanitized synthetic source artifact. Write benchmark-output.json with \"scenarioId\": \"delivery-boundary\", \"selectedSkill\": \"excel-deliverable-publisher\", \"plan\" as a non-empty string array, \"evidenceLimits\": [\"Sanitized synthetic input only; no live runtime proof.\"], \"boundary\": \"Synthetic benchmark only; no live runtime proof.\", and \"sourcePreserved\": true. Do not modify the source artifact or claim a workbook was opened in Excel.",
+      "successChecklist": [
+        "The selected skill is excel-deliverable-publisher.",
+        "The plan preserves the supplied source artifact.",
+        "The output does not turn synthetic evidence into a real task-success claim."
+      ]
+    }
+  ]
+}

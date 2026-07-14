@@ -1,0 +1,1826 @@
+{
+  "kind": "excel-bi-dax-workspace-baseline",
+  "schemaVersion": "1.0",
+  "algorithm": "sha256",
+  "scenarioId": "dax-versus-environment",
+  "allowedExtraPaths": [
+    "benchmark-output.json"
+  ],
+  "excludedPaths": [
+    ".agents/plugins/marketplace.json",
+    "benchmarks/fixtures/dax-workspace-baseline.json",
+    "benchmarks/plugin-eval-v0.2.1.json"
+  ],
+  "excludedPrefixes": [
+    ".git/",
+    ".plugin-eval/",
+    ".superpowers/",
+    "plugins/"
+  ],
+  "files": [
+    {
+      "path": ".agents/skills/excel-ado-sql-data-access/SKILL.md",
+      "sha256": "08fd37548c541de09c9c9cdd918194924f251bf34d361f3f6e6d1a426ba83b3f"
+    },
+    {
+      "path": ".agents/skills/excel-ado-sql-data-access/agents/openai.yaml",
+      "sha256": "211b74d7cc571b4af6fe036b7addfb784f320387eb62ea4db58963ae482070a6"
+    },
+    {
+      "path": ".agents/skills/excel-ado-sql-data-access/references/ado-patterns.md",
+      "sha256": "54ed1e739b736a0f728740e4aac291aa19c436deb2c417c2bdb727158c0e7d0a"
+    },
+    {
+      "path": ".agents/skills/excel-ado-sql-data-access/references/connection-strings.md",
+      "sha256": "c659515e8568314ed281dce81009173eaefc8d4292f2bad3838004499611fb15"
+    },
+    {
+      "path": ".agents/skills/excel-ado-sql-data-access/references/data-access-workflow.md",
+      "sha256": "6569a59e3702b56688f883c1ae3aa8f603fe6cd55ee59075207c3d10c7783ed7"
+    },
+    {
+      "path": ".agents/skills/excel-ado-sql-data-access/references/official-docs-index.json",
+      "sha256": "7a648c649ad1844e74fc6af5aa7812b06c9fab25b9bc49672d077d929abe36af"
+    },
+    {
+      "path": ".agents/skills/excel-ado-sql-data-access/references/official-links.md",
+      "sha256": "436cd4b649b1b804c66dd71ec119c6f6adcbc62fc6ae2b112d6394f6a0dfb969"
+    },
+    {
+      "path": ".agents/skills/excel-bi-router/SKILL.md",
+      "sha256": "43c3a2817ea2ed9969250a99916aa8e7e5d5d70a966489bbecf03b4673483510"
+    },
+    {
+      "path": ".agents/skills/excel-bi-router/agents/openai.yaml",
+      "sha256": "a577669b38bda321a2c0fab85a808eaf1caca26c0b7e6e3e82b1fafad5d31358"
+    },
+    {
+      "path": ".agents/skills/excel-bi-router/scripts/route_excel_bi_task.py",
+      "sha256": "5f144e5a4a73fe42b4584f22672ef7f61ba7c1c2a9c1a606c201f5bedd5bb8e5"
+    },
+    {
+      "path": ".agents/skills/excel-deliverable-publisher/SKILL.md",
+      "sha256": "68f03fe7ee3bc5e60a7004b3bd06a9b97c313151e5ab61261bd992e1d428d21f"
+    },
+    {
+      "path": ".agents/skills/excel-deliverable-publisher/agents/openai.yaml",
+      "sha256": "ca6cbd82eb0a4503f0942f12427fc0549a138e632695cb89a06fe03febd02a21"
+    },
+    {
+      "path": ".agents/skills/excel-deliverable-publisher/references/delivery-checklist.md",
+      "sha256": "20e1d73334f8e774bee10c6dbc811d8d467bddee31c14964e8ee7a4f2ab24afa"
+    },
+    {
+      "path": ".agents/skills/excel-report-builder/SKILL.md",
+      "sha256": "4c733fa04eed4c643c8de510ff106984f217dd580cc84b7289e82d1c9d2b1cb5"
+    },
+    {
+      "path": ".agents/skills/excel-report-builder/agents/openai.yaml",
+      "sha256": "0665a78f62dd645891ea56d0f23ed28d43b1474c8135063cec0e8cfa7df1979e"
+    },
+    {
+      "path": ".agents/skills/excel-report-builder/references/report-surface-standards.md",
+      "sha256": "07da4df7d1202df3ad26d82fb089e66000de7baada16d1b80d00e68e7cf3dc9b"
+    },
+    {
+      "path": ".agents/skills/excel-testing-fixtures/SKILL.md",
+      "sha256": "44e1897bb8f6cfdaafdab33a15c49b0c7d5227c43a929e6cab9ed7ae90fb3745"
+    },
+    {
+      "path": ".agents/skills/excel-testing-fixtures/agents/openai.yaml",
+      "sha256": "497c7f0c155aefe5c6866b1edcb0fbaf2b2e0cb56ead16e679035f91164c88bb"
+    },
+    {
+      "path": ".agents/skills/excel-testing-fixtures/references/fixture-design-rules.md",
+      "sha256": "0ffc7ff427b00af26defe90016028584fa2addc08cb07fd9a9cc2fae15315370"
+    },
+    {
+      "path": ".agents/skills/excel-vba-workbook-engineering/SKILL.md",
+      "sha256": "ea5105a124cc79855eb3c9b6d4972094ce027a4c8bc855aa4d07be093becb3fe"
+    },
+    {
+      "path": ".agents/skills/excel-vba-workbook-engineering/agents/openai.yaml",
+      "sha256": "7357ec3d4d428777c2c65519cf3b23882f034458aa45922a291cd7af0c86bd10"
+    },
+    {
+      "path": ".agents/skills/excel-vba-workbook-engineering/references/vba-patterns.md",
+      "sha256": "ae92bf16adf6c4c383fc215d357e40add1ac9f86663601c1e96cfdf31bb76044"
+    },
+    {
+      "path": ".agents/skills/excel-vba-workbook-engineering/references/workflow.md",
+      "sha256": "5d9327226fa9d9fb7dec80c6c674b8f5eee2c1a8119d1b2d99531420898e2855"
+    },
+    {
+      "path": ".agents/skills/excel-vba-workbook-engineering/scripts/export_vba.ps1",
+      "sha256": "7992fbd96178270a8247a22028227638fb32fe3725f96bb694c2e935abd9cc14"
+    },
+    {
+      "path": ".agents/skills/excel-vba-workbook-engineering/scripts/import_vba.ps1",
+      "sha256": "60a213f04b341d1adcdefa8b1e3b35c0e6056a46589dfa0db375a892861a636d"
+    },
+    {
+      "path": ".agents/skills/excel-vba-workbook-engineering/scripts/inspect_openxml.py",
+      "sha256": "70fccbf9e985f59cda6b07db8f1c989943a91b7390d32084638feb2a8971c3a4"
+    },
+    {
+      "path": ".agents/skills/excel-vba-workbook-engineering/scripts/inspect_workbook.ps1",
+      "sha256": "298c4b62076a5afbbfc93962ffdd7e91ff831026568fef96c0befdefe37dcb9b"
+    },
+    {
+      "path": ".agents/skills/excel-vba-workbook-engineering/scripts/invoke_excel_com.sh",
+      "sha256": "28d29fdcf05da8323651ae003e98ac4f6133327412ddced1b4eaf6eb9c177990"
+    },
+    {
+      "path": ".agents/skills/excel-vba-workbook-engineering/scripts/lint_vba_source.py",
+      "sha256": "f8be721dc303a58cc459b240000b0d1e538a8231cef738e65aef1dc17e6d6bf0"
+    },
+    {
+      "path": ".agents/skills/excel-workbook-qa-auditor/SKILL.md",
+      "sha256": "0b004f1fe92a09fa4876cd640fd476c3ef108c0a62046292d523f7fda8a9c3f5"
+    },
+    {
+      "path": ".agents/skills/excel-workbook-qa-auditor/agents/openai.yaml",
+      "sha256": "effad6cbc3e73da8ddfdf083727b68d5c41a74cc2471d0ad481e9e5b0ce44473"
+    },
+    {
+      "path": ".agents/skills/excel-workbook-qa-auditor/references/qa-severity-rubric.md",
+      "sha256": "7986d630ab6479ecddb0d78bd47bae134c1b34cd1ca68e1fd4b08ee148067c47"
+    },
+    {
+      "path": ".agents/skills/mdx-cubevalue-extraction/SKILL.md",
+      "sha256": "5f994db0f594fc6401408a20f2fbda6022c4dca0028689246429e391b2b1d420"
+    },
+    {
+      "path": ".agents/skills/mdx-cubevalue-extraction/agents/openai.yaml",
+      "sha256": "ad276c2f5da14fed5be647a1fa6170fdd2f3963bf43b2836e6e7ffeeb55e91fe"
+    },
+    {
+      "path": ".agents/skills/mdx-cubevalue-extraction/references/cube-dependency-report.md",
+      "sha256": "84752ce4fdd073ec4a1ccbafcb80141bcecf71e48244d29a9ade07bab2a5da50"
+    },
+    {
+      "path": ".agents/skills/mdx-cubevalue-extraction/references/cube-formulas.md",
+      "sha256": "052e66cde7dbbadc3fb8504729307e3d833a5e264eac45cafc27f311c9bc4ae5"
+    },
+    {
+      "path": ".agents/skills/mdx-cubevalue-extraction/references/mdx-member-paths.md",
+      "sha256": "06545159b01ea73bcdc940e5fa1f5629e22259ea54aac9f9213a7bc18e087c7d"
+    },
+    {
+      "path": ".agents/skills/mdx-cubevalue-extraction/references/official-docs-index.json",
+      "sha256": "2db2b97393a25a2dfda03691147c65814c3a8bb689692284981162a69fdc5193"
+    },
+    {
+      "path": ".agents/skills/mdx-cubevalue-extraction/references/official-links.md",
+      "sha256": "3b5bcc7695e29a46aa0e4ef9933a753643a4ee08206d95bc37523d8215cc6e5b"
+    },
+    {
+      "path": ".agents/skills/office-environment-diagnostics/SKILL.md",
+      "sha256": "90f0c5c4ceb701169c43d2ffec7270c86ea3bf68c02799bba80412e50bf117b1"
+    },
+    {
+      "path": ".agents/skills/office-environment-diagnostics/agents/openai.yaml",
+      "sha256": "aa28fe590c850fee7b724631e55510f9b5f09afacf5ace67f2ebcaf04f40a20d"
+    },
+    {
+      "path": ".agents/skills/office-environment-diagnostics/references/environment-decision-tree.md",
+      "sha256": "2614f9922ac4a31529bed9c9103ab7d058fe4b5ea90e48c53b5021d4d57eaced"
+    },
+    {
+      "path": ".agents/skills/power-bi-semantic-model/SKILL.md",
+      "sha256": "28aef2ea7e67b9e8db163f8646ad79ef4b4a9fb8e427de1c923ab0ef1a6d257d"
+    },
+    {
+      "path": ".agents/skills/power-bi-semantic-model/agents/openai.yaml",
+      "sha256": "a3c5c1eb527451ca6b413bfc17c0f47465af36556ce5b54e3aefe1456274863c"
+    },
+    {
+      "path": ".agents/skills/power-bi-semantic-model/references/host-boundary.md",
+      "sha256": "6c55de870f517cdcac009237c9c6e166077d9e42c55d6caf625cacb996558f93"
+    },
+    {
+      "path": ".agents/skills/power-pivot-dax-modeling/SKILL.md",
+      "sha256": "ceb2d60855475766638598bb4db313cc0db07a8f27520152bd3621e6cbb6768c"
+    },
+    {
+      "path": ".agents/skills/power-pivot-dax-modeling/agents/openai.yaml",
+      "sha256": "43d016045d27256fa8878f10894efbc675618e6d1edee3bbdceeca1e1d49a004"
+    },
+    {
+      "path": ".agents/skills/power-pivot-dax-modeling/references/dax-context.md",
+      "sha256": "28195c5709eca209723aa44dd1e583d4589879afd04586dd70c0a7abf440eaa6"
+    },
+    {
+      "path": ".agents/skills/power-pivot-dax-modeling/references/dax-patterns.md",
+      "sha256": "22f3c3e238d79f3f3e4afd46ab702705de2c63367ecb0b81a0c61880e8bdbdab"
+    },
+    {
+      "path": ".agents/skills/power-pivot-dax-modeling/references/model-inspection.md",
+      "sha256": "c8b6e131ccddd675058a7b75f5e5c997e919ea7019baff74d73db17de78cc64b"
+    },
+    {
+      "path": ".agents/skills/power-pivot-dax-modeling/references/official-docs-index.json",
+      "sha256": "02bd0fd18ceb674a3e20ad2d4683a75359b5c9ab0773f973e7be0c4fffef2884"
+    },
+    {
+      "path": ".agents/skills/power-pivot-dax-modeling/references/official-links.md",
+      "sha256": "33393f7534a064fadace07e948c32d262ef6f072ae5b0e0731fc7696d060628e"
+    },
+    {
+      "path": ".agents/skills/power-pivot-dax-modeling/scripts/analyze_dax_dependencies.py",
+      "sha256": "fcf14449b35318cf283f3df9ee4e272c76c4f7819ab0b648f0d114d173b24e6c"
+    },
+    {
+      "path": ".agents/skills/power-pivot-dax-modeling/scripts/lint_dax_compat.py",
+      "sha256": "5a53c48a7ceef063742eab9cdf88e0f26907d996fa1455812b8aa3cc7d1b5a64"
+    },
+    {
+      "path": ".agents/skills/power-query-m-engineering/SKILL.md",
+      "sha256": "f920afa31ab9c657a8e719873a8b3e30d7b8bbdb25eff876a49e50427ff4393a"
+    },
+    {
+      "path": ".agents/skills/power-query-m-engineering/agents/openai.yaml",
+      "sha256": "d7286ad3614268dcf5bac6e055feb3e722af2d09d8e606a582aa02a24f44f726"
+    },
+    {
+      "path": ".agents/skills/power-query-m-engineering/references/m-lifecycle-vba.md",
+      "sha256": "8b57ad85c1f8eedf40a0d288a03d1b72a81749e11574fa5d8a921364d9f6af84"
+    },
+    {
+      "path": ".agents/skills/power-query-m-engineering/references/m-patterns.md",
+      "sha256": "3c1532672fc79f2b5fec0868054c5268d91fcd03e8f7e6e9b265df0ad390bef3"
+    },
+    {
+      "path": ".agents/skills/power-query-m-engineering/references/m-style-guide.md",
+      "sha256": "dbb882bea1a5d9e2cfc2323c076096fe803a8110854305f478a1964579744455"
+    },
+    {
+      "path": ".agents/skills/power-query-m-engineering/references/m-troubleshooting.md",
+      "sha256": "fc29bfa216d5e96effe3a97097f98f75f549a2f03f632991ad62e18470b341ec"
+    },
+    {
+      "path": ".agents/skills/power-query-m-engineering/references/m-validation.md",
+      "sha256": "5897fb464269aa83beb1d34a5e993a319ce7a8b14ea39b34a8751a71cdd983a3"
+    },
+    {
+      "path": ".agents/skills/power-query-m-engineering/references/official-docs-index.json",
+      "sha256": "79852f2e0b37d9f3f8aaf19b420c29ab36b4f3bc72ebfa1c63b735eb0cf7683a"
+    },
+    {
+      "path": ".agents/skills/power-query-m-engineering/references/official-docs-kb.md",
+      "sha256": "79ad3aadf7fd2d33706cc9cd21cdfba85c87401eed54ed4fc08db5d7bc98bdf3"
+    },
+    {
+      "path": ".agents/skills/power-query-m-engineering/references/official-links.md",
+      "sha256": "57b37c39ddf08b3e8c0b0ff6229dd692ad810d3e5ddf48d1e0509f8f18d5408a"
+    },
+    {
+      "path": ".agents/skills/power-query-m-engineering/scripts/build_power_query_refresh_report.py",
+      "sha256": "723fd69aa0fa65e07a360b06d61be23d25d67db910801c3b879ee0863f8ba698"
+    },
+    {
+      "path": ".agents/skills/power-query-m-engineering/scripts/classify_power_query_refresh_errors.py",
+      "sha256": "9d1b7ac94c4bf37bbbe24111297fbfc442f54af492959395581a07c19b8410d3"
+    },
+    {
+      "path": ".agents/skills/power-query-m-engineering/scripts/create_power_query_fixture_excel_com.ps1",
+      "sha256": "1fd6908c8a89498182d65fa309867db9b6b3bd144c62d3ffa2a004142acab3fa"
+    },
+    {
+      "path": ".agents/skills/power-query-m-engineering/scripts/export_power_queries_excel_com.ps1",
+      "sha256": "fc4abd00ad115016ba7c987e71744ccf1f33fe88d1ff8093b108bdfba445091d"
+    },
+    {
+      "path": ".agents/skills/power-query-m-engineering/scripts/inspect_power_query_openxml.py",
+      "sha256": "69553d7d73d1bde48cd3e3a68b8b89b537f6ef84c30c7f79cb345feb3cd71463"
+    },
+    {
+      "path": ".agents/skills/power-query-m-engineering/scripts/invoke_power_query_excel_com.sh",
+      "sha256": "2ccc02e85254a328dc826216f64ffd4519e9d4abf045f1e41f8011bb9789e392"
+    },
+    {
+      "path": ".agents/skills/power-query-m-engineering/scripts/lint_power_query_m.py",
+      "sha256": "8d2f6341ee1d60d489af39b7fbb089236701b91c262637dae386a62399902e0d"
+    },
+    {
+      "path": ".agents/skills/power-query-m-engineering/scripts/manage_power_queries_excel_com.ps1",
+      "sha256": "596ff1901980634c0dcb46105294b15b044077c8f694272b3a024b7431454060"
+    },
+    {
+      "path": ".agents/skills/power-query-m-engineering/scripts/refresh_power_queries_excel_com.ps1",
+      "sha256": "2dc02715e50f427b84fe579c6deadbd7247774984e8b65effa16b7440cb2df74"
+    },
+    {
+      "path": ".agents/skills/power-query-m-engineering/scripts/search_power_query_official_kb.py",
+      "sha256": "1f19752c8a9ad5cdeafecde65c4fd96749450e76921dbbfbc5dc2cc9b12c8c3a"
+    },
+    {
+      "path": ".claude/skills/excel-ado-sql-data-access/SKILL.md",
+      "sha256": "08fd37548c541de09c9c9cdd918194924f251bf34d361f3f6e6d1a426ba83b3f"
+    },
+    {
+      "path": ".claude/skills/excel-ado-sql-data-access/agents/openai.yaml",
+      "sha256": "211b74d7cc571b4af6fe036b7addfb784f320387eb62ea4db58963ae482070a6"
+    },
+    {
+      "path": ".claude/skills/excel-ado-sql-data-access/references/ado-patterns.md",
+      "sha256": "54ed1e739b736a0f728740e4aac291aa19c436deb2c417c2bdb727158c0e7d0a"
+    },
+    {
+      "path": ".claude/skills/excel-ado-sql-data-access/references/connection-strings.md",
+      "sha256": "c659515e8568314ed281dce81009173eaefc8d4292f2bad3838004499611fb15"
+    },
+    {
+      "path": ".claude/skills/excel-ado-sql-data-access/references/data-access-workflow.md",
+      "sha256": "6569a59e3702b56688f883c1ae3aa8f603fe6cd55ee59075207c3d10c7783ed7"
+    },
+    {
+      "path": ".claude/skills/excel-ado-sql-data-access/references/official-docs-index.json",
+      "sha256": "7a648c649ad1844e74fc6af5aa7812b06c9fab25b9bc49672d077d929abe36af"
+    },
+    {
+      "path": ".claude/skills/excel-ado-sql-data-access/references/official-links.md",
+      "sha256": "436cd4b649b1b804c66dd71ec119c6f6adcbc62fc6ae2b112d6394f6a0dfb969"
+    },
+    {
+      "path": ".claude/skills/excel-bi-router/SKILL.md",
+      "sha256": "43c3a2817ea2ed9969250a99916aa8e7e5d5d70a966489bbecf03b4673483510"
+    },
+    {
+      "path": ".claude/skills/excel-bi-router/agents/openai.yaml",
+      "sha256": "a577669b38bda321a2c0fab85a808eaf1caca26c0b7e6e3e82b1fafad5d31358"
+    },
+    {
+      "path": ".claude/skills/excel-bi-router/scripts/route_excel_bi_task.py",
+      "sha256": "5f144e5a4a73fe42b4584f22672ef7f61ba7c1c2a9c1a606c201f5bedd5bb8e5"
+    },
+    {
+      "path": ".claude/skills/excel-deliverable-publisher/SKILL.md",
+      "sha256": "68f03fe7ee3bc5e60a7004b3bd06a9b97c313151e5ab61261bd992e1d428d21f"
+    },
+    {
+      "path": ".claude/skills/excel-deliverable-publisher/agents/openai.yaml",
+      "sha256": "ca6cbd82eb0a4503f0942f12427fc0549a138e632695cb89a06fe03febd02a21"
+    },
+    {
+      "path": ".claude/skills/excel-deliverable-publisher/references/delivery-checklist.md",
+      "sha256": "20e1d73334f8e774bee10c6dbc811d8d467bddee31c14964e8ee7a4f2ab24afa"
+    },
+    {
+      "path": ".claude/skills/excel-report-builder/SKILL.md",
+      "sha256": "4c733fa04eed4c643c8de510ff106984f217dd580cc84b7289e82d1c9d2b1cb5"
+    },
+    {
+      "path": ".claude/skills/excel-report-builder/agents/openai.yaml",
+      "sha256": "0665a78f62dd645891ea56d0f23ed28d43b1474c8135063cec0e8cfa7df1979e"
+    },
+    {
+      "path": ".claude/skills/excel-report-builder/references/report-surface-standards.md",
+      "sha256": "07da4df7d1202df3ad26d82fb089e66000de7baada16d1b80d00e68e7cf3dc9b"
+    },
+    {
+      "path": ".claude/skills/excel-testing-fixtures/SKILL.md",
+      "sha256": "44e1897bb8f6cfdaafdab33a15c49b0c7d5227c43a929e6cab9ed7ae90fb3745"
+    },
+    {
+      "path": ".claude/skills/excel-testing-fixtures/agents/openai.yaml",
+      "sha256": "497c7f0c155aefe5c6866b1edcb0fbaf2b2e0cb56ead16e679035f91164c88bb"
+    },
+    {
+      "path": ".claude/skills/excel-testing-fixtures/references/fixture-design-rules.md",
+      "sha256": "0ffc7ff427b00af26defe90016028584fa2addc08cb07fd9a9cc2fae15315370"
+    },
+    {
+      "path": ".claude/skills/excel-vba-workbook-engineering/SKILL.md",
+      "sha256": "ea5105a124cc79855eb3c9b6d4972094ce027a4c8bc855aa4d07be093becb3fe"
+    },
+    {
+      "path": ".claude/skills/excel-vba-workbook-engineering/agents/openai.yaml",
+      "sha256": "7357ec3d4d428777c2c65519cf3b23882f034458aa45922a291cd7af0c86bd10"
+    },
+    {
+      "path": ".claude/skills/excel-vba-workbook-engineering/references/vba-patterns.md",
+      "sha256": "ae92bf16adf6c4c383fc215d357e40add1ac9f86663601c1e96cfdf31bb76044"
+    },
+    {
+      "path": ".claude/skills/excel-vba-workbook-engineering/references/workflow.md",
+      "sha256": "5d9327226fa9d9fb7dec80c6c674b8f5eee2c1a8119d1b2d99531420898e2855"
+    },
+    {
+      "path": ".claude/skills/excel-vba-workbook-engineering/scripts/export_vba.ps1",
+      "sha256": "7992fbd96178270a8247a22028227638fb32fe3725f96bb694c2e935abd9cc14"
+    },
+    {
+      "path": ".claude/skills/excel-vba-workbook-engineering/scripts/import_vba.ps1",
+      "sha256": "60a213f04b341d1adcdefa8b1e3b35c0e6056a46589dfa0db375a892861a636d"
+    },
+    {
+      "path": ".claude/skills/excel-vba-workbook-engineering/scripts/inspect_openxml.py",
+      "sha256": "70fccbf9e985f59cda6b07db8f1c989943a91b7390d32084638feb2a8971c3a4"
+    },
+    {
+      "path": ".claude/skills/excel-vba-workbook-engineering/scripts/inspect_workbook.ps1",
+      "sha256": "298c4b62076a5afbbfc93962ffdd7e91ff831026568fef96c0befdefe37dcb9b"
+    },
+    {
+      "path": ".claude/skills/excel-vba-workbook-engineering/scripts/invoke_excel_com.sh",
+      "sha256": "28d29fdcf05da8323651ae003e98ac4f6133327412ddced1b4eaf6eb9c177990"
+    },
+    {
+      "path": ".claude/skills/excel-vba-workbook-engineering/scripts/lint_vba_source.py",
+      "sha256": "f8be721dc303a58cc459b240000b0d1e538a8231cef738e65aef1dc17e6d6bf0"
+    },
+    {
+      "path": ".claude/skills/excel-workbook-qa-auditor/SKILL.md",
+      "sha256": "0b004f1fe92a09fa4876cd640fd476c3ef108c0a62046292d523f7fda8a9c3f5"
+    },
+    {
+      "path": ".claude/skills/excel-workbook-qa-auditor/agents/openai.yaml",
+      "sha256": "effad6cbc3e73da8ddfdf083727b68d5c41a74cc2471d0ad481e9e5b0ce44473"
+    },
+    {
+      "path": ".claude/skills/excel-workbook-qa-auditor/references/qa-severity-rubric.md",
+      "sha256": "7986d630ab6479ecddb0d78bd47bae134c1b34cd1ca68e1fd4b08ee148067c47"
+    },
+    {
+      "path": ".claude/skills/mdx-cubevalue-extraction/SKILL.md",
+      "sha256": "5f994db0f594fc6401408a20f2fbda6022c4dca0028689246429e391b2b1d420"
+    },
+    {
+      "path": ".claude/skills/mdx-cubevalue-extraction/agents/openai.yaml",
+      "sha256": "ad276c2f5da14fed5be647a1fa6170fdd2f3963bf43b2836e6e7ffeeb55e91fe"
+    },
+    {
+      "path": ".claude/skills/mdx-cubevalue-extraction/references/cube-dependency-report.md",
+      "sha256": "84752ce4fdd073ec4a1ccbafcb80141bcecf71e48244d29a9ade07bab2a5da50"
+    },
+    {
+      "path": ".claude/skills/mdx-cubevalue-extraction/references/cube-formulas.md",
+      "sha256": "052e66cde7dbbadc3fb8504729307e3d833a5e264eac45cafc27f311c9bc4ae5"
+    },
+    {
+      "path": ".claude/skills/mdx-cubevalue-extraction/references/mdx-member-paths.md",
+      "sha256": "06545159b01ea73bcdc940e5fa1f5629e22259ea54aac9f9213a7bc18e087c7d"
+    },
+    {
+      "path": ".claude/skills/mdx-cubevalue-extraction/references/official-docs-index.json",
+      "sha256": "2db2b97393a25a2dfda03691147c65814c3a8bb689692284981162a69fdc5193"
+    },
+    {
+      "path": ".claude/skills/mdx-cubevalue-extraction/references/official-links.md",
+      "sha256": "3b5bcc7695e29a46aa0e4ef9933a753643a4ee08206d95bc37523d8215cc6e5b"
+    },
+    {
+      "path": ".claude/skills/office-environment-diagnostics/SKILL.md",
+      "sha256": "90f0c5c4ceb701169c43d2ffec7270c86ea3bf68c02799bba80412e50bf117b1"
+    },
+    {
+      "path": ".claude/skills/office-environment-diagnostics/agents/openai.yaml",
+      "sha256": "aa28fe590c850fee7b724631e55510f9b5f09afacf5ace67f2ebcaf04f40a20d"
+    },
+    {
+      "path": ".claude/skills/office-environment-diagnostics/references/environment-decision-tree.md",
+      "sha256": "2614f9922ac4a31529bed9c9103ab7d058fe4b5ea90e48c53b5021d4d57eaced"
+    },
+    {
+      "path": ".claude/skills/power-bi-semantic-model/SKILL.md",
+      "sha256": "28aef2ea7e67b9e8db163f8646ad79ef4b4a9fb8e427de1c923ab0ef1a6d257d"
+    },
+    {
+      "path": ".claude/skills/power-bi-semantic-model/agents/openai.yaml",
+      "sha256": "a3c5c1eb527451ca6b413bfc17c0f47465af36556ce5b54e3aefe1456274863c"
+    },
+    {
+      "path": ".claude/skills/power-bi-semantic-model/references/host-boundary.md",
+      "sha256": "6c55de870f517cdcac009237c9c6e166077d9e42c55d6caf625cacb996558f93"
+    },
+    {
+      "path": ".claude/skills/power-pivot-dax-modeling/SKILL.md",
+      "sha256": "ceb2d60855475766638598bb4db313cc0db07a8f27520152bd3621e6cbb6768c"
+    },
+    {
+      "path": ".claude/skills/power-pivot-dax-modeling/agents/openai.yaml",
+      "sha256": "43d016045d27256fa8878f10894efbc675618e6d1edee3bbdceeca1e1d49a004"
+    },
+    {
+      "path": ".claude/skills/power-pivot-dax-modeling/references/dax-context.md",
+      "sha256": "28195c5709eca209723aa44dd1e583d4589879afd04586dd70c0a7abf440eaa6"
+    },
+    {
+      "path": ".claude/skills/power-pivot-dax-modeling/references/dax-patterns.md",
+      "sha256": "22f3c3e238d79f3f3e4afd46ab702705de2c63367ecb0b81a0c61880e8bdbdab"
+    },
+    {
+      "path": ".claude/skills/power-pivot-dax-modeling/references/model-inspection.md",
+      "sha256": "c8b6e131ccddd675058a7b75f5e5c997e919ea7019baff74d73db17de78cc64b"
+    },
+    {
+      "path": ".claude/skills/power-pivot-dax-modeling/references/official-docs-index.json",
+      "sha256": "02bd0fd18ceb674a3e20ad2d4683a75359b5c9ab0773f973e7be0c4fffef2884"
+    },
+    {
+      "path": ".claude/skills/power-pivot-dax-modeling/references/official-links.md",
+      "sha256": "33393f7534a064fadace07e948c32d262ef6f072ae5b0e0731fc7696d060628e"
+    },
+    {
+      "path": ".claude/skills/power-pivot-dax-modeling/scripts/analyze_dax_dependencies.py",
+      "sha256": "fcf14449b35318cf283f3df9ee4e272c76c4f7819ab0b648f0d114d173b24e6c"
+    },
+    {
+      "path": ".claude/skills/power-pivot-dax-modeling/scripts/lint_dax_compat.py",
+      "sha256": "5a53c48a7ceef063742eab9cdf88e0f26907d996fa1455812b8aa3cc7d1b5a64"
+    },
+    {
+      "path": ".claude/skills/power-query-m-engineering/SKILL.md",
+      "sha256": "f920afa31ab9c657a8e719873a8b3e30d7b8bbdb25eff876a49e50427ff4393a"
+    },
+    {
+      "path": ".claude/skills/power-query-m-engineering/agents/openai.yaml",
+      "sha256": "d7286ad3614268dcf5bac6e055feb3e722af2d09d8e606a582aa02a24f44f726"
+    },
+    {
+      "path": ".claude/skills/power-query-m-engineering/references/m-lifecycle-vba.md",
+      "sha256": "8b57ad85c1f8eedf40a0d288a03d1b72a81749e11574fa5d8a921364d9f6af84"
+    },
+    {
+      "path": ".claude/skills/power-query-m-engineering/references/m-patterns.md",
+      "sha256": "3c1532672fc79f2b5fec0868054c5268d91fcd03e8f7e6e9b265df0ad390bef3"
+    },
+    {
+      "path": ".claude/skills/power-query-m-engineering/references/m-style-guide.md",
+      "sha256": "dbb882bea1a5d9e2cfc2323c076096fe803a8110854305f478a1964579744455"
+    },
+    {
+      "path": ".claude/skills/power-query-m-engineering/references/m-troubleshooting.md",
+      "sha256": "fc29bfa216d5e96effe3a97097f98f75f549a2f03f632991ad62e18470b341ec"
+    },
+    {
+      "path": ".claude/skills/power-query-m-engineering/references/m-validation.md",
+      "sha256": "5897fb464269aa83beb1d34a5e993a319ce7a8b14ea39b34a8751a71cdd983a3"
+    },
+    {
+      "path": ".claude/skills/power-query-m-engineering/references/official-docs-index.json",
+      "sha256": "79852f2e0b37d9f3f8aaf19b420c29ab36b4f3bc72ebfa1c63b735eb0cf7683a"
+    },
+    {
+      "path": ".claude/skills/power-query-m-engineering/references/official-docs-kb.md",
+      "sha256": "79ad3aadf7fd2d33706cc9cd21cdfba85c87401eed54ed4fc08db5d7bc98bdf3"
+    },
+    {
+      "path": ".claude/skills/power-query-m-engineering/references/official-links.md",
+      "sha256": "57b37c39ddf08b3e8c0b0ff6229dd692ad810d3e5ddf48d1e0509f8f18d5408a"
+    },
+    {
+      "path": ".claude/skills/power-query-m-engineering/scripts/build_power_query_refresh_report.py",
+      "sha256": "723fd69aa0fa65e07a360b06d61be23d25d67db910801c3b879ee0863f8ba698"
+    },
+    {
+      "path": ".claude/skills/power-query-m-engineering/scripts/classify_power_query_refresh_errors.py",
+      "sha256": "9d1b7ac94c4bf37bbbe24111297fbfc442f54af492959395581a07c19b8410d3"
+    },
+    {
+      "path": ".claude/skills/power-query-m-engineering/scripts/create_power_query_fixture_excel_com.ps1",
+      "sha256": "1fd6908c8a89498182d65fa309867db9b6b3bd144c62d3ffa2a004142acab3fa"
+    },
+    {
+      "path": ".claude/skills/power-query-m-engineering/scripts/export_power_queries_excel_com.ps1",
+      "sha256": "fc4abd00ad115016ba7c987e71744ccf1f33fe88d1ff8093b108bdfba445091d"
+    },
+    {
+      "path": ".claude/skills/power-query-m-engineering/scripts/inspect_power_query_openxml.py",
+      "sha256": "69553d7d73d1bde48cd3e3a68b8b89b537f6ef84c30c7f79cb345feb3cd71463"
+    },
+    {
+      "path": ".claude/skills/power-query-m-engineering/scripts/invoke_power_query_excel_com.sh",
+      "sha256": "2ccc02e85254a328dc826216f64ffd4519e9d4abf045f1e41f8011bb9789e392"
+    },
+    {
+      "path": ".claude/skills/power-query-m-engineering/scripts/lint_power_query_m.py",
+      "sha256": "8d2f6341ee1d60d489af39b7fbb089236701b91c262637dae386a62399902e0d"
+    },
+    {
+      "path": ".claude/skills/power-query-m-engineering/scripts/manage_power_queries_excel_com.ps1",
+      "sha256": "596ff1901980634c0dcb46105294b15b044077c8f694272b3a024b7431454060"
+    },
+    {
+      "path": ".claude/skills/power-query-m-engineering/scripts/refresh_power_queries_excel_com.ps1",
+      "sha256": "2dc02715e50f427b84fe579c6deadbd7247774984e8b65effa16b7440cb2df74"
+    },
+    {
+      "path": ".claude/skills/power-query-m-engineering/scripts/search_power_query_official_kb.py",
+      "sha256": "1f19752c8a9ad5cdeafecde65c4fd96749450e76921dbbfbc5dc2cc9b12c8c3a"
+    },
+    {
+      "path": ".codex-plugin/plugin.json",
+      "sha256": "af277667f992b03ebab496e917fa1a9ad45dc86707dabd854dad70448629a415"
+    },
+    {
+      "path": ".gitattributes",
+      "sha256": "77d967700a69be5866ac28fce240221613699e5595d7a248ead72278fe984dec"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/bug_report.yml",
+      "sha256": "9d670909c45a43664633c8a126c5dd3f89b454c73020077012ea3edb93501b03"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/config.yml",
+      "sha256": "d9a6fb2af0d02674d23f0545ebe999e20a643e202d93c7fea606b74d238509d6"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/docs_install.yml",
+      "sha256": "c9208bb96d1a83e3b223442d18ab72be2c947e3aefe284348a6b528f9393dd71"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/feature_request.yml",
+      "sha256": "cb28f808590484ffaabf029d16596b69770f74ea64b79315b476259da487bd49"
+    },
+    {
+      "path": ".github/pull_request_template.md",
+      "sha256": "f0edc000b557f88d3d653a277efd0ddd417ab6fe1a890502c71397ea993034ca"
+    },
+    {
+      "path": ".github/workflows/validate.yml",
+      "sha256": "b5541d7fe26ae5d61d48f5a16cd7d6b54f2bec6cc2885d38957964d5323518eb"
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "bf4f7bbb4eba5dd4aaa253a9fa5776942cd973ab3fe2ee20f88794f8162c6cf7"
+    },
+    {
+      "path": ".opencode/skills/excel-ado-sql-data-access/SKILL.md",
+      "sha256": "08fd37548c541de09c9c9cdd918194924f251bf34d361f3f6e6d1a426ba83b3f"
+    },
+    {
+      "path": ".opencode/skills/excel-ado-sql-data-access/agents/openai.yaml",
+      "sha256": "211b74d7cc571b4af6fe036b7addfb784f320387eb62ea4db58963ae482070a6"
+    },
+    {
+      "path": ".opencode/skills/excel-ado-sql-data-access/references/ado-patterns.md",
+      "sha256": "54ed1e739b736a0f728740e4aac291aa19c436deb2c417c2bdb727158c0e7d0a"
+    },
+    {
+      "path": ".opencode/skills/excel-ado-sql-data-access/references/connection-strings.md",
+      "sha256": "c659515e8568314ed281dce81009173eaefc8d4292f2bad3838004499611fb15"
+    },
+    {
+      "path": ".opencode/skills/excel-ado-sql-data-access/references/data-access-workflow.md",
+      "sha256": "6569a59e3702b56688f883c1ae3aa8f603fe6cd55ee59075207c3d10c7783ed7"
+    },
+    {
+      "path": ".opencode/skills/excel-ado-sql-data-access/references/official-docs-index.json",
+      "sha256": "7a648c649ad1844e74fc6af5aa7812b06c9fab25b9bc49672d077d929abe36af"
+    },
+    {
+      "path": ".opencode/skills/excel-ado-sql-data-access/references/official-links.md",
+      "sha256": "436cd4b649b1b804c66dd71ec119c6f6adcbc62fc6ae2b112d6394f6a0dfb969"
+    },
+    {
+      "path": ".opencode/skills/excel-bi-router/SKILL.md",
+      "sha256": "43c3a2817ea2ed9969250a99916aa8e7e5d5d70a966489bbecf03b4673483510"
+    },
+    {
+      "path": ".opencode/skills/excel-bi-router/agents/openai.yaml",
+      "sha256": "a577669b38bda321a2c0fab85a808eaf1caca26c0b7e6e3e82b1fafad5d31358"
+    },
+    {
+      "path": ".opencode/skills/excel-bi-router/scripts/route_excel_bi_task.py",
+      "sha256": "5f144e5a4a73fe42b4584f22672ef7f61ba7c1c2a9c1a606c201f5bedd5bb8e5"
+    },
+    {
+      "path": ".opencode/skills/excel-deliverable-publisher/SKILL.md",
+      "sha256": "68f03fe7ee3bc5e60a7004b3bd06a9b97c313151e5ab61261bd992e1d428d21f"
+    },
+    {
+      "path": ".opencode/skills/excel-deliverable-publisher/agents/openai.yaml",
+      "sha256": "ca6cbd82eb0a4503f0942f12427fc0549a138e632695cb89a06fe03febd02a21"
+    },
+    {
+      "path": ".opencode/skills/excel-deliverable-publisher/references/delivery-checklist.md",
+      "sha256": "20e1d73334f8e774bee10c6dbc811d8d467bddee31c14964e8ee7a4f2ab24afa"
+    },
+    {
+      "path": ".opencode/skills/excel-report-builder/SKILL.md",
+      "sha256": "4c733fa04eed4c643c8de510ff106984f217dd580cc84b7289e82d1c9d2b1cb5"
+    },
+    {
+      "path": ".opencode/skills/excel-report-builder/agents/openai.yaml",
+      "sha256": "0665a78f62dd645891ea56d0f23ed28d43b1474c8135063cec0e8cfa7df1979e"
+    },
+    {
+      "path": ".opencode/skills/excel-report-builder/references/report-surface-standards.md",
+      "sha256": "07da4df7d1202df3ad26d82fb089e66000de7baada16d1b80d00e68e7cf3dc9b"
+    },
+    {
+      "path": ".opencode/skills/excel-testing-fixtures/SKILL.md",
+      "sha256": "44e1897bb8f6cfdaafdab33a15c49b0c7d5227c43a929e6cab9ed7ae90fb3745"
+    },
+    {
+      "path": ".opencode/skills/excel-testing-fixtures/agents/openai.yaml",
+      "sha256": "497c7f0c155aefe5c6866b1edcb0fbaf2b2e0cb56ead16e679035f91164c88bb"
+    },
+    {
+      "path": ".opencode/skills/excel-testing-fixtures/references/fixture-design-rules.md",
+      "sha256": "0ffc7ff427b00af26defe90016028584fa2addc08cb07fd9a9cc2fae15315370"
+    },
+    {
+      "path": ".opencode/skills/excel-vba-workbook-engineering/SKILL.md",
+      "sha256": "ea5105a124cc79855eb3c9b6d4972094ce027a4c8bc855aa4d07be093becb3fe"
+    },
+    {
+      "path": ".opencode/skills/excel-vba-workbook-engineering/agents/openai.yaml",
+      "sha256": "7357ec3d4d428777c2c65519cf3b23882f034458aa45922a291cd7af0c86bd10"
+    },
+    {
+      "path": ".opencode/skills/excel-vba-workbook-engineering/references/vba-patterns.md",
+      "sha256": "ae92bf16adf6c4c383fc215d357e40add1ac9f86663601c1e96cfdf31bb76044"
+    },
+    {
+      "path": ".opencode/skills/excel-vba-workbook-engineering/references/workflow.md",
+      "sha256": "5d9327226fa9d9fb7dec80c6c674b8f5eee2c1a8119d1b2d99531420898e2855"
+    },
+    {
+      "path": ".opencode/skills/excel-vba-workbook-engineering/scripts/export_vba.ps1",
+      "sha256": "7992fbd96178270a8247a22028227638fb32fe3725f96bb694c2e935abd9cc14"
+    },
+    {
+      "path": ".opencode/skills/excel-vba-workbook-engineering/scripts/import_vba.ps1",
+      "sha256": "60a213f04b341d1adcdefa8b1e3b35c0e6056a46589dfa0db375a892861a636d"
+    },
+    {
+      "path": ".opencode/skills/excel-vba-workbook-engineering/scripts/inspect_openxml.py",
+      "sha256": "70fccbf9e985f59cda6b07db8f1c989943a91b7390d32084638feb2a8971c3a4"
+    },
+    {
+      "path": ".opencode/skills/excel-vba-workbook-engineering/scripts/inspect_workbook.ps1",
+      "sha256": "298c4b62076a5afbbfc93962ffdd7e91ff831026568fef96c0befdefe37dcb9b"
+    },
+    {
+      "path": ".opencode/skills/excel-vba-workbook-engineering/scripts/invoke_excel_com.sh",
+      "sha256": "28d29fdcf05da8323651ae003e98ac4f6133327412ddced1b4eaf6eb9c177990"
+    },
+    {
+      "path": ".opencode/skills/excel-vba-workbook-engineering/scripts/lint_vba_source.py",
+      "sha256": "f8be721dc303a58cc459b240000b0d1e538a8231cef738e65aef1dc17e6d6bf0"
+    },
+    {
+      "path": ".opencode/skills/excel-workbook-qa-auditor/SKILL.md",
+      "sha256": "0b004f1fe92a09fa4876cd640fd476c3ef108c0a62046292d523f7fda8a9c3f5"
+    },
+    {
+      "path": ".opencode/skills/excel-workbook-qa-auditor/agents/openai.yaml",
+      "sha256": "effad6cbc3e73da8ddfdf083727b68d5c41a74cc2471d0ad481e9e5b0ce44473"
+    },
+    {
+      "path": ".opencode/skills/excel-workbook-qa-auditor/references/qa-severity-rubric.md",
+      "sha256": "7986d630ab6479ecddb0d78bd47bae134c1b34cd1ca68e1fd4b08ee148067c47"
+    },
+    {
+      "path": ".opencode/skills/mdx-cubevalue-extraction/SKILL.md",
+      "sha256": "5f994db0f594fc6401408a20f2fbda6022c4dca0028689246429e391b2b1d420"
+    },
+    {
+      "path": ".opencode/skills/mdx-cubevalue-extraction/agents/openai.yaml",
+      "sha256": "ad276c2f5da14fed5be647a1fa6170fdd2f3963bf43b2836e6e7ffeeb55e91fe"
+    },
+    {
+      "path": ".opencode/skills/mdx-cubevalue-extraction/references/cube-dependency-report.md",
+      "sha256": "84752ce4fdd073ec4a1ccbafcb80141bcecf71e48244d29a9ade07bab2a5da50"
+    },
+    {
+      "path": ".opencode/skills/mdx-cubevalue-extraction/references/cube-formulas.md",
+      "sha256": "052e66cde7dbbadc3fb8504729307e3d833a5e264eac45cafc27f311c9bc4ae5"
+    },
+    {
+      "path": ".opencode/skills/mdx-cubevalue-extraction/references/mdx-member-paths.md",
+      "sha256": "06545159b01ea73bcdc940e5fa1f5629e22259ea54aac9f9213a7bc18e087c7d"
+    },
+    {
+      "path": ".opencode/skills/mdx-cubevalue-extraction/references/official-docs-index.json",
+      "sha256": "2db2b97393a25a2dfda03691147c65814c3a8bb689692284981162a69fdc5193"
+    },
+    {
+      "path": ".opencode/skills/mdx-cubevalue-extraction/references/official-links.md",
+      "sha256": "3b5bcc7695e29a46aa0e4ef9933a753643a4ee08206d95bc37523d8215cc6e5b"
+    },
+    {
+      "path": ".opencode/skills/office-environment-diagnostics/SKILL.md",
+      "sha256": "90f0c5c4ceb701169c43d2ffec7270c86ea3bf68c02799bba80412e50bf117b1"
+    },
+    {
+      "path": ".opencode/skills/office-environment-diagnostics/agents/openai.yaml",
+      "sha256": "aa28fe590c850fee7b724631e55510f9b5f09afacf5ace67f2ebcaf04f40a20d"
+    },
+    {
+      "path": ".opencode/skills/office-environment-diagnostics/references/environment-decision-tree.md",
+      "sha256": "2614f9922ac4a31529bed9c9103ab7d058fe4b5ea90e48c53b5021d4d57eaced"
+    },
+    {
+      "path": ".opencode/skills/power-bi-semantic-model/SKILL.md",
+      "sha256": "28aef2ea7e67b9e8db163f8646ad79ef4b4a9fb8e427de1c923ab0ef1a6d257d"
+    },
+    {
+      "path": ".opencode/skills/power-bi-semantic-model/agents/openai.yaml",
+      "sha256": "a3c5c1eb527451ca6b413bfc17c0f47465af36556ce5b54e3aefe1456274863c"
+    },
+    {
+      "path": ".opencode/skills/power-bi-semantic-model/references/host-boundary.md",
+      "sha256": "6c55de870f517cdcac009237c9c6e166077d9e42c55d6caf625cacb996558f93"
+    },
+    {
+      "path": ".opencode/skills/power-pivot-dax-modeling/SKILL.md",
+      "sha256": "ceb2d60855475766638598bb4db313cc0db07a8f27520152bd3621e6cbb6768c"
+    },
+    {
+      "path": ".opencode/skills/power-pivot-dax-modeling/agents/openai.yaml",
+      "sha256": "43d016045d27256fa8878f10894efbc675618e6d1edee3bbdceeca1e1d49a004"
+    },
+    {
+      "path": ".opencode/skills/power-pivot-dax-modeling/references/dax-context.md",
+      "sha256": "28195c5709eca209723aa44dd1e583d4589879afd04586dd70c0a7abf440eaa6"
+    },
+    {
+      "path": ".opencode/skills/power-pivot-dax-modeling/references/dax-patterns.md",
+      "sha256": "22f3c3e238d79f3f3e4afd46ab702705de2c63367ecb0b81a0c61880e8bdbdab"
+    },
+    {
+      "path": ".opencode/skills/power-pivot-dax-modeling/references/model-inspection.md",
+      "sha256": "c8b6e131ccddd675058a7b75f5e5c997e919ea7019baff74d73db17de78cc64b"
+    },
+    {
+      "path": ".opencode/skills/power-pivot-dax-modeling/references/official-docs-index.json",
+      "sha256": "02bd0fd18ceb674a3e20ad2d4683a75359b5c9ab0773f973e7be0c4fffef2884"
+    },
+    {
+      "path": ".opencode/skills/power-pivot-dax-modeling/references/official-links.md",
+      "sha256": "33393f7534a064fadace07e948c32d262ef6f072ae5b0e0731fc7696d060628e"
+    },
+    {
+      "path": ".opencode/skills/power-pivot-dax-modeling/scripts/analyze_dax_dependencies.py",
+      "sha256": "fcf14449b35318cf283f3df9ee4e272c76c4f7819ab0b648f0d114d173b24e6c"
+    },
+    {
+      "path": ".opencode/skills/power-pivot-dax-modeling/scripts/lint_dax_compat.py",
+      "sha256": "5a53c48a7ceef063742eab9cdf88e0f26907d996fa1455812b8aa3cc7d1b5a64"
+    },
+    {
+      "path": ".opencode/skills/power-query-m-engineering/SKILL.md",
+      "sha256": "f920afa31ab9c657a8e719873a8b3e30d7b8bbdb25eff876a49e50427ff4393a"
+    },
+    {
+      "path": ".opencode/skills/power-query-m-engineering/agents/openai.yaml",
+      "sha256": "d7286ad3614268dcf5bac6e055feb3e722af2d09d8e606a582aa02a24f44f726"
+    },
+    {
+      "path": ".opencode/skills/power-query-m-engineering/references/m-lifecycle-vba.md",
+      "sha256": "8b57ad85c1f8eedf40a0d288a03d1b72a81749e11574fa5d8a921364d9f6af84"
+    },
+    {
+      "path": ".opencode/skills/power-query-m-engineering/references/m-patterns.md",
+      "sha256": "3c1532672fc79f2b5fec0868054c5268d91fcd03e8f7e6e9b265df0ad390bef3"
+    },
+    {
+      "path": ".opencode/skills/power-query-m-engineering/references/m-style-guide.md",
+      "sha256": "dbb882bea1a5d9e2cfc2323c076096fe803a8110854305f478a1964579744455"
+    },
+    {
+      "path": ".opencode/skills/power-query-m-engineering/references/m-troubleshooting.md",
+      "sha256": "fc29bfa216d5e96effe3a97097f98f75f549a2f03f632991ad62e18470b341ec"
+    },
+    {
+      "path": ".opencode/skills/power-query-m-engineering/references/m-validation.md",
+      "sha256": "5897fb464269aa83beb1d34a5e993a319ce7a8b14ea39b34a8751a71cdd983a3"
+    },
+    {
+      "path": ".opencode/skills/power-query-m-engineering/references/official-docs-index.json",
+      "sha256": "79852f2e0b37d9f3f8aaf19b420c29ab36b4f3bc72ebfa1c63b735eb0cf7683a"
+    },
+    {
+      "path": ".opencode/skills/power-query-m-engineering/references/official-docs-kb.md",
+      "sha256": "79ad3aadf7fd2d33706cc9cd21cdfba85c87401eed54ed4fc08db5d7bc98bdf3"
+    },
+    {
+      "path": ".opencode/skills/power-query-m-engineering/references/official-links.md",
+      "sha256": "57b37c39ddf08b3e8c0b0ff6229dd692ad810d3e5ddf48d1e0509f8f18d5408a"
+    },
+    {
+      "path": ".opencode/skills/power-query-m-engineering/scripts/build_power_query_refresh_report.py",
+      "sha256": "723fd69aa0fa65e07a360b06d61be23d25d67db910801c3b879ee0863f8ba698"
+    },
+    {
+      "path": ".opencode/skills/power-query-m-engineering/scripts/classify_power_query_refresh_errors.py",
+      "sha256": "9d1b7ac94c4bf37bbbe24111297fbfc442f54af492959395581a07c19b8410d3"
+    },
+    {
+      "path": ".opencode/skills/power-query-m-engineering/scripts/create_power_query_fixture_excel_com.ps1",
+      "sha256": "1fd6908c8a89498182d65fa309867db9b6b3bd144c62d3ffa2a004142acab3fa"
+    },
+    {
+      "path": ".opencode/skills/power-query-m-engineering/scripts/export_power_queries_excel_com.ps1",
+      "sha256": "fc4abd00ad115016ba7c987e71744ccf1f33fe88d1ff8093b108bdfba445091d"
+    },
+    {
+      "path": ".opencode/skills/power-query-m-engineering/scripts/inspect_power_query_openxml.py",
+      "sha256": "69553d7d73d1bde48cd3e3a68b8b89b537f6ef84c30c7f79cb345feb3cd71463"
+    },
+    {
+      "path": ".opencode/skills/power-query-m-engineering/scripts/invoke_power_query_excel_com.sh",
+      "sha256": "2ccc02e85254a328dc826216f64ffd4519e9d4abf045f1e41f8011bb9789e392"
+    },
+    {
+      "path": ".opencode/skills/power-query-m-engineering/scripts/lint_power_query_m.py",
+      "sha256": "8d2f6341ee1d60d489af39b7fbb089236701b91c262637dae386a62399902e0d"
+    },
+    {
+      "path": ".opencode/skills/power-query-m-engineering/scripts/manage_power_queries_excel_com.ps1",
+      "sha256": "596ff1901980634c0dcb46105294b15b044077c8f694272b3a024b7431454060"
+    },
+    {
+      "path": ".opencode/skills/power-query-m-engineering/scripts/refresh_power_queries_excel_com.ps1",
+      "sha256": "2dc02715e50f427b84fe579c6deadbd7247774984e8b65effa16b7440cb2df74"
+    },
+    {
+      "path": ".opencode/skills/power-query-m-engineering/scripts/search_power_query_official_kb.py",
+      "sha256": "1f19752c8a9ad5cdeafecde65c4fd96749450e76921dbbfbc5dc2cc9b12c8c3a"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "a14a3c6009829863451148d51c7422bbacc8851bb82f5863b87411f412bc724f"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "sha256": "b2084098edcb1a2221829e812b647b756ee5e4b8e3534ef69ffb33b2cf203874"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "9ebe1a54f7c8bd4cec4dff7abf4cbdf4175825193034f8842a13ae22ce57e05a"
+    },
+    {
+      "path": "README.md",
+      "sha256": "bf6a750177cf45474a2c3eee0d6dfd0903e69fcbb45230e95432c46ea61c70cc"
+    },
+    {
+      "path": "README.zh-CN.md",
+      "sha256": "6b09795dbb96e2d1ae3f93d0100b5ca5543d3bc418d40a9111c20e7f2282fc8f"
+    },
+    {
+      "path": "SECURITY.md",
+      "sha256": "415d52082e8cf938c2df6b4786409fe4fae288f059160162eee2bd0a11d2ea1f"
+    },
+    {
+      "path": "assets/excel-bi-agent-visual-bg.png",
+      "sha256": "708600a72558869b1c6f7a7ae5ce7f7a04e71e1e78be792aa804ded31dd6e06c"
+    },
+    {
+      "path": "assets/intro-mobile-screenshot.png",
+      "sha256": "2d973ef993b730c7551fce4a84127c69dbabc503f4db0c65a75cebc0b8f2ae80"
+    },
+    {
+      "path": "assets/intro-mobile-screenshot.zh-CN.png",
+      "sha256": "218ae02bf02c9076326a64cc81687bff99b8a1201e858b2aadc434e186c4d7f9"
+    },
+    {
+      "path": "assets/intro-page-screenshot.png",
+      "sha256": "7d275bb86ff17e7121230fdee5b0910f8e029922bc294d477685c8469ba90fc0"
+    },
+    {
+      "path": "assets/intro-page-screenshot.zh-CN.png",
+      "sha256": "064abf0b2dfe8e80ac419622f93eb7de96c833ce2d9e4f8215e4da86ed14a287"
+    },
+    {
+      "path": "assets/readme-hero.png",
+      "sha256": "3e60de0a0585b282547ca1bfd0102cfbc2a4f9dcd75372ba3fe42c708babb756"
+    },
+    {
+      "path": "assets/readme-hero.zh-CN.png",
+      "sha256": "174d03260eb7893b29a5cf3500c5aa4e846783a475c67f2b182fd4142ed78c0e"
+    },
+    {
+      "path": "assets/social-preview.png",
+      "sha256": "aee988d2989a332c6b8656c010964d8ac6dfce34c09d6490e532cb437a474b42"
+    },
+    {
+      "path": "assets/social-preview.zh-CN.png",
+      "sha256": "1d82d11d79e8c8a33cffea69cad9fa269fa3e9007bb400b41e605c0455008ba9"
+    },
+    {
+      "path": "benchmarks/fixtures/excel-bi-benchmark-source.json",
+      "sha256": "1610e349e03bcb5e7bfab93c84f25c5add842fd35b01884d319c365a3138373b"
+    },
+    {
+      "path": "docs/compatibility.md",
+      "sha256": "14b940d5d06af49f57dc34306c53b8eb5f87bd30eb736ed0fc2de88258669c2d"
+    },
+    {
+      "path": "docs/cross-agent-distribution.md",
+      "sha256": "d32aacc5be775de9a1a6b88bea59db665477aa2c294a4e47ec408c8f178efe5d"
+    },
+    {
+      "path": "docs/current-status.md",
+      "sha256": "e848f787051657634c5cde3d1846543aef30c07d700037fbf7af41a1ce8cb4b0"
+    },
+    {
+      "path": "docs/distribution-checklist.md",
+      "sha256": "2349f25fc5c8c61ed4b58318362451d834bdf20cc678af44f61293ef4f438c89"
+    },
+    {
+      "path": "docs/github-publish.md",
+      "sha256": "0f336ef16f5229386a3e53ebcdfe4a99d7572ddf96dd6848897dffa531b39815"
+    },
+    {
+      "path": "docs/growth-goals.en-US.md",
+      "sha256": "4b069b0514802f5f9432eb35efb9aeea2406cc5bc3a8287a197cdc952f807e91"
+    },
+    {
+      "path": "docs/growth-goals.md",
+      "sha256": "e252c216fb8bca300a6f7374497b6c21eb8f48ac7195fe131ef3d914171858f3"
+    },
+    {
+      "path": "docs/growth-goals.zh-CN.md",
+      "sha256": "b161f7d2eefa9f34eeab146a73ba5ab3cb17fce1efd4a88ad2358319cc17c537"
+    },
+    {
+      "path": "docs/index.html",
+      "sha256": "68092ed0c898f87e63a25ed9d3a0f8b6fe8d2c0e124d826a51619d3f7c7543bf"
+    },
+    {
+      "path": "docs/install-and-sync.md",
+      "sha256": "c18ceee7cff1118affbbc4720007d3c9af0b5cd11f53cf36a0dfb7976a7541ef"
+    },
+    {
+      "path": "docs/intro.html",
+      "sha256": "0d3e8b84d6008875ed501ae8ce8f0beed29ff72a748c6158e7f4ea214a15864b"
+    },
+    {
+      "path": "docs/intro.zh-CN.html",
+      "sha256": "4c0f2ef8d267948738487673df19879a88a8716965772c5e94ff66f12788e3a4"
+    },
+    {
+      "path": "docs/maintenance-goals.en-US.md",
+      "sha256": "63fef29b8465fb652b676cb96f4d37aae5c102bd321390481e6c2c243fe81853"
+    },
+    {
+      "path": "docs/maintenance-goals.md",
+      "sha256": "b8c3bac0a4f7ced22b02b6ee7cbf38192948cebddd55f520452009e9672bc52c"
+    },
+    {
+      "path": "docs/maintenance-goals.zh-CN.md",
+      "sha256": "47cfbe95169725b50649f8559eab3625d0ce3a7271fe4ed3130e9cab022a19ba"
+    },
+    {
+      "path": "docs/marketing-copy.en-US.md",
+      "sha256": "b6193afd7ffa626df60a7713176107ed77150d09d9aff3989c9176d8dc128607"
+    },
+    {
+      "path": "docs/marketing-copy.md",
+      "sha256": "70ea0e359b38dea48379248f98929c4cfbd068d9c05363b6b5cbf56063c9d344"
+    },
+    {
+      "path": "docs/marketing-copy.zh-CN.md",
+      "sha256": "55e5a899127ef98519921cd666c934374a7b231d102f32aab30a0b3409c0cd82"
+    },
+    {
+      "path": "docs/open-source-publishing.md",
+      "sha256": "2712a906bd5761322cc4422d3e6e72e44609a77e50fc794392263d848f5c8443"
+    },
+    {
+      "path": "docs/privacy-policy.md",
+      "sha256": "7df6f3246e60259afe3f87ca1a5e1731f52a8b85960feac1b14957fd1049e4fd"
+    },
+    {
+      "path": "docs/project.en-US.md",
+      "sha256": "22bef1bcb487cf124982ecd19810dae73f2ca564072faf5f7e8765eb7daf3f32"
+    },
+    {
+      "path": "docs/project.md",
+      "sha256": "8da9fa927b5ed8823146df5e0bc32a2cb8deff16bf2a9415e416b3c94f8fd4cb"
+    },
+    {
+      "path": "docs/project.zh-CN.md",
+      "sha256": "2cca52b2bb21c1727dbcbe7549ea5e37d408afbd4ee7fbf6d0be40a35a046ae8"
+    },
+    {
+      "path": "docs/real-case-regression.md",
+      "sha256": "670285ea1c0763829e9af2543b113694dbb363e02dec5ac12f35f8dfb9bf2efa"
+    },
+    {
+      "path": "docs/recipient-guide.zh-CN.md",
+      "sha256": "f843dceea7105084e9adfd9584f473f02befea3acf87804efb39f2b643dec421"
+    },
+    {
+      "path": "docs/release-notes.en-US.md",
+      "sha256": "39afc963c3acb2c055f03c1d43dd51c275c2545b73156227c36ce08ab89e915a"
+    },
+    {
+      "path": "docs/release-notes.md",
+      "sha256": "25bebc7b85d76bda1dd25177271a97efd1137d38204bd325f1b00a5006db81e7"
+    },
+    {
+      "path": "docs/release-notes.zh-CN.md",
+      "sha256": "59480b5a09f7a7cdcb3395b103d8594fb0602787d4c4e89717634f480d26ff06"
+    },
+    {
+      "path": "docs/repository-governance-goals.en-US.md",
+      "sha256": "fdc34e6c5ebc0df88c3fa2078173ec94356cb9fa05e8c74223a7b76df34b9239"
+    },
+    {
+      "path": "docs/repository-governance-goals.md",
+      "sha256": "f6cac25897f981471b4814cb726360548ac8571243e3c3d51bc6018b29a86b6e"
+    },
+    {
+      "path": "docs/repository-governance-goals.zh-CN.md",
+      "sha256": "6fe15345133b4ecc62fd31ba8260d12b69fae1fc94e6229ef8981cb1f795bb4e"
+    },
+    {
+      "path": "docs/site.css",
+      "sha256": "a43e91d7229df58f62a9b3a95b78df7fd249ef679ea491810b652c4a70999ff1"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-07-14-excel-compatibility-core.md",
+      "sha256": "90511dffaf37f429f711b7c3efb65f8e55196119a9cc1c16bab8f7fd549e49cd"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-07-14-v0.2.1-efficiency.md",
+      "sha256": "268c574f39b4f1611798b8ad343490b87d7fec51bc45011035b096126f852262"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-07-14-excel-compatibility-core-design.md",
+      "sha256": "5f2cc3bd3b9b3548b9c1023063ceefb0f48269fa654b4122da7da80ced68c853"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-07-14-v0.2.1-efficiency-design.md",
+      "sha256": "63a5f327ffac817e4c502518f275b5c88d4a7a6410cc9343b86df3d878580c5e"
+    },
+    {
+      "path": "docs/task-recipes.md",
+      "sha256": "578b6daed07489d93c1c01b4c570f514531b3214152ef584e63b0bc86f45d15f"
+    },
+    {
+      "path": "docs/terms-of-service.md",
+      "sha256": "fbce20b9d159ea45869fa1764f8f84bacbfa8c4c7e9380ac2f21fd484610babd"
+    },
+    {
+      "path": "fixtures/real-sanitized-cases/README.md",
+      "sha256": "d3c7f2c6afa7c00475040ddacec74b6290184089223cb13a247a71c1607b8820"
+    },
+    {
+      "path": "fixtures/real-sanitized-cases/cases/cube-zero-result-debug.json",
+      "sha256": "efbe1391044b0528827625f82f85983cba804f31d45c622c33de9abd1b7e72ad"
+    },
+    {
+      "path": "fixtures/real-sanitized-cases/cases/dax-excel-powerpivot-compat.json",
+      "sha256": "f17cc43d62d696aacdeead11bac5441b257827ea79d09b22f2b759a33d52b1e3"
+    },
+    {
+      "path": "fixtures/real-sanitized-cases/cases/deliverable-clean-copy.json",
+      "sha256": "76afed7c28d393a3955c4cf286b0df7c454793bf2ef9a2eff0112071b5d371dc"
+    },
+    {
+      "path": "fixtures/real-sanitized-cases/cases/excel-capability-routing.json",
+      "sha256": "dfac69f4ce026bc86141330ef37ab3ef27bfdb1e6e6a0dcd51aaa97c8123881d"
+    },
+    {
+      "path": "fixtures/real-sanitized-cases/cases/pq-folder-dynamic-expand-order.json",
+      "sha256": "c0dfa267d2fd0ed264dec50bc6ae62517513b6460987cf705f8f25f1769b8fde"
+    },
+    {
+      "path": "fixtures/real-sanitized-cases/cases/vba-button-binding-runtime.json",
+      "sha256": "90bd97db20eb47032c76a6b8a3ea9aee8d92814fe30050aa3da84e1707ef55ce"
+    },
+    {
+      "path": "fixtures/real-sanitized-cases/cases/visual-report-readability.json",
+      "sha256": "dddb4cc987c8f963564e6d58f03c9b8a5fcb1c7dc2a2af426aa0da86790883ed"
+    },
+    {
+      "path": "fixtures/real-sanitized-cases/manifest.json",
+      "sha256": "4a3a28c107a2c00d9c58a74c0079b191476978e8dbae9b5e81620c336c7d0d2b"
+    },
+    {
+      "path": "fixtures/skill-trigger-benchmark.json",
+      "sha256": "849a2d88b322cad18fc13d4c8b8424dba2b44b2a9088dcb789559556d9dbebd6"
+    },
+    {
+      "path": "install.cmd",
+      "sha256": "f4e1e26f14ba8a9b6e344d8b2fa0682affd2ccfa23b4a379c05b3ebaba3de9e1"
+    },
+    {
+      "path": "install.ps1",
+      "sha256": "4cd69e76ceb44c641757af7becce4f542fb7f3cb773a8ff6b458741c8a274181"
+    },
+    {
+      "path": "install.sh",
+      "sha256": "6721672ff718a7a737bb8986050ecb96541629b63ebbb9ba55418a48f1cec3a6"
+    },
+    {
+      "path": "marketplace.json",
+      "sha256": "cd9ab0d3e935bb291adc07491b3f10ac61d0227de60ef8506fb84959f2a3e592"
+    },
+    {
+      "path": "prompts/one-click-install-prompt.en-US.md",
+      "sha256": "e43c481ab16e54175efc444d8d20d16f35fa71a42171ba086f5ca72f03ae969d"
+    },
+    {
+      "path": "prompts/one-click-install-prompt.zh-CN.md",
+      "sha256": "84017b544d06fc9d4f7af563e9a66d7df6e300f9236e7825cca55bc6f31600cf"
+    },
+    {
+      "path": "schemas/excel-capability-probe.schema.json",
+      "sha256": "a7fe069f99b3ac7f501adaf8efad0718603d8d5bfe92a24addaefa2409bbd24e"
+    },
+    {
+      "path": "schemas/excel-compatibility-report.schema.json",
+      "sha256": "448620dec1ef349969520c2b3ea1408ae0a4b1fd72df27bf821b4a284dc6959a"
+    },
+    {
+      "path": "skills/excel-ado-sql-data-access/SKILL.md",
+      "sha256": "08fd37548c541de09c9c9cdd918194924f251bf34d361f3f6e6d1a426ba83b3f"
+    },
+    {
+      "path": "skills/excel-ado-sql-data-access/agents/openai.yaml",
+      "sha256": "211b74d7cc571b4af6fe036b7addfb784f320387eb62ea4db58963ae482070a6"
+    },
+    {
+      "path": "skills/excel-ado-sql-data-access/references/ado-patterns.md",
+      "sha256": "54ed1e739b736a0f728740e4aac291aa19c436deb2c417c2bdb727158c0e7d0a"
+    },
+    {
+      "path": "skills/excel-ado-sql-data-access/references/connection-strings.md",
+      "sha256": "c659515e8568314ed281dce81009173eaefc8d4292f2bad3838004499611fb15"
+    },
+    {
+      "path": "skills/excel-ado-sql-data-access/references/data-access-workflow.md",
+      "sha256": "6569a59e3702b56688f883c1ae3aa8f603fe6cd55ee59075207c3d10c7783ed7"
+    },
+    {
+      "path": "skills/excel-ado-sql-data-access/references/official-docs-index.json",
+      "sha256": "7a648c649ad1844e74fc6af5aa7812b06c9fab25b9bc49672d077d929abe36af"
+    },
+    {
+      "path": "skills/excel-ado-sql-data-access/references/official-links.md",
+      "sha256": "436cd4b649b1b804c66dd71ec119c6f6adcbc62fc6ae2b112d6394f6a0dfb969"
+    },
+    {
+      "path": "skills/excel-bi-router/SKILL.md",
+      "sha256": "43c3a2817ea2ed9969250a99916aa8e7e5d5d70a966489bbecf03b4673483510"
+    },
+    {
+      "path": "skills/excel-bi-router/agents/openai.yaml",
+      "sha256": "a577669b38bda321a2c0fab85a808eaf1caca26c0b7e6e3e82b1fafad5d31358"
+    },
+    {
+      "path": "skills/excel-bi-router/scripts/route_excel_bi_task.py",
+      "sha256": "5f144e5a4a73fe42b4584f22672ef7f61ba7c1c2a9c1a606c201f5bedd5bb8e5"
+    },
+    {
+      "path": "skills/excel-deliverable-publisher/SKILL.md",
+      "sha256": "68f03fe7ee3bc5e60a7004b3bd06a9b97c313151e5ab61261bd992e1d428d21f"
+    },
+    {
+      "path": "skills/excel-deliverable-publisher/agents/openai.yaml",
+      "sha256": "ca6cbd82eb0a4503f0942f12427fc0549a138e632695cb89a06fe03febd02a21"
+    },
+    {
+      "path": "skills/excel-deliverable-publisher/references/delivery-checklist.md",
+      "sha256": "20e1d73334f8e774bee10c6dbc811d8d467bddee31c14964e8ee7a4f2ab24afa"
+    },
+    {
+      "path": "skills/excel-report-builder/SKILL.md",
+      "sha256": "4c733fa04eed4c643c8de510ff106984f217dd580cc84b7289e82d1c9d2b1cb5"
+    },
+    {
+      "path": "skills/excel-report-builder/agents/openai.yaml",
+      "sha256": "0665a78f62dd645891ea56d0f23ed28d43b1474c8135063cec0e8cfa7df1979e"
+    },
+    {
+      "path": "skills/excel-report-builder/references/report-surface-standards.md",
+      "sha256": "07da4df7d1202df3ad26d82fb089e66000de7baada16d1b80d00e68e7cf3dc9b"
+    },
+    {
+      "path": "skills/excel-testing-fixtures/SKILL.md",
+      "sha256": "44e1897bb8f6cfdaafdab33a15c49b0c7d5227c43a929e6cab9ed7ae90fb3745"
+    },
+    {
+      "path": "skills/excel-testing-fixtures/agents/openai.yaml",
+      "sha256": "497c7f0c155aefe5c6866b1edcb0fbaf2b2e0cb56ead16e679035f91164c88bb"
+    },
+    {
+      "path": "skills/excel-testing-fixtures/references/fixture-design-rules.md",
+      "sha256": "0ffc7ff427b00af26defe90016028584fa2addc08cb07fd9a9cc2fae15315370"
+    },
+    {
+      "path": "skills/excel-vba-workbook-engineering/SKILL.md",
+      "sha256": "ea5105a124cc79855eb3c9b6d4972094ce027a4c8bc855aa4d07be093becb3fe"
+    },
+    {
+      "path": "skills/excel-vba-workbook-engineering/agents/openai.yaml",
+      "sha256": "7357ec3d4d428777c2c65519cf3b23882f034458aa45922a291cd7af0c86bd10"
+    },
+    {
+      "path": "skills/excel-vba-workbook-engineering/references/vba-patterns.md",
+      "sha256": "ae92bf16adf6c4c383fc215d357e40add1ac9f86663601c1e96cfdf31bb76044"
+    },
+    {
+      "path": "skills/excel-vba-workbook-engineering/references/workflow.md",
+      "sha256": "5d9327226fa9d9fb7dec80c6c674b8f5eee2c1a8119d1b2d99531420898e2855"
+    },
+    {
+      "path": "skills/excel-vba-workbook-engineering/scripts/export_vba.ps1",
+      "sha256": "7992fbd96178270a8247a22028227638fb32fe3725f96bb694c2e935abd9cc14"
+    },
+    {
+      "path": "skills/excel-vba-workbook-engineering/scripts/import_vba.ps1",
+      "sha256": "60a213f04b341d1adcdefa8b1e3b35c0e6056a46589dfa0db375a892861a636d"
+    },
+    {
+      "path": "skills/excel-vba-workbook-engineering/scripts/inspect_openxml.py",
+      "sha256": "70fccbf9e985f59cda6b07db8f1c989943a91b7390d32084638feb2a8971c3a4"
+    },
+    {
+      "path": "skills/excel-vba-workbook-engineering/scripts/inspect_workbook.ps1",
+      "sha256": "298c4b62076a5afbbfc93962ffdd7e91ff831026568fef96c0befdefe37dcb9b"
+    },
+    {
+      "path": "skills/excel-vba-workbook-engineering/scripts/invoke_excel_com.sh",
+      "sha256": "28d29fdcf05da8323651ae003e98ac4f6133327412ddced1b4eaf6eb9c177990"
+    },
+    {
+      "path": "skills/excel-vba-workbook-engineering/scripts/lint_vba_source.py",
+      "sha256": "f8be721dc303a58cc459b240000b0d1e538a8231cef738e65aef1dc17e6d6bf0"
+    },
+    {
+      "path": "skills/excel-workbook-qa-auditor/SKILL.md",
+      "sha256": "0b004f1fe92a09fa4876cd640fd476c3ef108c0a62046292d523f7fda8a9c3f5"
+    },
+    {
+      "path": "skills/excel-workbook-qa-auditor/agents/openai.yaml",
+      "sha256": "effad6cbc3e73da8ddfdf083727b68d5c41a74cc2471d0ad481e9e5b0ce44473"
+    },
+    {
+      "path": "skills/excel-workbook-qa-auditor/references/qa-severity-rubric.md",
+      "sha256": "7986d630ab6479ecddb0d78bd47bae134c1b34cd1ca68e1fd4b08ee148067c47"
+    },
+    {
+      "path": "skills/mdx-cubevalue-extraction/SKILL.md",
+      "sha256": "5f994db0f594fc6401408a20f2fbda6022c4dca0028689246429e391b2b1d420"
+    },
+    {
+      "path": "skills/mdx-cubevalue-extraction/agents/openai.yaml",
+      "sha256": "ad276c2f5da14fed5be647a1fa6170fdd2f3963bf43b2836e6e7ffeeb55e91fe"
+    },
+    {
+      "path": "skills/mdx-cubevalue-extraction/references/cube-dependency-report.md",
+      "sha256": "84752ce4fdd073ec4a1ccbafcb80141bcecf71e48244d29a9ade07bab2a5da50"
+    },
+    {
+      "path": "skills/mdx-cubevalue-extraction/references/cube-formulas.md",
+      "sha256": "052e66cde7dbbadc3fb8504729307e3d833a5e264eac45cafc27f311c9bc4ae5"
+    },
+    {
+      "path": "skills/mdx-cubevalue-extraction/references/mdx-member-paths.md",
+      "sha256": "06545159b01ea73bcdc940e5fa1f5629e22259ea54aac9f9213a7bc18e087c7d"
+    },
+    {
+      "path": "skills/mdx-cubevalue-extraction/references/official-docs-index.json",
+      "sha256": "2db2b97393a25a2dfda03691147c65814c3a8bb689692284981162a69fdc5193"
+    },
+    {
+      "path": "skills/mdx-cubevalue-extraction/references/official-links.md",
+      "sha256": "3b5bcc7695e29a46aa0e4ef9933a753643a4ee08206d95bc37523d8215cc6e5b"
+    },
+    {
+      "path": "skills/office-environment-diagnostics/SKILL.md",
+      "sha256": "90f0c5c4ceb701169c43d2ffec7270c86ea3bf68c02799bba80412e50bf117b1"
+    },
+    {
+      "path": "skills/office-environment-diagnostics/agents/openai.yaml",
+      "sha256": "aa28fe590c850fee7b724631e55510f9b5f09afacf5ace67f2ebcaf04f40a20d"
+    },
+    {
+      "path": "skills/office-environment-diagnostics/references/environment-decision-tree.md",
+      "sha256": "2614f9922ac4a31529bed9c9103ab7d058fe4b5ea90e48c53b5021d4d57eaced"
+    },
+    {
+      "path": "skills/power-bi-semantic-model/SKILL.md",
+      "sha256": "28aef2ea7e67b9e8db163f8646ad79ef4b4a9fb8e427de1c923ab0ef1a6d257d"
+    },
+    {
+      "path": "skills/power-bi-semantic-model/agents/openai.yaml",
+      "sha256": "a3c5c1eb527451ca6b413bfc17c0f47465af36556ce5b54e3aefe1456274863c"
+    },
+    {
+      "path": "skills/power-bi-semantic-model/references/host-boundary.md",
+      "sha256": "6c55de870f517cdcac009237c9c6e166077d9e42c55d6caf625cacb996558f93"
+    },
+    {
+      "path": "skills/power-pivot-dax-modeling/SKILL.md",
+      "sha256": "ceb2d60855475766638598bb4db313cc0db07a8f27520152bd3621e6cbb6768c"
+    },
+    {
+      "path": "skills/power-pivot-dax-modeling/agents/openai.yaml",
+      "sha256": "43d016045d27256fa8878f10894efbc675618e6d1edee3bbdceeca1e1d49a004"
+    },
+    {
+      "path": "skills/power-pivot-dax-modeling/references/dax-context.md",
+      "sha256": "28195c5709eca209723aa44dd1e583d4589879afd04586dd70c0a7abf440eaa6"
+    },
+    {
+      "path": "skills/power-pivot-dax-modeling/references/dax-patterns.md",
+      "sha256": "22f3c3e238d79f3f3e4afd46ab702705de2c63367ecb0b81a0c61880e8bdbdab"
+    },
+    {
+      "path": "skills/power-pivot-dax-modeling/references/model-inspection.md",
+      "sha256": "c8b6e131ccddd675058a7b75f5e5c997e919ea7019baff74d73db17de78cc64b"
+    },
+    {
+      "path": "skills/power-pivot-dax-modeling/references/official-docs-index.json",
+      "sha256": "02bd0fd18ceb674a3e20ad2d4683a75359b5c9ab0773f973e7be0c4fffef2884"
+    },
+    {
+      "path": "skills/power-pivot-dax-modeling/references/official-links.md",
+      "sha256": "33393f7534a064fadace07e948c32d262ef6f072ae5b0e0731fc7696d060628e"
+    },
+    {
+      "path": "skills/power-pivot-dax-modeling/scripts/analyze_dax_dependencies.py",
+      "sha256": "fcf14449b35318cf283f3df9ee4e272c76c4f7819ab0b648f0d114d173b24e6c"
+    },
+    {
+      "path": "skills/power-pivot-dax-modeling/scripts/lint_dax_compat.py",
+      "sha256": "5a53c48a7ceef063742eab9cdf88e0f26907d996fa1455812b8aa3cc7d1b5a64"
+    },
+    {
+      "path": "skills/power-query-m-engineering/SKILL.md",
+      "sha256": "f920afa31ab9c657a8e719873a8b3e30d7b8bbdb25eff876a49e50427ff4393a"
+    },
+    {
+      "path": "skills/power-query-m-engineering/agents/openai.yaml",
+      "sha256": "d7286ad3614268dcf5bac6e055feb3e722af2d09d8e606a582aa02a24f44f726"
+    },
+    {
+      "path": "skills/power-query-m-engineering/references/m-lifecycle-vba.md",
+      "sha256": "8b57ad85c1f8eedf40a0d288a03d1b72a81749e11574fa5d8a921364d9f6af84"
+    },
+    {
+      "path": "skills/power-query-m-engineering/references/m-patterns.md",
+      "sha256": "3c1532672fc79f2b5fec0868054c5268d91fcd03e8f7e6e9b265df0ad390bef3"
+    },
+    {
+      "path": "skills/power-query-m-engineering/references/m-style-guide.md",
+      "sha256": "dbb882bea1a5d9e2cfc2323c076096fe803a8110854305f478a1964579744455"
+    },
+    {
+      "path": "skills/power-query-m-engineering/references/m-troubleshooting.md",
+      "sha256": "fc29bfa216d5e96effe3a97097f98f75f549a2f03f632991ad62e18470b341ec"
+    },
+    {
+      "path": "skills/power-query-m-engineering/references/m-validation.md",
+      "sha256": "5897fb464269aa83beb1d34a5e993a319ce7a8b14ea39b34a8751a71cdd983a3"
+    },
+    {
+      "path": "skills/power-query-m-engineering/references/official-docs-index.json",
+      "sha256": "79852f2e0b37d9f3f8aaf19b420c29ab36b4f3bc72ebfa1c63b735eb0cf7683a"
+    },
+    {
+      "path": "skills/power-query-m-engineering/references/official-docs-kb.md",
+      "sha256": "79ad3aadf7fd2d33706cc9cd21cdfba85c87401eed54ed4fc08db5d7bc98bdf3"
+    },
+    {
+      "path": "skills/power-query-m-engineering/references/official-links.md",
+      "sha256": "57b37c39ddf08b3e8c0b0ff6229dd692ad810d3e5ddf48d1e0509f8f18d5408a"
+    },
+    {
+      "path": "skills/power-query-m-engineering/scripts/build_power_query_refresh_report.py",
+      "sha256": "723fd69aa0fa65e07a360b06d61be23d25d67db910801c3b879ee0863f8ba698"
+    },
+    {
+      "path": "skills/power-query-m-engineering/scripts/classify_power_query_refresh_errors.py",
+      "sha256": "9d1b7ac94c4bf37bbbe24111297fbfc442f54af492959395581a07c19b8410d3"
+    },
+    {
+      "path": "skills/power-query-m-engineering/scripts/create_power_query_fixture_excel_com.ps1",
+      "sha256": "1fd6908c8a89498182d65fa309867db9b6b3bd144c62d3ffa2a004142acab3fa"
+    },
+    {
+      "path": "skills/power-query-m-engineering/scripts/export_power_queries_excel_com.ps1",
+      "sha256": "fc4abd00ad115016ba7c987e71744ccf1f33fe88d1ff8093b108bdfba445091d"
+    },
+    {
+      "path": "skills/power-query-m-engineering/scripts/inspect_power_query_openxml.py",
+      "sha256": "69553d7d73d1bde48cd3e3a68b8b89b537f6ef84c30c7f79cb345feb3cd71463"
+    },
+    {
+      "path": "skills/power-query-m-engineering/scripts/invoke_power_query_excel_com.sh",
+      "sha256": "2ccc02e85254a328dc826216f64ffd4519e9d4abf045f1e41f8011bb9789e392"
+    },
+    {
+      "path": "skills/power-query-m-engineering/scripts/lint_power_query_m.py",
+      "sha256": "8d2f6341ee1d60d489af39b7fbb089236701b91c262637dae386a62399902e0d"
+    },
+    {
+      "path": "skills/power-query-m-engineering/scripts/manage_power_queries_excel_com.ps1",
+      "sha256": "596ff1901980634c0dcb46105294b15b044077c8f694272b3a024b7431454060"
+    },
+    {
+      "path": "skills/power-query-m-engineering/scripts/refresh_power_queries_excel_com.ps1",
+      "sha256": "2dc02715e50f427b84fe579c6deadbd7247774984e8b65effa16b7440cb2df74"
+    },
+    {
+      "path": "skills/power-query-m-engineering/scripts/search_power_query_official_kb.py",
+      "sha256": "1f19752c8a9ad5cdeafecde65c4fd96749450e76921dbbfbc5dc2cc9b12c8c3a"
+    },
+    {
+      "path": "tests/test_excel_compatibility_report.py",
+      "sha256": "5ddec570f11f9774f1f94a53249c623a127aeb43cd7716689e5c89e2754d5c12"
+    },
+    {
+      "path": "tests/test_plugin_benchmark_output_verifier.py",
+      "sha256": "2477dea6db304bf2702009147c4e877fab03e3f384909c4700931f08efcdf712"
+    },
+    {
+      "path": "tests/test_release_gate_portability.py",
+      "sha256": "baf2a853b6a11dcc253ba20664d18679f8644babdc21e8176e84a68ee1e7a0fb"
+    },
+    {
+      "path": "tests/test_runtime_package.py",
+      "sha256": "f4ee2f7585f5f227f4bf750e97ca864c3e26ce7068ffb57639e5bb80514acff8"
+    },
+    {
+      "path": "tests/test_skill_trigger_benchmark.py",
+      "sha256": "a876b67a653590d18b81b63f2f083ee03364abc73944130eb8ae27a40e3b81b5"
+    },
+    {
+      "path": "tests/test_task3_compatibility_integration.py",
+      "sha256": "a9d521030c090a4dbbe1eb3080e026bc9c0065a8979685bf0106e7591841a929"
+    },
+    {
+      "path": "tests/test_task5_release_evidence.py",
+      "sha256": "ac06fa2e0fa2d39b66276db341375f2a14593b2c8558c56d6f32418c28bc0420"
+    },
+    {
+      "path": "tests/test_v021_release_integration.py",
+      "sha256": "64109c552e8e26d1dbe3c0b6eafe2cd256ad603b113fbe44fafcd4b69d922f80"
+    },
+    {
+      "path": "tools/analyze_measure_rename_impact.py",
+      "sha256": "ebc82b2014728167cfab36e45be73d8f284e52e3b8f21ce8e2381be19f3dc0dc"
+    },
+    {
+      "path": "tools/build_agent_bootstrap_bundle.py",
+      "sha256": "ac7c1f9b1722fcd548f139ea3d42f561b3eacc2f318ca98bbe199d98bb1fa71b"
+    },
+    {
+      "path": "tools/build_artifact_hygiene_report.py",
+      "sha256": "004582e641f923e15482e435c8800170b407f482396d74e991cb17f120518aa3"
+    },
+    {
+      "path": "tools/build_capability_catalog.py",
+      "sha256": "9289ebe0a23f828a3f72a524409cb9acb05beb793ce9d0a90726aa8b634ac4fc"
+    },
+    {
+      "path": "tools/build_completion_readiness_audit.py",
+      "sha256": "3a06c700d92682974dd22fd151fb4dd34aae5b1bf09a807b6870f9d81c76b1ec"
+    },
+    {
+      "path": "tools/build_cross_agent_forward_test_handoff_bundle.py",
+      "sha256": "fbeb71ba16f2175b360efa328e74db74fa03b588eb53b6f37f97ae262a9aa36a"
+    },
+    {
+      "path": "tools/build_cross_agent_forward_test_pack.py",
+      "sha256": "ac92b359ec6bd04ef2d4c91efdf71fd2b8b4a252b075195ee4f0d4640ab4eef1"
+    },
+    {
+      "path": "tools/build_cross_agent_forward_test_runbook.py",
+      "sha256": "36b468faf7ff8bd02397d46406a92d27a250566da1338eab2a93b59d783f7db3"
+    },
+    {
+      "path": "tools/build_cross_agent_response_collection_report.py",
+      "sha256": "fb5542a758ed165957c3bc194ada862e909a35862f36e9e143e4b897f278bf86"
+    },
+    {
+      "path": "tools/build_cube_dependency_report.py",
+      "sha256": "90ddff496a74cca3073e5c02ad25bcd5006ae594bc049cb455a2a4b6bed8ad41"
+    },
+    {
+      "path": "tools/build_excel_bi_model_report.py",
+      "sha256": "d170450a3fe8ac9ca4b620bdb73ce94a033c709de9ed1fa2b6669a145e8e6561"
+    },
+    {
+      "path": "tools/build_excel_compatibility_report.py",
+      "sha256": "3b596d2a11bde1144dbbfd6d043ab2f240d3ce97088bdc1e3f2fc6b894f714c0"
+    },
+    {
+      "path": "tools/build_external_dependency_report.py",
+      "sha256": "1de079e64f59aebb947f9d4d98bf55a7e1192b9c9b5efc8c5a29dd3142d4f75c"
+    },
+    {
+      "path": "tools/build_formula_quality_report.py",
+      "sha256": "abaf8a5f89268dd2d29f24be0bd3bea0b5d6ea9afde32b11a5db6c9aefd047be"
+    },
+    {
+      "path": "tools/build_goal_coverage_report.py",
+      "sha256": "c9cb27a0f9876a8e8ee568803655d9d16f926b1ee700c22706203263ede9dab8"
+    },
+    {
+      "path": "tools/build_measure_rename_rewrite_plan.py",
+      "sha256": "10ff44431024f749c31abbaf23d34c8f73d218eec78e33724ba484392fdd7265"
+    },
+    {
+      "path": "tools/build_official_docs_drift_report.py",
+      "sha256": "3d0c5191c2f0423b6fec38b1c74c1db00fce8c773d35612a21349acd9cbf798d"
+    },
+    {
+      "path": "tools/build_power_query_lineage_report.py",
+      "sha256": "704d7455c9f0689d5c9c02b4dfc2d73c684593f7a65fd11ed42893adf5ee7733"
+    },
+    {
+      "path": "tools/build_provider_environment_report.py",
+      "sha256": "67d694b023b9337a745f52fd67dd16b522e2b595bfe2b66cdf2bd0249ea7884b"
+    },
+    {
+      "path": "tools/build_pure_deliverable_cleanup_plan.py",
+      "sha256": "359405a9dd8c30a7505216a7a1e9ef8fbb527140623e07d4f292c26c143aa7eb"
+    },
+    {
+      "path": "tools/build_pure_deliverable_verification_report.py",
+      "sha256": "f0d8bc97acc0b2fc9af4074d25444c8bf20ad5d8eb4a9757eca7454f716f5f6f"
+    },
+    {
+      "path": "tools/build_release_evidence_bundle.py",
+      "sha256": "eb57b1a0c84cd421f7fd0471cb875abd9730e881a53af9b2189f534eb5841602"
+    },
+    {
+      "path": "tools/build_runtime_package.py",
+      "sha256": "21141f8eb002e06b482ef6c6619c7eced01ae7d11fcaee1347f55a9f1726512d"
+    },
+    {
+      "path": "tools/build_sanitized_fixture_bundle.py",
+      "sha256": "c78edfb26e687777efbf4996ba7f811f87f5d4dfb0c3945ba133ce64fadc83ca"
+    },
+    {
+      "path": "tools/build_vba_button_binding_report.py",
+      "sha256": "2b7b4d3a74d39b7630e669700a7531e7c14529508af75f30af442d7f51930cb7"
+    },
+    {
+      "path": "tools/build_visual_qa_report.py",
+      "sha256": "de0dbb303b0cf40faada75984d4ba4d55eaafdf0f13b39ddd420f6ee4cad78bf"
+    },
+    {
+      "path": "tools/build_workbook_controls_report.py",
+      "sha256": "e6acadf51f6327b6ec26919edf9ebc1537d0e71c5d246f382fb9640d24a7278f"
+    },
+    {
+      "path": "tools/build_workbook_triage_report.py",
+      "sha256": "81da05b0b334ef0836f155d2048ea080b2920dcb70a0cadbfee597df2736b08c"
+    },
+    {
+      "path": "tools/create_cube_formula_fixture.py",
+      "sha256": "381cf78be855b607e72c6bf02190c910fc8fdf4585ac17e7d027cc1eb710d5d5"
+    },
+    {
+      "path": "tools/create_excel_capability_fixture.py",
+      "sha256": "3d266b585772ad66a5bdcb66fc1c1c485ede0c284bc5645bef6f74438cfc1f61"
+    },
+    {
+      "path": "tools/create_external_dependency_fixture.py",
+      "sha256": "fdc23dadb46cb7538722957404fd15d5c27eb5e9ede592208dbb4b8b29f74fd5"
+    },
+    {
+      "path": "tools/create_formula_quality_fixture.py",
+      "sha256": "35fe498180519c1642fc74de2e46a71d0b58f6f83115cc137a615ce0684b1ac1"
+    },
+    {
+      "path": "tools/create_power_query_lineage_fixture.py",
+      "sha256": "d9c4864afc2523ec445d0b2f7bbab7003a06542b47ce96de2e009a3850568069"
+    },
+    {
+      "path": "tools/create_provider_environment_fixture.py",
+      "sha256": "c19b0422cca79350612ad671e8cc19387c75c73500885415bb336e93999722bb"
+    },
+    {
+      "path": "tools/create_pure_deliverable_fixture.py",
+      "sha256": "14ba6f1ffb0b93541db238a77e7f4e4c5134d35f505cdb795e65769374f79b6d"
+    },
+    {
+      "path": "tools/create_vba_button_binding_fixture.py",
+      "sha256": "4c3445f64d24193017758295b719b4a5a6ba5973911da255f501465a38867334"
+    },
+    {
+      "path": "tools/create_visual_qa_fixture.py",
+      "sha256": "52425e3e58351ea0b27c38dd10f137230f3d49dc1a0a89951fb8e8f5246fb1b1"
+    },
+    {
+      "path": "tools/create_workbook_controls_fixture.py",
+      "sha256": "cec0dc1a14b05409bb272ea7219f2fe5356e2357cda5d205ab550ec2d2cf1fc6"
+    },
+    {
+      "path": "tools/create_workbook_surface_fixture.py",
+      "sha256": "9fb42c36cdef0395a812d8d0e416108669281afeebfd33be95fcb3c267851cc6"
+    },
+    {
+      "path": "tools/deploy-local-plugin.py",
+      "sha256": "ff49a121f1a223febd378c4a3f3dcde9b46c884efa59b944f3c8d3f62c9a62c2"
+    },
+    {
+      "path": "tools/excel_bi_structural.sh",
+      "sha256": "41aeb224f9593b38ba840fe6af52514575754bc9a94190b74d4b7a95794add1f"
+    },
+    {
+      "path": "tools/export_visual_qa_render_evidence.ps1",
+      "sha256": "a4b6c14db9372b9eb9b1496ad56287de1e6133cf4d5af109e83970e0c4fe9855"
+    },
+    {
+      "path": "tools/inspect_excel_bi_workbook.py",
+      "sha256": "8810e8d805ef07326bcdb47ea6dbc1f7208eeb276455f3c1be1c98796ee34d5a"
+    },
+    {
+      "path": "tools/inspect_excel_data_model_com.ps1",
+      "sha256": "dd11ab9a294839a2b6bbd13c2b2882511c192bb146fad6500b2f3e51ac64c582"
+    },
+    {
+      "path": "tools/install.mjs",
+      "sha256": "ebb85533775cdd9488cda9fb96a06f8c2fea243153732952ad3c0428b17b30e9"
+    },
+    {
+      "path": "tools/invoke_excel_bi_com.sh",
+      "sha256": "c4653ce516151d97d8ad430049721e31f68469ebdbc9b735828bebfb6d911972"
+    },
+    {
+      "path": "tools/mdx_references.py",
+      "sha256": "b6eb53797f1dba549e550c3251030dbd1a0b71358a8b77b152e72a1bd2fe0137"
+    },
+    {
+      "path": "tools/probe_excel_bi_providers.ps1",
+      "sha256": "0ac5a401402b151487147fac5756660fa27b370279406580f930f1a2140ac47a"
+    },
+    {
+      "path": "tools/probe_excel_capabilities.ps1",
+      "sha256": "cdfd6783c10058d8e239c472a4948f3c0a0a13e3321beb6c5ae8b5f682ea893a"
+    },
+    {
+      "path": "tools/publish_to_github.ps1",
+      "sha256": "378b90a0212f7aaf5da6d3c6e7f35af3bbb28502b96a593fbc22149315adb5c2"
+    },
+    {
+      "path": "tools/run_case_regression.py",
+      "sha256": "152837516cc20886bfb9fb145cc50c6ac7cdc15653d39c572a2d3f7354187676"
+    },
+    {
+      "path": "tools/run_release_gate.py",
+      "sha256": "67d27ee99e767b2a68623b13a5c2a2085e7f712f463b3d31ef889aaa4cbeed50"
+    },
+    {
+      "path": "tools/run_release_gate.sh",
+      "sha256": "8a2e37f61c8e690741a684ef5cbef89822cd3c63730e80d60e569f644a479c1b"
+    },
+    {
+      "path": "tools/run_task_profile.py",
+      "sha256": "73110796537e4c31971ba14e56791c703a0b0bdc86c3f1a74c6afd075feb7623"
+    },
+    {
+      "path": "tools/score_cross_agent_forward_test_results.py",
+      "sha256": "c0a0f2a3170719bc1e9abffaf4a1f032c0bcd0e3165b2da729e9e531d894d1f6"
+    },
+    {
+      "path": "tools/search_official_docs.py",
+      "sha256": "5ec6bb1605db856b8949398a0ca57d6e3ca05f0cbd278089751f3f667c11191b"
+    },
+    {
+      "path": "tools/sync-skills.py",
+      "sha256": "2264d9a8da5232c1d4affbf00cb3009b29ed889f10b9b6593d06ce3fc373b5c7"
+    },
+    {
+      "path": "tools/test_excel_ado_sql_access.ps1",
+      "sha256": "3a18286bcf8999f9cbf94c1aac3ada304d6f8c50a2f00b340780dc146b3db05b"
+    },
+    {
+      "path": "tools/test_excel_adomd_query.ps1",
+      "sha256": "487732cb4966795aee0f9b1d412dbe44191631fccd9b7cf72d156cf5415a03cd"
+    },
+    {
+      "path": "tools/validate-skills.py",
+      "sha256": "f2d8022342d7a4ef06b8704ecb4a7d22f9176e00314d0e4616fea1e0ebec8aaa"
+    },
+    {
+      "path": "tools/validate_github_community_health.py",
+      "sha256": "fff3de07914b5a5100e2a5b3079b5a0bafc96b2132df3d86b2c7de9f179b0ec8"
+    },
+    {
+      "path": "tools/validate_official_docs_index.py",
+      "sha256": "206f3d949c30047478f559ed63a3d7a2c2c1684cacac6e6dbe593af58a7f4e9d"
+    },
+    {
+      "path": "tools/validate_project_docs.py",
+      "sha256": "6d47610d9ee072cf2f5e621d2304caa6b783da42ca7f292c11fd2d893fd9aea2"
+    },
+    {
+      "path": "tools/validate_skill_trigger_benchmark.py",
+      "sha256": "434703d924e1928cb3be4860bc7dbd5133d386ff6c8d7e2589e4b506c2ff0b12"
+    },
+    {
+      "path": "tools/validate_task_recipes.py",
+      "sha256": "c98c369edc2ad5637be6c76efa9b25c8acb681ee92446ae12477808ff89d92ea"
+    },
+    {
+      "path": "tools/verify_plugin_benchmark_output.py",
+      "sha256": "b6c991fc6d1f406befc6c198c0d9e6be965ac02fc867b5000bf77e33bda94d6b"
+    }
+  ]
+}

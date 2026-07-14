@@ -1,6 +1,6 @@
 ---
 name: excel-bi-router
-description: Use when a Microsoft Excel BI request is broad or mixed, spans multiple technologies, asks about platform or version compatibility, or has an unclear workbook, VBA, Power Query, DAX, MDX/CUBE, ADO/SQL, delivery, QA, environment, report, semantic-model, or fixture layer.
+description: Use when an Excel BI request is broad, mixed, or unclear and must be routed among workbook, VBA, Power Query, DAX, MDX/CUBE, ADO/SQL, reporting, QA, delivery, or environment skills.
 ---
 
 # Excel BI Router

@@ -17,7 +17,9 @@ It is built for the messy Excel work that generic coding agents usually mishandl
 
 Maintained by **Qiu Binbin (丘彬彬)**. WeChat: **binstudy**. Blog: **https://90le.cn**.
 
-Current release: **v0.2.0** (`0.2.0+codex.20260714`). This release adds capability-first compatibility evidence and a compact allowlisted Codex runtime package.
+Current stable release: **v0.2.0**.
+
+Unreleased release candidate: **v0.2.1** (`0.2.1+codex.20260714`), prepared for a draft pull request. The candidate shortens the three starter prompts, makes all 12 skill descriptions trigger-only, and adds a 36-case trigger corpus plus three real plugin-eval benchmark scenarios. The 12 published skill IDs and Excel feature scope are unchanged.
 
 ## Use It When
 
@@ -113,6 +115,8 @@ Build the compact runtime package without development docs or duplicated agent m
 ```powershell
 python tools\build_runtime_package.py --project-root . --out-dir "$env:TEMP\excel-bi-runtime" --zip "$env:TEMP\excel-bi-runtime.zip" --require-pass
 ```
+
+The staged static plugin-eval comparison measured `trigger_cost_tokens` at 682, down from 1,161 by 41.26%, while `invoke_cost_tokens` moved from 15,365 to 14,886 (-479). This uses synthetic/generated package analysis and does not prove real task success; observed usage is separate evidence. See [Task recipes](docs/task-recipes.md) for the reproducible staging, analysis, comparison, and three-scenario benchmark commands.
 
 ## Compatibility Evidence
 

@@ -1,6 +1,6 @@
 ---
 name: power-bi-semantic-model
-description: Work with Power BI semantic model concepts and their relationship to Excel Power Pivot. Use when Codex must reason about PBIX, TMDL, XMLA, Tabular models, DAX portability, measures, relationships, calculation groups, deployment boundaries, or differences between Power BI semantic models and Excel Data Model/Power Pivot workbooks.
+description: Use when reasoning about Power BI PBIX, TMDL, XMLA, Tabular models, calculation groups, DAX portability, or boundaries between Power BI semantic models and Excel Power Pivot.
 ---
 
 # Power BI Semantic Model

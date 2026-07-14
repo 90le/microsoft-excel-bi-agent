@@ -1,6 +1,6 @@
 ---
 name: power-query-m-engineering
-description: Create, debug, optimize, and validate Power Query M queries in Excel or Power BI, including folder ingestion, Excel.Workbook, Csv.Document, joins, grouping, expanding, type conversion, dynamic columns, refresh errors, query dependencies, and preserving row counts/order.
+description: Use when creating, debugging, or optimizing Power Query M in Excel or Power BI, including Excel.Workbook, Csv.Document, folders, joins, grouping, expansion, types, dependencies, refresh errors, or performance.
 ---
 
 # Power Query M Engineering

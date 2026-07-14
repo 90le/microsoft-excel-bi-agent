@@ -1,0 +1,294 @@
+{
+  "kind": "excel-skill-trigger-benchmark",
+  "schemaVersion": "1.0",
+  "cases": [
+    {
+      "id": "excel-ado-sql-data-access-positive-1",
+      "kind": "positive",
+      "targetSkill": "excel-ado-sql-data-access",
+      "expectedSkill": "excel-ado-sql-data-access",
+      "text": "Write parameterized ADODB code to query an Excel table into a recordset.",
+      "successChecklist": ["Select excel-ado-sql-data-access.", "Keep runtime claims evidence-qualified."]
+    },
+    {
+      "id": "excel-ado-sql-data-access-positive-2",
+      "kind": "positive",
+      "targetSkill": "excel-ado-sql-data-access",
+      "expectedSkill": "excel-ado-sql-data-access",
+      "text": "Diagnose this ACE OLEDB connection string and SQL query against a CSV file.",
+      "successChecklist": ["Select excel-ado-sql-data-access.", "Keep runtime claims evidence-qualified."]
+    },
+    {
+      "id": "excel-ado-sql-data-access-confusable-negative",
+      "kind": "confusable-negative",
+      "targetSkill": "excel-ado-sql-data-access",
+      "expectedSkill": "power-query-m-engineering",
+      "text": "Optimize this Power Query native SQL query and preserve folding.",
+      "successChecklist": ["Select power-query-m-engineering.", "Do not route by the SQL keyword alone."]
+    },
+    {
+      "id": "excel-bi-router-positive-1",
+      "kind": "positive",
+      "targetSkill": "excel-bi-router",
+      "expectedSkill": "excel-bi-router",
+      "text": "This Excel task mixes VBA, Power Query, DAX, and delivery cleanup; route the work.",
+      "successChecklist": ["Select excel-bi-router.", "Identify the specialist boundaries."]
+    },
+    {
+      "id": "excel-bi-router-positive-2",
+      "kind": "positive",
+      "targetSkill": "excel-bi-router",
+      "expectedSkill": "excel-bi-router",
+      "text": "I have an unclear Excel BI request spanning workbook code and the Data Model. Which skill owns each part?",
+      "successChecklist": ["Select excel-bi-router.", "Identify the specialist boundaries."]
+    },
+    {
+      "id": "excel-bi-router-confusable-negative",
+      "kind": "confusable-negative",
+      "targetSkill": "excel-bi-router",
+      "expectedSkill": "excel-workbook-qa-auditor",
+      "text": "Audit this workbook for broken links, hidden sheets, and delivery risks.",
+      "successChecklist": ["Select excel-workbook-qa-auditor.", "Do not route a clearly scoped audit first."]
+    },
+    {
+      "id": "excel-deliverable-publisher-positive-1",
+      "kind": "positive",
+      "targetSkill": "excel-deliverable-publisher",
+      "expectedSkill": "excel-deliverable-publisher",
+      "text": "Create a client-ready .xlsx copy with formulas frozen and external links removed.",
+      "successChecklist": ["Select excel-deliverable-publisher.", "Preserve the source artifact."]
+    },
+    {
+      "id": "excel-deliverable-publisher-positive-2",
+      "kind": "positive",
+      "targetSkill": "excel-deliverable-publisher",
+      "expectedSkill": "excel-deliverable-publisher",
+      "text": "Audit this .xlsm delivery copy and remove process sheets without changing the source.",
+      "successChecklist": ["Select excel-deliverable-publisher.", "Preserve the source artifact."]
+    },
+    {
+      "id": "excel-deliverable-publisher-confusable-negative",
+      "kind": "confusable-negative",
+      "targetSkill": "excel-deliverable-publisher",
+      "expectedSkill": "excel-report-builder",
+      "text": "Build a polished Excel dashboard with pivots, charts, and controls.",
+      "successChecklist": ["Select excel-report-builder.", "Do not treat report construction as publishing."]
+    },
+    {
+      "id": "excel-report-builder-positive-1",
+      "kind": "positive",
+      "targetSkill": "excel-report-builder",
+      "expectedSkill": "excel-report-builder",
+      "text": "Build an Excel dashboard with readable KPI tables, charts, pivots, and controls.",
+      "successChecklist": ["Select excel-report-builder.", "Preserve workbook semantics."]
+    },
+    {
+      "id": "excel-report-builder-positive-2",
+      "kind": "positive",
+      "targetSkill": "excel-report-builder",
+      "expectedSkill": "excel-report-builder",
+      "text": "Improve this report sheet layout while preserving formulas and workbook semantics.",
+      "successChecklist": ["Select excel-report-builder.", "Preserve workbook semantics."]
+    },
+    {
+      "id": "excel-report-builder-confusable-negative",
+      "kind": "confusable-negative",
+      "targetSkill": "excel-report-builder",
+      "expectedSkill": "excel-workbook-qa-auditor",
+      "text": "Audit an existing dashboard for clipped charts and blank report surfaces.",
+      "successChecklist": ["Select excel-workbook-qa-auditor.", "Do not turn a visual audit into a rebuild."]
+    },
+    {
+      "id": "excel-testing-fixtures-positive-1",
+      "kind": "positive",
+      "targetSkill": "excel-testing-fixtures",
+      "expectedSkill": "excel-testing-fixtures",
+      "text": "Create a sanitized workbook fixture that reproduces this refresh failure without customer data.",
+      "successChecklist": ["Select excel-testing-fixtures.", "Use only synthetic or sanitized content."]
+    },
+    {
+      "id": "excel-testing-fixtures-positive-2",
+      "kind": "positive",
+      "targetSkill": "excel-testing-fixtures",
+      "expectedSkill": "excel-testing-fixtures",
+      "text": "Build regression and forward-test inputs for this Excel automation workflow.",
+      "successChecklist": ["Select excel-testing-fixtures.", "Use only synthetic or sanitized content."]
+    },
+    {
+      "id": "excel-testing-fixtures-confusable-negative",
+      "kind": "confusable-negative",
+      "targetSkill": "excel-testing-fixtures",
+      "expectedSkill": "excel-deliverable-publisher",
+      "text": "Create a clean client delivery copy and remove process-only sheets.",
+      "successChecklist": ["Select excel-deliverable-publisher.", "Do not replace delivery work with fixture creation."]
+    },
+    {
+      "id": "excel-vba-workbook-engineering-positive-1",
+      "kind": "positive",
+      "targetSkill": "excel-vba-workbook-engineering",
+      "expectedSkill": "excel-vba-workbook-engineering",
+      "text": "Debug this VBA runtime error and preserve the macro-enabled workbook structure.",
+      "successChecklist": ["Select excel-vba-workbook-engineering.", "Separate structural and runtime evidence."]
+    },
+    {
+      "id": "excel-vba-workbook-engineering-positive-2",
+      "kind": "positive",
+      "targetSkill": "excel-vba-workbook-engineering",
+      "expectedSkill": "excel-vba-workbook-engineering",
+      "text": "Add a button that runs the correct macro and verify its OnAction binding.",
+      "successChecklist": ["Select excel-vba-workbook-engineering.", "Separate structural and runtime evidence."]
+    },
+    {
+      "id": "excel-vba-workbook-engineering-confusable-negative",
+      "kind": "confusable-negative",
+      "targetSkill": "excel-vba-workbook-engineering",
+      "expectedSkill": "excel-ado-sql-data-access",
+      "text": "Query this workbook table with ADODB and return a parameterized recordset.",
+      "successChecklist": ["Select excel-ado-sql-data-access.", "Do not route ADO work by its VBA host alone."]
+    },
+    {
+      "id": "excel-workbook-qa-auditor-positive-1",
+      "kind": "positive",
+      "targetSkill": "excel-workbook-qa-auditor",
+      "expectedSkill": "excel-workbook-qa-auditor",
+      "text": "Audit this workbook's formulas, links, hidden sheets, controls, and delivery risks.",
+      "successChecklist": ["Select excel-workbook-qa-auditor.", "Rank findings by evidence and risk."]
+    },
+    {
+      "id": "excel-workbook-qa-auditor-positive-2",
+      "kind": "positive",
+      "targetSkill": "excel-workbook-qa-auditor",
+      "expectedSkill": "excel-workbook-qa-auditor",
+      "text": "Check this Excel report for clipped charts, blank surfaces, and visual QA issues.",
+      "successChecklist": ["Select excel-workbook-qa-auditor.", "Rank findings by evidence and risk."]
+    },
+    {
+      "id": "excel-workbook-qa-auditor-confusable-negative",
+      "kind": "confusable-negative",
+      "targetSkill": "excel-workbook-qa-auditor",
+      "expectedSkill": "excel-deliverable-publisher",
+      "text": "Prepare the approved workbook as a client-ready values-only deliverable.",
+      "successChecklist": ["Select excel-deliverable-publisher.", "Do not stop at an audit when publishing is requested."]
+    },
+    {
+      "id": "mdx-cubevalue-extraction-positive-1",
+      "kind": "positive",
+      "targetSkill": "mdx-cubevalue-extraction",
+      "expectedSkill": "mdx-cubevalue-extraction",
+      "text": "Fix this CUBEVALUE formula against ThisWorkbookDataModel and explain the MDX tuple.",
+      "successChecklist": ["Select mdx-cubevalue-extraction.", "Keep DAX and MDX layers distinct."]
+    },
+    {
+      "id": "mdx-cubevalue-extraction-positive-2",
+      "kind": "positive",
+      "targetSkill": "mdx-cubevalue-extraction",
+      "expectedSkill": "mdx-cubevalue-extraction",
+      "text": "Create CUBEMEMBER and CUBESET formulas for these measures and hierarchy members.",
+      "successChecklist": ["Select mdx-cubevalue-extraction.", "Keep DAX and MDX layers distinct."]
+    },
+    {
+      "id": "mdx-cubevalue-extraction-confusable-negative",
+      "kind": "confusable-negative",
+      "targetSkill": "mdx-cubevalue-extraction",
+      "expectedSkill": "power-pivot-dax-modeling",
+      "text": "Fix this CALCULATE measure and explain its filter context.",
+      "successChecklist": ["Select power-pivot-dax-modeling.", "Do not route a DAX measure to the CUBE layer."]
+    },
+    {
+      "id": "office-environment-diagnostics-positive-1",
+      "kind": "positive",
+      "targetSkill": "office-environment-diagnostics",
+      "expectedSkill": "office-environment-diagnostics",
+      "text": "Check whether this Mac and Windows Office environment supports Excel COM and VBA access.",
+      "successChecklist": ["Select office-environment-diagnostics.", "Distinguish host capability from formula logic."]
+    },
+    {
+      "id": "office-environment-diagnostics-positive-2",
+      "kind": "positive",
+      "targetSkill": "office-environment-diagnostics",
+      "expectedSkill": "office-environment-diagnostics",
+      "text": "Diagnose ACE, MSOLAP, and ADOMD bitness and registration on this machine.",
+      "successChecklist": ["Select office-environment-diagnostics.", "Distinguish host capability from formula logic."]
+    },
+    {
+      "id": "office-environment-diagnostics-confusable-negative",
+      "kind": "confusable-negative",
+      "targetSkill": "office-environment-diagnostics",
+      "expectedSkill": "power-pivot-dax-modeling",
+      "text": "Is this DAX measure compatible with Excel Power Pivot?",
+      "successChecklist": ["Select power-pivot-dax-modeling.", "Do not treat formula compatibility as host diagnostics."]
+    },
+    {
+      "id": "power-bi-semantic-model-positive-1",
+      "kind": "positive",
+      "targetSkill": "power-bi-semantic-model",
+      "expectedSkill": "power-bi-semantic-model",
+      "text": "Review this TMDL model and explain which features will not transfer to Excel Power Pivot.",
+      "successChecklist": ["Select power-bi-semantic-model.", "Explain Power BI and Excel model boundaries."]
+    },
+    {
+      "id": "power-bi-semantic-model-positive-2",
+      "kind": "positive",
+      "targetSkill": "power-bi-semantic-model",
+      "expectedSkill": "power-bi-semantic-model",
+      "text": "Analyze PBIX calculation groups, XMLA boundaries, and DAX portability to Excel.",
+      "successChecklist": ["Select power-bi-semantic-model.", "Explain Power BI and Excel model boundaries."]
+    },
+    {
+      "id": "power-bi-semantic-model-confusable-negative",
+      "kind": "confusable-negative",
+      "targetSkill": "power-bi-semantic-model",
+      "expectedSkill": "power-pivot-dax-modeling",
+      "text": "Create an Excel Power Pivot measure for year-over-year growth.",
+      "successChecklist": ["Select power-pivot-dax-modeling.", "Do not route native Excel model work to Power BI review."]
+    },
+    {
+      "id": "power-pivot-dax-modeling-positive-1",
+      "kind": "positive",
+      "targetSkill": "power-pivot-dax-modeling",
+      "expectedSkill": "power-pivot-dax-modeling",
+      "text": "Fix this CALCULATE measure and validate its row and filter context in Excel Power Pivot.",
+      "successChecklist": ["Select power-pivot-dax-modeling.", "Keep host support as a separate concern."]
+    },
+    {
+      "id": "power-pivot-dax-modeling-positive-2",
+      "kind": "positive",
+      "targetSkill": "power-pivot-dax-modeling",
+      "expectedSkill": "power-pivot-dax-modeling",
+      "text": "Build DAX measures for year-over-year growth and verify their dependencies.",
+      "successChecklist": ["Select power-pivot-dax-modeling.", "Keep host support as a separate concern."]
+    },
+    {
+      "id": "power-pivot-dax-modeling-confusable-negative",
+      "kind": "confusable-negative",
+      "targetSkill": "power-pivot-dax-modeling",
+      "expectedSkill": "office-environment-diagnostics",
+      "text": "Can Power Query run through Excel COM on this Linux host?",
+      "successChecklist": ["Select office-environment-diagnostics.", "Do not answer platform support as DAX modeling."]
+    },
+    {
+      "id": "power-query-m-engineering-positive-1",
+      "kind": "positive",
+      "targetSkill": "power-query-m-engineering",
+      "expectedSkill": "power-query-m-engineering",
+      "text": "Optimize this Power Query M folder ingestion with joins, expansion, and stable types.",
+      "successChecklist": ["Select power-query-m-engineering.", "Preserve query semantics and evidence limits."]
+    },
+    {
+      "id": "power-query-m-engineering-positive-2",
+      "kind": "positive",
+      "targetSkill": "power-query-m-engineering",
+      "expectedSkill": "power-query-m-engineering",
+      "text": "Diagnose this Excel.Workbook refresh error and preserve row counts and query dependencies.",
+      "successChecklist": ["Select power-query-m-engineering.", "Preserve query semantics and evidence limits."]
+    },
+    {
+      "id": "power-query-m-engineering-confusable-negative",
+      "kind": "confusable-negative",
+      "targetSkill": "power-query-m-engineering",
+      "expectedSkill": "excel-vba-workbook-engineering",
+      "text": "Write VBA that adds a query, refreshes it, waits, and reports errors.",
+      "successChecklist": ["Select excel-vba-workbook-engineering.", "Do not route VBA orchestration as M authoring."]
+    }
+  ]
+}

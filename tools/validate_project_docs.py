@@ -139,6 +139,41 @@ PRIVATE_LEDGER_LINKS = (
     "docs/completion-evidence.md",
 )
 
+BENCHMARK_SUBJECT_RE = re.compile(r"benchmark|plugin-eval|trigger_cost_tokens|基准", re.IGNORECASE)
+BENCHMARK_POSITIVE_ASSERTION_VERB_PATTERN = (
+    r"(?:prove(?:s|d)?|establish(?:es|ed)?|show(?:s|ed|n)?|demonstrate(?:s|d)?|"
+    r"confirm(?:s|ed)?|validate(?:s|d)?|achieve(?:s|d)?)"
+)
+BENCHMARK_OUTCOME_RE = re.compile(
+    rf"\b(?:{BENCHMARK_POSITIVE_ASSERTION_VERB_PATTERN}|passes|passed|succeeds?|"
+    r"outperform(?:s|ed)?|improv(?:es|ed)?|"
+    r"decreas(?:es|ed)?|reduc(?:es|ed)?|increas(?:es|ed)?|conclusive|successful|better|"
+    r"improved|reduced|higher|lower|passing)\b|证明|建立|显示|确认|改善|降低|减少|提升",
+    re.IGNORECASE,
+)
+POSITIVE_REAL_SUCCESS_RE = re.compile(
+    rf"\b{BENCHMARK_POSITIVE_ASSERTION_VERB_PATTERN}\b(?:\W+\w+){{0,3}}\W+"
+    r"(?:real|live|actual)\s+(?:(?:task|workbook)\s+){1,2}success\b",
+    re.IGNORECASE,
+)
+NEGATED_ASSERTION_PREFIX_RE = re.compile(
+    r"(?:\b(?:not|never|cannot|can't|doesn't|don't|didn't|isn't|aren't|wasn't|weren't|"
+    r"won't|wouldn't|couldn't|shouldn't)|\bfails?\s+to)\s+$",
+    re.IGNORECASE,
+)
+SYNTHETIC_TERMS = ("synthetic", "generated", "合成", "生成")
+OBSERVED_TERMS = ("observed", "measured", "live usage", "实测", "观测")
+NO_REAL_TASK_PROOF_TERMS = (
+    "does not prove real task success",
+    "do not prove real task success",
+    "cannot count as real task-success evidence",
+    "not real task-success evidence",
+    "does not establish real task success",
+    "不证明真实任务成功",
+    "不能作为真实任务成功证据",
+    "不代表真实任务成功",
+)
+
 
 def read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8")
@@ -160,6 +195,45 @@ def check_required_links(label: str, text: str, links: list[str], errors: list[s
     for link in links:
         if link not in text:
             errors.append(f"{label} does not link {link}")
+
+
+def benchmark_evidence_boundary_errors(texts: dict[str, str]) -> list[str]:
+    """Require benchmark claims to separate synthetic mechanics from observed proof."""
+
+    errors: list[str] = []
+    for path, text in texts.items():
+        sections = re.split(r"(?m)(?=^#{1,6}\s+)", text)
+        for section_index, section in enumerate(sections):
+            blocks = re.split(r"\n\s*\n|(?=^\s*[-*+]\s+)", section, flags=re.MULTILINE)
+            for block_index, block in enumerate(blocks):
+                has_subject = bool(BENCHMARK_SUBJECT_RE.search(block))
+                positive_real_success = any(
+                    not NEGATED_ASSERTION_PREFIX_RE.search(block[max(0, match.start() - 24) : match.start()])
+                    for match in POSITIVE_REAL_SUCCESS_RE.finditer(block)
+                )
+                if has_subject and positive_real_success:
+                    errors.append(
+                        f"{path} benchmark claim in section {section_index + 1}, block "
+                        f"{block_index + 1} makes an unsupported positive real-success assertion"
+                    )
+                    continue
+                if not (has_subject and BENCHMARK_OUTCOME_RE.search(block)):
+                    continue
+                lowered = block.casefold()
+                missing: list[str] = []
+                if not any(term in lowered for term in SYNTHETIC_TERMS):
+                    missing.append("synthetic/generated evidence")
+                if not any(term in lowered for term in NO_REAL_TASK_PROOF_TERMS):
+                    missing.append("synthetic output does not prove real task success")
+                if not any(term in lowered for term in OBSERVED_TERMS):
+                    missing.append("separate observed/measured evidence")
+                if missing:
+                    errors.append(
+                        f"{path} benchmark claim in section {section_index + 1}, block "
+                        f"{block_index + 1} is missing boundary language: "
+                        + ", ".join(missing)
+                    )
+    return errors
 
 
 def validate(project_root: Path) -> dict[str, Any]:
@@ -191,6 +265,8 @@ def validate(project_root: Path) -> dict[str, Any]:
         markers = has_mojibake(text)
         if markers:
             errors.append(f"{path} contains possible Chinese mojibake markers: {', '.join(markers)}")
+
+    errors.extend(benchmark_evidence_boundary_errors(texts))
 
     readme_en = texts.get("README.md", "")
     readme_zh = texts.get("README.zh-CN.md", "")
@@ -355,8 +431,21 @@ def validate(project_root: Path) -> dict[str, Any]:
             errors.append(f"release notes do not document public check: {command}")
 
     for path, text in [("docs/release-notes.en-US.md", release_notes_en), ("docs/release-notes.zh-CN.md", release_notes_zh)]:
-        if "v0.2.0" not in text or "0.2.0+codex.20260714" not in text:
-            errors.append(f"{path} does not document the v0.2.0 release and plugin version")
+        if "v0.2.1" not in text or "0.2.1+codex.20260714" not in text:
+            errors.append(f"{path} does not document the v0.2.1 release and plugin version")
+
+    release_state_contracts = [
+        ("README.md", readme_en, "Current stable release: **v0.2.0**", "Unreleased release candidate: **v0.2.1**"),
+        ("README.zh-CN.md", readme_zh, "当前稳定版：**v0.2.0**", "未发布候选：**v0.2.1**"),
+        ("docs/current-status.md", current_status, "## Current Stable Release", "## Unreleased Release Candidate"),
+        ("docs/release-notes.en-US.md", release_notes_en, "Current stable release: v0.2.0.", "Unreleased Release Candidate"),
+        ("docs/release-notes.zh-CN.md", release_notes_zh, "当前稳定版：v0.2.0。", "未发布候选"),
+    ]
+    for path, text, stable_marker, candidate_marker in release_state_contracts:
+        if stable_marker not in text:
+            errors.append(f"{path} does not identify v0.2.0 as the stable release")
+        if candidate_marker not in text or "0.2.1+codex.20260714" not in text:
+            errors.append(f"{path} does not identify 0.2.1+codex.20260714 as an unreleased candidate")
 
     for command in PUBLIC_CHECK_COMMANDS:
         if command not in distribution_doc.replace("\\", "/"):
@@ -379,6 +468,10 @@ def validate(project_root: Path) -> dict[str, Any]:
             if private_link in texts.get(path, ""):
                 errors.append(f"{path} links maintainer-only ignored document: {private_link}")
 
+    landing_candidates = {
+        "docs/intro.html": "Unreleased release candidate",
+        "docs/intro.zh-CN.html": "未发布候选",
+    }
     for path, text in [("docs/intro.html", intro_en), ("docs/intro.zh-CN.html", intro_zh)]:
         if 'name="viewport"' not in text:
             errors.append(f"{path} is missing responsive viewport meta")
@@ -387,10 +480,14 @@ def validate(project_root: Path) -> dict[str, Any]:
         release_links = re.findall(r"/releases/tag/v(\d+\.\d+\.\d+)", text)
         if not release_links:
             errors.append(f"{path} does not expose a latest release link")
-        elif plugin_release and release_links[0] != plugin_release:
+        elif release_links[0] != "0.2.0":
             errors.append(
-                f"{path} latest release v{release_links[0]} does not match plugin manifest v{plugin_release}"
+                f"{path} latest stable release link is v{release_links[0]}, expected v0.2.0"
             )
+        if plugin_release and plugin_release in release_links:
+            errors.append(f"{path} links unreleased manifest candidate v{plugin_release} as a release tag")
+        if landing_candidates[path] not in text or (plugin_release and f"v{plugin_release}" not in text):
+            errors.append(f"{path} does not label manifest v{plugin_release} as an unreleased candidate")
         if "./compatibility.md" not in text:
             errors.append(f"{path} does not link the compatibility matrix")
         if "release-notes" not in text:
