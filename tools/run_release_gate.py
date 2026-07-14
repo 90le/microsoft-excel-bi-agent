@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import locale
 import os
 import platform
 import re
@@ -62,6 +63,26 @@ def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def decode_subprocess_output(output: bytes | str | None) -> str:
+    if output is None:
+        return ""
+    if isinstance(output, str):
+        return output
+
+    encodings = ["utf-8-sig", locale.getpreferredencoding(False)]
+    tried: set[str] = set()
+    for encoding in encodings:
+        normalized = encoding.lower()
+        if normalized in tried:
+            continue
+        tried.add(normalized)
+        try:
+            return output.decode(encoding)
+        except (LookupError, UnicodeDecodeError):
+            continue
+    return output.decode("utf-8", errors="replace")
+
+
 def run_command(command: list[str], cwd: Path, name: str, ok_codes: set[int] | None = None) -> CheckResult:
     ok_codes = ok_codes or {0}
     env = os.environ.copy()
@@ -70,7 +91,6 @@ def run_command(command: list[str], cwd: Path, name: str, ok_codes: set[int] | N
         completed = subprocess.run(
             command,
             cwd=str(cwd),
-            text=True,
             capture_output=True,
             env=env,
             timeout=180,
@@ -82,8 +102,8 @@ def run_command(command: list[str], cwd: Path, name: str, ok_codes: set[int] | N
             status=status,
             detail=detail,
             command=command,
-            stdout=completed.stdout.strip(),
-            stderr=completed.stderr.strip(),
+            stdout=decode_subprocess_output(completed.stdout).strip(),
+            stderr=decode_subprocess_output(completed.stderr).strip(),
         )
     except FileNotFoundError as exc:
         return CheckResult(name=name, status=SKIP, detail=str(exc), command=command)
@@ -97,8 +117,8 @@ def run_command(command: list[str], cwd: Path, name: str, ok_codes: set[int] | N
             status=FAIL,
             detail=f"timed out after {exc.timeout} seconds",
             command=command,
-            stdout=(exc.stdout or "").strip() if isinstance(exc.stdout, str) else "",
-            stderr=(exc.stderr or "").strip() if isinstance(exc.stderr, str) else "",
+            stdout=decode_subprocess_output(exc.stdout).strip(),
+            stderr=decode_subprocess_output(exc.stderr).strip(),
         )
 
 
@@ -114,12 +134,16 @@ def read_plugin_json(project_root: Path) -> dict[str, object]:
 
 
 def find_bash() -> str | None:
-    for candidate in [
-        shutil.which("bash"),
+    candidates = [
         r"C:\Program Files\Git\bin\bash.exe",
         r"C:\Program Files\Git\usr\bin\bash.exe",
-    ]:
+        shutil.which("bash"),
+    ] if os.name == "nt" else [shutil.which("bash")]
+    for candidate in candidates:
         if candidate and Path(candidate).exists():
+            normalized = str(candidate).replace("/", "\\").lower()
+            if os.name == "nt" and re.search(r"\\(?:system32|sysnative|syswow64)\\bash\.exe$", normalized):
+                continue
             return candidate
     return None
 
